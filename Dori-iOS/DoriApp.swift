@@ -9,6 +9,11 @@ import SwiftUI
 
 @main
 struct DoriApp: App {
+  
+  init() {
+    FontManager.registerAllFonts()
+  }
+  
   var body: some Scene {
     WindowGroup {
       ContentView()
