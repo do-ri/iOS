@@ -11,34 +11,37 @@ jobs:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup Xcode
-      uses: maxim-lobanov/setup-xcode@v1
-      with:
-        xcode-version: latest-stable
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
 
-    - name: Create xcconfig files
-      run: |
-        # Debug.xcconfig 생성
-        touch Common.xcconfig
-        
-        echo "✅ xcconfig files created"
+      - name: Setup mise and Tuist
+        uses: jdx/mise-action@v2
 
-    - name: Build project
-      run: |
-        # .xcodeproj 파일 찾기
-      
-        PROJECT=$(find . -maxdepth 2 -name "*.xcodeproj")
-        SCHEME=$(basename "$PROJECT" .xcodeproj)
-      
-        echo "Found Project: $PROJECT"
-        echo "Found Scheme: $SCHEME"
-        
-        xcodebuild -project "$PROJECT" \
-          -scheme "$SCHEME" \
-          -configuration Debug \
-          -skipMacroValidation \
-          -destination "platform=iOS Simulator,name=iPhone 16 Pro,OS=26.2" \
-          clean build
+      - name: Prepare xcconfig files
+        run: |
+          mkdir -p Projects/App/Resources
+          if [ ! -f Projects/App/Resources/Common.xcconfig ]; then
+            printf "BASE_URL = https://hellodoriworld.com\n" > Projects/App/Resources/Common.xcconfig
+          fi
+          echo "✅ xcconfig file is ready"
+
+      - name: Install Tuist dependencies
+        run: tuist install
+
+      - name: Generate workspace
+        run: tuist generate --no-open
+
+      - name: Build project
+        run: |
+          xcodebuild \
+            -workspace Dori-iOS.xcworkspace \
+            -scheme DoriApp \
+            -configuration Debug \
+            -skipMacroValidation \
+            -destination "generic/platform=iOS Simulator" \
+            clean build
