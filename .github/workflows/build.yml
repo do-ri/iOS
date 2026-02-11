@@ -50,48 +50,40 @@ jobs:
         run: |
           set -euo pipefail
 
-          TEST_SCHEMES=$(
-            xcodebuild -workspace Dori-iOS.xcworkspace -list -json | /usr/bin/python3 -c '
-import json, sys
-data = json.load(sys.stdin)
-schemes = data.get("workspace", {}).get("schemes", []) or data.get("project", {}).get("schemes", [])
-tests = [scheme for scheme in schemes if scheme.endswith("Tests")]
-print("\n".join(tests))
-'
-          )
+          TEST_SCHEMES="$(xcodebuild -workspace Dori-iOS.xcworkspace -list | awk '
+            /Schemes:/ { in_schemes=1; next }
+            in_schemes && NF {
+              gsub(/^[[:space:]]+|[[:space:]]+$/, "", $0)
+              print
+            }
+          ' | grep 'Tests$' || true)"
 
-          if [ -z "$TEST_SCHEMES" ]; then
+          if [ -z "${TEST_SCHEMES}" ]; then
             echo "No *Tests schemes found. Skipping test step."
             exit 0
           fi
 
-          SIMULATOR_ID=$(
-            xcrun simctl list devices available -j | /usr/bin/python3 -c '
-import json, sys
-devices = json.load(sys.stdin).get("devices", {})
-for runtime in sorted(devices.keys(), reverse=True):
-    if "iOS" not in runtime:
-        continue
-    for device in devices[runtime]:
-        if device.get("isAvailable") and "iPhone" in device.get("name", ""):
-            print(device["udid"])
-            raise SystemExit(0)
-raise SystemExit(1)
-'
-          )
+          SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '
+            /iPhone/ && /(Shutdown|Booted)/ { print $2; exit }
+          ')"
 
-          echo "Using simulator id: $SIMULATOR_ID"
+          if [ -z "${SIMULATOR_ID}" ]; then
+            echo "No available iPhone simulator found."
+            exit 1
+          fi
+
+          echo "Using simulator id: ${SIMULATOR_ID}"
           echo "Test schemes:"
-          echo "$TEST_SCHEMES"
+          echo "${TEST_SCHEMES}"
 
           while IFS= read -r scheme; do
-            [ -z "$scheme" ] && continue
-            echo "Running tests for scheme: $scheme"
+            [ -z "${scheme}" ] && continue
+            echo "Running tests for scheme: ${scheme}"
             xcodebuild \
               -workspace Dori-iOS.xcworkspace \
-              -scheme "$scheme" \
+              -scheme "${scheme}" \
               -configuration Debug \
               -skipMacroValidation \
-              -destination "id=$SIMULATOR_ID" \
+              -destination "id=${SIMULATOR_ID}" \
               test
-          done <<< "$TEST_SCHEMES"
+          done <<< "${TEST_SCHEMES}"
