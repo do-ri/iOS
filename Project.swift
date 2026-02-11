@@ -27,6 +27,22 @@ func framework(
     )
 }
 
+func doriUnitTests(
+  name: String,
+  dependencies: [TargetDependency] = []
+) -> Target {
+  .target(
+    name: "\(name)Tests",
+    destinations: .iOS,
+    product: .unitTests,
+    bundleId: "com.arex.dori.\(name)Tests",
+    deploymentTargets: deploymentTarget,
+    sources: ["\(name)/Tests/**"],
+    dependencies: [.target(name: name)] + dependencies,
+    settings: .settings(base: commonSettings)
+  )
+}
+
 let project = Project(
     name: "Dori-iOS",
     organizationName: "com.arex",
@@ -69,6 +85,7 @@ let project = Project(
 
         // Infra
         framework(name: "DoriNetwork", path: "Projects/Infra/DoriNetwork"),
+        doriUnitTests(name: "DoriNetwork"),
         framework(name: "DoriNetworkImpl", path: "Projects/Infra/DoriNetworkImpl",
                   dependencies: [
                       .target(name: "DoriNetwork"),
