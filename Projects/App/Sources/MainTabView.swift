@@ -2,37 +2,83 @@
 //  MainTabView.swift
 //  Dori-iOS
 //
-//  Created by 강동영 on 2/5/26.
+//  Created by 강동영 on 2/11/26.
 //
 
 import SwiftUI
+import ComposableArchitecture
+import FeatureCalendar
+import FeatureHistory
+import FeatureMyPage
+
+@Reducer
+struct MainTabFeature {
+  @ObservableState
+  struct State: Equatable {
+    var selectedTab: Tab = .calendar
+    var calendar = CalendarFeature.State()
+    var history = HistoryFeature.State()
+    var myPage = MyPageFeature.State()
+
+    enum Tab: Equatable {
+      case calendar, history, myPage
+    }
+  }
+
+  enum Action: Equatable {
+    case tabSelected(State.Tab)
+    case calendar(CalendarFeature.Action)
+    case history(HistoryFeature.Action)
+    case myPage(MyPageFeature.Action)
+  }
+
+  var body: some ReducerOf<Self> {
+    Scope(state: \.calendar, action: \.calendar) {
+      CalendarFeature()
+    }
+    Scope(state: \.history, action: \.history) {
+      HistoryFeature()
+    }
+    Scope(state: \.myPage, action: \.myPage) {
+      MyPageFeature()
+    }
+    Reduce { state, action in
+      switch action {
+      case let .tabSelected(tab):
+        state.selectedTab = tab
+        return .none
+
+      case .calendar, .history, .myPage:
+        return .none
+      }
+    }
+  }
+}
 
 struct MainTabView: View {
-  @State private var selectedTab = 0
-  
+  @Bindable var store: StoreOf<MainTabFeature>
+
   var body: some View {
-    TabView(selection: $selectedTab) {
-      Text("캘린더")
-        .tabItem {
-          Label("캘린더", systemImage: "calendar")
-        }
-        .tag(0)
-      
-      Text("내역")
-        .tabItem {
-          Label("내역", systemImage: "list.bullet.rectangle")
-        }
-        .tag(1)
-      
-      Text("마이페이지")
-        .tabItem {
-          Label("마이페이지", systemImage: "person.circle")
-        }
-        .tag(2)
+    TabView(selection: $store.selectedTab.sending(\.tabSelected)) {
+      CalendarView(store: store.scope(state: \.calendar, action: \.calendar))
+        .tag(MainTabFeature.State.Tab.calendar)
+        .tabItem { Label("캘린더", systemImage: "calendar") }
+
+      HistoryView(store: store.scope(state: \.history, action: \.history))
+        .tag(MainTabFeature.State.Tab.history)
+        .tabItem { Label("내역", systemImage: "list.bullet.rectangle") }
+
+      MyPageView(store: store.scope(state: \.myPage, action: \.myPage))
+        .tag(MainTabFeature.State.Tab.myPage)
+        .tabItem { Label("마이페이지", systemImage: "person.circle") }
     }
   }
 }
 
 #Preview {
-  MainTabView()
+  MainTabView(
+    store: Store(initialState: MainTabFeature.State()) {
+      MainTabFeature()
+    }
+  )
 }
