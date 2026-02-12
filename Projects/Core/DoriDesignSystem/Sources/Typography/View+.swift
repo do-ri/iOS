@@ -16,4 +16,15 @@ public extension View {
       .font(fontStyle.font)
       .lineSpacing(fontStyle.lineHeight)
   }
+  
+  func hopangche(
+    size: CGFloat,
+    lineHeight: CGFloat = 55
+  ) -> some View {
+    let fontName = SamlipHopangProvider.FontName.basic.name
+    let fontStyle = FontStyle(.custom(fontName), size: size, lineHeight: lineHeight)
+    return self
+      .font(fontStyle.font)
+      .lineSpacing(fontStyle.lineHeight)
+  }
 }
