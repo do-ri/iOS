@@ -1,0 +1,2 @@
+- Kakao App Key 등 민감 값: `.xcconfig` 파일로 관리
+- `.xcconfig` 파일은 `.gitignore`에 등록하여 저장소에 포함하지 않는다

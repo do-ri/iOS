@@ -2,6 +2,21 @@
 
 ---
 
+## Role
+이 에이전트는 입력되는 프롬프트에 대해서 다음 2가지 역할을 수행하며 협업한다:
+
+1. 기술 아키텍처 팀 동료
+2. Devil’s Advocate (비판적 사고 담당)
+
+### 응답형식
+응답은 항상 다음 구조로 제공한다:
+
+[아키텍처 관점]
+- ...
+
+[Devil’s Advocate]
+- ...
+
 ## 1. 프로젝트 개요
 
 **앱 이름**: Dori(도리)
@@ -38,48 +53,8 @@
 ---
 
 ## 3. 아키텍처
+See @rules/architecture.md
 
-### 3.1 TCA 단방향 데이터 플로우
-
-기존 `temp/` MVVM 프로토타입 코드를 TCA로 전환한다.
-
-- 각 화면 = 1개 `@Reducer` + 1개 SwiftUI `View`
-- 상태 변경은 반드시 Action → Reducer → State 경로를 따른다
-- Side Effect는 `Effect<Action>`으로 관리한다
-
-### 3.2 Navigation 전략
-
-| 범위 | 방식 | 설명 |
-|------|------|------|
-| App Root | Tree-based | `enum State`로 Intro / MainTab 분기 |
-| Tab 내부 (History) | Stack-based | `StackState` / `StackAction`로 list → detail push |
-| 모달/시트 | Tree-based | `@Presents` / `ifLet`으로 모달 표시 |
-
-### 3.3 의존성 관리
-
-- TCA `@Dependency` 시스템 사용
-- Protocol 대신 **struct + closure** 패턴 (`DependencyKey` 준수)
-- `liveValue` / `previewValue` / `testValue` 3단 분리
-
-### 3.4 코드 패턴 참조
-
-**자동화 스킬** (boilerplate 생성용):
-
-| Skill | 용도 |
-|-------|------|
-| `/tca-reducer` | @Reducer 구조 생성 |
-| `/tca-view` | TCA Store 연결 SwiftUI View |
-| `/tca-client` | @Dependency Client 구조 |
-
-**레퍼런스 문서** (분기/도메인 지식 필요):
-
-| 문서 | 용도 |
-|------|------|
-| `docs/tca-navigation.md` | Tree/Stack/Tab/AppRoot Navigation 패턴 |
-| `docs/tca-test.md` | TestStore 기반 테스트 패턴 |
-| `docs/tca-network.md` | API Client + 에러 핸들링 |
-
----
 
 ## 4. Feature 명세
 
@@ -153,134 +128,21 @@
 ---
 
 ## 5. 네트워크 레이어
-
-### 5.1 설계 원칙
-
-- API Client를 TCA `@Dependency`로 정의 (인터페이스 우선 설계)
-- 서버 API 스펙 전달 전까지 **Mock 구현**으로 개발 진행
-- `liveValue` / `previewValue` / `testValue` 3단 분리
-
-### 5.2 API Client 구조
-
-```swift
-@DependencyClient
-struct DataClient: Sendable {
-    var fetchPersons: @Sendable () async throws -> [Person]
-    var fetchPerson: @Sendable (UUID) async throws -> Person
-    var fetchTransactions: @Sendable (Date, TransactionType?) async throws -> [Transaction]
-    var deletePerson: @Sendable (UUID) async throws -> Void
-    // ... CRUD 메서드 추가
-}
-```
-
-### 5.3 에러 핸들링
-
-```swift
-enum APIError: Error, Equatable, Sendable {
-    case networkError(String)
-    case decodingError
-    case unauthorized
-    case serverError(Int)
-    case unknown
-}
-```
-
-### 5.4 코드 패턴
-
-`/tca-network` skill 참조
-
+See @network-layer.md
 ---
 
 ## 6. Swift 6 Concurrency 가이드
-
+See @swift-language-guide.md
 ### 6.1 프로젝트 설정
 
 - `MainActor` 기본 격리 (`SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)
 - Approachable Concurrency ON (`SWIFT_APPROACHABLE_CONCURRENCY = YES`)
 
-### 6.2 규칙
-
-| 항목 | 규칙 |
-|------|------|
-| 도메인 모델 | `Sendable` + `Equatable` 준수 |
-| Dependency Client struct | `Sendable` 준수 |
-| Client closure 프로퍼티 | `@Sendable` 어노테이션 |
-| `@unchecked Sendable` | **사용 금지** |
-| TCA Effect 내 async 작업 | `.run { send in }` 패턴 사용 |
-
-### 6.3 도메인 모델 예시
-
-```swift
-struct Person: Identifiable, Codable, Equatable, Sendable {
-    let id: UUID
-    var name: String
-    var relationship: Relationship
-    var transactions: [Transaction]
-}
-```
-
-### 6.4 Effect 패턴
-
-```swift
-case .loginButtonTapped:
-    state.isLoading = true
-    return .run { send in
-        let result = await Result {
-            try await kakaoAuthClient.login()
-        }
-        await send(.loginResponse(result))
-    }
-```
-
 ---
 
 ## 7. 디렉토리 구조
 
-```
-Dori-iOS/
-  DoriApp.swift
-  Core/
-    Models/               → Person, Transaction, Relationship, TransactionType
-    Clients/              → DataClient, KeychainClient, KakaoAuthClient
-      DataClient.swift
-      DataClient+Live.swift
-      DataClient+Mock.swift
-      KeychainClient.swift
-      KeychainClient+Live.swift
-      KakaoAuthClient.swift
-      KakaoAuthClient+Live.swift
-    DesignSystem/
-      Components/         → AmountLabel, PersonCardView, DoriBarGraphView,
-                            TransactionRowView, DateHeaderView,
-                            DoriSegmentControl, MonthSelectorView,
-                            CalendarGridView, PrimaryButton,
-                            DoriCommonAlert, AlertButton,
-                            FloatingActionButton
-      Extensions/         → Color+Extensions, Date+Extensions, Int+Extensions
-  Feature/
-    App/                  → AppFeature (Root reducer), AppView
-      AppFeature.swift
-      AppView.swift
-    Intro/                → IntroFeature, IntroView
-      IntroFeature.swift
-      IntroView.swift
-    MainTab/              → MainTabFeature, MainTabView
-      MainTabFeature.swift
-      MainTabView.swift
-    Calendar/             → CalendarFeature, CalendarView
-      CalendarFeature.swift
-      CalendarView.swift
-    History/
-      HistoryList/        → HistoryListFeature, HistoryListView
-        HistoryListFeature.swift
-        HistoryListView.swift
-      HistoryDetail/      → HistoryDetailFeature, HistoryDetailView
-        HistoryDetailFeature.swift
-        HistoryDetailView.swift
-    MyPage/               → MyPageFeature, MyPageView
-      MyPageFeature.swift
-      MyPageView.swift
-```
+모듈화 구조에 따라감
 
 ### 의존 방향
 
@@ -334,44 +196,46 @@ struct CalendarFeature {
 - UI 표시 문자열: **한국어** (`"로그아웃"`, `"주도리"`, `"받도리"`)
 - 코드 식별자: **영어** (`loginButtonTapped`, `fetchPersons`)
 
+### 8.4 파일 헤더 템플릿
+
+- 신규 생성 파일(`.swift`, `.xcconfig`)에는 아래 헤더 템플릿을 파일 최상단에 추가한다.
+- 작성자명은 AI 사용 여부와 무관하게 반드시 `강동영`으로 유지한다.
+
+```swift
+//
+//  {FileName}
+//  Dori-iOS
+//
+//  Created by 강동영 on {M/d/yy}.
+//
+```
+
 ---
 
 ## 9. Git 전략
 
 ### 9.1 브랜치 구조
 
-| 브랜치 | 용도 |
-|--------|------|
-| `master` | 릴리즈 |
-| `develop` | 통합/CI |
-| `feature/{issue}-{desc}` | 기능 개발 |
+
+- `main`: 릴리즈
+- `fix`: feature, release의 수정사항
+- `develop`: 통합/CI 
+- `feature/{issue}-{desc}`: 기능 개발
 
 ### 9.2 PR 흐름
 
 ```
-feature/* → develop → master
+feature/* → develop → main
 ```
 
 ### 9.3 민감 설정 관리
-
-- Kakao App Key 등 민감 값: `.xcconfig` 파일로 관리
-- `.xcconfig` 파일은 `.gitignore`에 등록하여 저장소에 포함하지 않는다
+See @rules/frontend/security.md
 
 ---
 
 ## 10. 테스트 전략
+See @rules/frontend/test-strategy.md
 
-### 10.1 Reducer 테스트
-
-- TCA `TestStore`를 사용하여 Reducer 로직을 검증한다
-- `withDependencies`로 Mock 의존성을 주입한다
-- `store.send()` → State 변경 검증
-- `store.receive()` → Effect 결과 검증
-- 코드 패턴: `/tca-test` skill 참조
-
-### 10.2 유틸리티 테스트
-
-- `Date+Extensions`, `Int+Extensions` 등 Extension 유틸 함수 단위 테스트
 
 ### 10.3 MVP 제외 항목
 
