@@ -48,6 +48,7 @@ public enum FontManager {
       "Pretendard-Regular",
       "Pretendard-Medium",
       "Pretendard-SemiBold",
+      "SDSamliphopangcheTTFBasic"
     ]
     fontNames.forEach { registerFontIfNeeded($0) }
   }

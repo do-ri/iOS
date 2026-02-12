@@ -15,31 +15,6 @@ public protocol FontProvider {
   var bold: String? { get }
 }
 
-// MARK: - Pretendard Font Provider
-public struct PretendardProvider: FontProvider {
-  public let regular: String = FontName.regular.name
-  public let medium: String = FontName.medium.name
-  public let semiBold: String = FontName.semiBold.name
-  public let bold: String? = FontName.bold.name
-  
-  public init() {}
-}
-
-extension PretendardProvider {
-  enum FontName {
-    case regular, medium, semiBold, bold
-    
-    var name: String {
-      switch self {
-      case .regular: return "Pretendard-Regular"
-      case .medium: return "Pretendard-Medium"
-      case .semiBold: return "Pretendard-SemiBold"
-      case .bold: return "Pretendard-Bold"
-      }
-    }
-  }
-}
-
 // MARK: - Font Weight Enum
 public enum FontWeight {
   case regular, medium, semiBold, bold
