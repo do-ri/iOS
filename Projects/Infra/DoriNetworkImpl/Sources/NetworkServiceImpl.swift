@@ -16,9 +16,13 @@ public final class NetworkServiceImpl: NetworkService {
   private let decoder: JSONDecoder
   private let logger: NetworkLogable?
   
-  public init(configuration: URLSessionConfiguration, logger: NetworkLogable? = nil) {
+  public init(
+    configuration: URLSessionConfiguration,
+    logger: NetworkLogable? = nil,
+    interceptor: RequestInterceptor? = nil
+  ) {
     configuration.timeoutIntervalForRequest = 20
-    self.session = Session(configuration: configuration)
+    self.session = Session(configuration: configuration, interceptor: interceptor)
     self.logger = logger
     self.decoder = JSONDecoder()
   }
