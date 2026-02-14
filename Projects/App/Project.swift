@@ -10,7 +10,10 @@ import ProjectDescriptionHelpers
 
 let project = Project.dori(
   targets: [
-    DoriAppTarget.make(
+    .app(
+      name: "DoriApp",
+      bundleId: Environment.App.baseBundleId,
+      resources: [.glob(pattern: "Resources/**", excluding: ["Resources/info.plist"])],
       dependencies: [
         DoriModules.onboarding.module.projectDependency,
         DoriModules.calendar.module.projectDependency,
@@ -22,8 +25,8 @@ let project = Project.dori(
         DoriModules.keychain.module.projectDependency,
         DoriModules.designSystem.module.projectDependency,
         DoriModules.core.module.projectDependency,
-        DoriDependency.composableArchitecture,
-      ]
+        .external(.composableArchitecture)
+      ],
     ),
   ]
 )
