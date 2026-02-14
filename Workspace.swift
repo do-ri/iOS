@@ -9,6 +9,6 @@ import ProjectDescription
 import ProjectDescriptionHelpers
 
 let workspace = Workspace(
-  name: DoriManifest.projectName,
+  name: Environment.projectName,
   projects: DoriLayer.allCases.map(\.projectPath)
 )
