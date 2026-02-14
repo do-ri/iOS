@@ -27,3 +27,7 @@ public struct SuccessResponse<T: Decodable & Sendable>: Decodable, Sendable {
     public let data: T?
     public let error: ApiErrorResponse?
 }
+
+public struct EmptyResponse: Codable, Equatable, Sendable {
+    public init() {}
+}

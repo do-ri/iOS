@@ -77,6 +77,8 @@ public final class NetworkServiceImpl: NetworkService {
       return .delete
     case .PATCH:
       return .patch
+    @unknown default:
+      fatalError()
     }
   }
   
@@ -122,3 +124,4 @@ public final class NetworkServiceImpl: NetworkService {
     }
   }
 }
+
