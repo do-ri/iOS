@@ -14,10 +14,10 @@ let project = Project.dori(
     .doriFramework(
       DoriModules.kakaoAuth.module,
       dependencies: [
-        DoriDependency.composableArchitecture,
-        DoriDependency.kakaoSDKCommon,
-        DoriDependency.kakaoSDKAuth,
-        DoriDependency.kakaoSDKUser,
+        .external(.composableArchitecture),
+        .external(.kakaoSDKCommon),
+        .external(.kakaoSDKAuth),
+        .external(.kakaoSDKUser)
       ]
     ),
     .doriFramework(
