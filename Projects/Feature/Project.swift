@@ -18,20 +18,24 @@ let project = Project.dori(
         DoriModules.core.module.projectDependency,
         DoriModules.network.module.projectDependency,
         DoriModules.kakaoAuth.module.projectDependency,
-        DoriDependency.composableArchitecture,
+        .external(.composableArchitecture)
       ]
     ),
     .doriFramework(
       DoriModules.calendar.module,
-      dependencies: [DoriDependency.composableArchitecture]
+      dependencies: [.external(.composableArchitecture)]
     ),
     .doriFramework(
       DoriModules.history.module,
-      dependencies: [DoriDependency.composableArchitecture]
+      dependencies: [.external(.composableArchitecture)]
     ),
     .doriFramework(
       DoriModules.myPage.module,
-      dependencies: [DoriDependency.composableArchitecture]
+      dependencies: [
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.network.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
     ),
   ]
 )
