@@ -31,7 +31,7 @@ public struct SplashView: View {
             .hopangche(size: 55)
             .foregroundStyle(.main)
           Text(prop.subtitle)
-            .pretendard(.caption(.c18))
+            .pretendard(.regular(.r18))
             .foregroundStyle(.main)
         }
         

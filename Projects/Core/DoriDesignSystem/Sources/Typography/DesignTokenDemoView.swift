@@ -47,13 +47,13 @@ fileprivate struct DesignTokenDemoView: View {
               .frame(height: 50)
               .foregroundStyle(.grey100)
             Text("도리 화이팅")
-              .pretendard(.heading(heading))
+              .pretendard(.headline(heading))
           }
         }
       } header: {
         Text("헤딩")
           .padding()
-          .pretendard(.heading(.h15))
+          .pretendard(.bold(.b15))
           .foregroundStyle(.doriWhite)
           .frame(maxWidth: .infinity)
           .background(.secondary)
@@ -73,7 +73,7 @@ fileprivate struct DesignTokenDemoView: View {
       } header: {
         Text("서브 타이틀")
           .padding()
-          .pretendard(.heading(.h15))
+          .pretendard(.bold(.b15))
           .foregroundStyle(.doriWhite)
           .frame(maxWidth: .infinity)
           .background(.secondary)
@@ -93,7 +93,7 @@ fileprivate struct DesignTokenDemoView: View {
       } header: {
         Text("바디")
           .padding()
-          .pretendard(.heading(.h15))
+          .pretendard(.bold(.b15))
           .foregroundStyle(.doriWhite)
           .frame(maxWidth: .infinity)
           .background(.main)
@@ -113,7 +113,7 @@ fileprivate struct DesignTokenDemoView: View {
       } header: {
         Text("캡션")
           .padding()
-          .pretendard(.heading(.h15))
+          .pretendard(.bold(.b15))
           .foregroundStyle(.doriWhite)
           .frame(maxWidth: .infinity)
           .background(.main)
@@ -142,10 +142,10 @@ extension DesignTokenDemoView {
     DoriColors.doriBlack.color
   ]
   
-  private static let typoHeadings: [TypoStyle.Heading] = TypoStyle.Heading.allCases
-  private static let typoSubTitles: [TypoStyle.SubTitle] = TypoStyle.SubTitle.allCases
-  private static let typoBodys: [TypoStyle.Body] = TypoStyle.Body.allCases
-  private static let typoCaptions: [TypoStyle.Caption] = TypoStyle.Caption.allCases
+  private static let typoHeadings: [TypoSemantic.Heading] = TypoSemantic.Heading.allCases
+  private static let typoSubTitles: [TypoSemantic.SubTitle] = TypoSemantic.SubTitle.allCases
+  private static let typoBodys: [TypoSemantic.Body] = TypoSemantic.Body.allCases
+  private static let typoCaptions: [TypoSemantic.Caption] = TypoSemantic.Caption.allCases
 }
 
 #Preview {

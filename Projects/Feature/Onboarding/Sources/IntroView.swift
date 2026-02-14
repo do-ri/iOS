@@ -105,14 +105,14 @@ public struct IntroView: View {
                   .hopangche(size: 55)
                   .foregroundStyle(.main)
                 Text(prop.subtitle)
-                  .pretendard(.caption(.c18))
+                  .pretendard(.regular(.r18))
                   .foregroundStyle(.main)
               } else {
                 Text(prop.title)
-                  .pretendard(.subtitle(.t20))
+                  .pretendard(.subtitle(.sb1))
                   .foregroundStyle(.main)
                 Text(prop.subtitle)
-                  .pretendard(.subtitle(.t20))
+                  .pretendard(.subtitle(.sb1))
                   .foregroundStyle(.main)
               }
               
@@ -142,7 +142,7 @@ public struct IntroView: View {
       store.send(.kakaoLoginButtonTapped)
     } label: {
       Text("카카오로 시작하기")
-        .pretendard(.subtitle(.t15))
+        .pretendard(.semiBold(.sb15))
         .foregroundStyle(DoriColors.doriBlack.color)
         .frame(maxWidth: .infinity)
         .frame(height: 46)
