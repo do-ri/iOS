@@ -9,12 +9,20 @@ import SwiftUI
 
 public extension View {
   // MARK: - font, linespacing 적용되어있음 (기본값: Pretendard)
-  func pretendard(_ style: TypoStyle) -> some View {
+  func pretendard(_ semantic: TypoSemantic) -> some View {
     let pretendardProvider = PretendardProvider()
-    let fontStyle = style.getFontStyle(with: pretendardProvider)
+    let fontStyle = semantic.getFontStyle(with: pretendardProvider)
     return self
       .font(fontStyle.font)
-      .lineSpacing(fontStyle.lineHeight)
+      .lineSpacing(fontStyle.lineSpacing)
+  }
+  
+  func pretendard(_ token: TypoToken) -> some View {
+    let pretendardProvider = PretendardProvider()
+    let fontStyle = token.getFontStyle(with: pretendardProvider)
+    return self
+      .font(fontStyle.font)
+      .lineSpacing(fontStyle.lineSpacing)
   }
   
   func hopangche(
@@ -22,9 +30,9 @@ public extension View {
     lineHeight: CGFloat = 55
   ) -> some View {
     let fontName = SamlipHopangProvider.FontName.basic.name
-    let fontStyle = FontStyle(.custom(fontName), size: size, lineHeight: lineHeight)
+    let fontStyle = FontStyle(.custom(fontName), size: size)
     return self
       .font(fontStyle.font)
-      .lineSpacing(fontStyle.lineHeight)
+      .lineSpacing(fontStyle.lineSpacing)
   }
 }
