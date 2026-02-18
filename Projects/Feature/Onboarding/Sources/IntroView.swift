@@ -170,41 +170,6 @@ public struct IntroView: View {
   }
 }
 
-struct PageIndicator: View {
-  let count: Int
-  @Binding var currentIndex: Int?
-  
-  init(
-    count: Int,
-    currentIndex: Binding<Int?>
-  ) {
-    self.count = count
-    if currentIndex.wrappedValue == nil {
-      self._currentIndex = .constant(0)
-    } else {
-      self._currentIndex = currentIndex
-    }
-    
-  }
-  
-  var body: some View {
-    HStack {
-      ForEach(0..<count, id: \.self) { index in
-        Circle()
-          .frame(
-            width: 10,
-            height: 10
-          )
-          .foregroundStyle(
-            currentIndex == index
-            ? DoriColors.main.color
-            : DoriColors.grey200.color
-          )
-      }
-    }
-  }
-}
-
 
 #Preview {
   IntroView(
