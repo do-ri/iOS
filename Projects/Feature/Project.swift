@@ -22,12 +22,29 @@ let project = Project.dori(
       ]
     ),
     .doriFramework(
+      DoriModules.addDori.module,
+      dependencies: [
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.core.module.projectDependency,
+        DoriModules.network.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
+    ),
+    .doriFramework(
       DoriModules.calendar.module,
       dependencies: [.external(.composableArchitecture)]
+      dependencies: [
+        DoriModules.addDori.module.targetDependency,
+        .external(.composableArchitecture)
+      ]
     ),
     .doriFramework(
       DoriModules.history.module,
       dependencies: [.external(.composableArchitecture)]
+      dependencies: [
+        DoriModules.addDori.module.targetDependency,
+        .external(.composableArchitecture)
+      ]
     ),
     .doriFramework(
       DoriModules.myPage.module,

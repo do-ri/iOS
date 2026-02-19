@@ -36,6 +36,16 @@ public extension View {
   }
 }
 
+public extension Shape {
+  func stroke(_ colors: UIAsset.Colors, lineWidth: CGFloat) -> some View {
+    self.stroke(colors.color, lineWidth: lineWidth)
+  }
+  
+  func fill(_ colors: UIAsset.Colors) -> some View {
+    self.fill(colors.color)
+  }
+}
+
 public extension Image {
   init(_ images: {{enumName}}.Images) {
     self = images.image
