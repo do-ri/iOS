@@ -50,6 +50,10 @@ struct AppFeature {
       case .intro(.delegate(.loginSucceeded)):
         state.route = .mainTab
         return .none
+        
+      case .mainTab(.delegate(.needsAuthentication)):
+        state.route = .intro
+        return .none
 
       case .splash, .intro, .mainTab:
         return .none

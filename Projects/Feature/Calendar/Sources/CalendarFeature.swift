@@ -7,6 +7,8 @@
 
 import ComposableArchitecture
 import SwiftUI
+import DoriDesignSystem
+import FeatureAddDori
 
 @Reducer
 public struct CalendarFeature {
@@ -14,30 +16,75 @@ public struct CalendarFeature {
 
   @ObservableState
   public struct State: Equatable, Sendable {
+    @Presents public var addDori: AddDoriFeature.State?
+
     public init() {}
   }
 
   public enum Action: Equatable, Sendable {
     case onAppear
+    case fabTapped
+    case addDori(PresentationAction<AddDoriFeature.Action>)
   }
 
-  public func reduce(into state: inout State, action: Action) -> Effect<Action> {
-    switch action {
-    case .onAppear:
-      return .none
+  public var body: some ReducerOf<Self> {
+    Reduce { state, action in
+      switch action {
+      case .onAppear:
+        return .none
+
+      case .fabTapped:
+        state.addDori = AddDoriFeature.State(mode: .create)
+        return .none
+
+      case .addDori(.presented(.delegate(.doriCreated))):
+        state.addDori = nil
+        return .none
+
+      case .addDori(.presented(.delegate(.dismissed))):
+        state.addDori = nil
+        return .none
+
+      case .addDori:
+        return .none
+      }
+    }
+    .ifLet(\.$addDori, action: \.addDori) {
+      AddDoriFeature()
     }
   }
 }
 
 public struct CalendarView: View {
-  let store: StoreOf<CalendarFeature>
+  @Bindable var store: StoreOf<CalendarFeature>
 
   public init(store: StoreOf<CalendarFeature>) {
     self.store = store
   }
 
   public var body: some View {
-    Text("캘린더")
+    NavigationStack {
+      ZStack(alignment: .bottomTrailing) {
+        Text("캘린더")
+          .frame(
+            maxWidth: .infinity,
+            maxHeight: .infinity
+          )
+
+        FloatingActionButton {
+          store.send(.fabTapped)
+        }
+        .padding(20)
+      }
       .onAppear { store.send(.onAppear) }
+      .navigationDestination(
+        item: $store.scope(
+          state: \.addDori,
+          action: \.addDori
+        )
+      ) { addDoriStore in
+        AddDoriView(store: addDoriStore)
+      }
+    }
   }
 }
