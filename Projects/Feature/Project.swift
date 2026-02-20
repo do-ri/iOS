@@ -22,12 +22,31 @@ let project = Project.dori(
       ]
     ),
     .doriFramework(
+      DoriModules.addDori.module,
+      dependencies: [
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.core.module.projectDependency,
+        DoriModules.network.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
+    ),
+    .doriFramework(
       DoriModules.calendar.module,
-      dependencies: [.external(.composableArchitecture)]
+      dependencies: [
+        DoriModules.addDori.module.targetDependency,
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.core.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
     ),
     .doriFramework(
       DoriModules.history.module,
-      dependencies: [.external(.composableArchitecture)]
+      dependencies: [
+        DoriModules.addDori.module.targetDependency,
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.core.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
     ),
     .doriFramework(
       DoriModules.myPage.module,
@@ -37,5 +56,20 @@ let project = Project.dori(
         .external(.composableArchitecture)
       ]
     ),
+//    .app(
+//      name: "MyPageDemoApp",
+//      bundleId: "com.arex.dori.mypage.demo",
+//      infoPlist: .extendingDefault(with: [
+//        "CFBundleDisplayName": "Home Demo",
+//        "UILaunchStoryboardName": "LaunchScreen",
+//        "UISupportedInterfaceOrientations": .array([
+//          .string("UIInterfaceOrientationPortrait")
+//        ])
+//      ]),
+//      sources: ["Demo/Sources/**"],
+//      resources: ["Demo/Resources/**"],
+//      dependencies: [],
+//      settings: .demoAppSettings,
+//    ),
   ]
 )

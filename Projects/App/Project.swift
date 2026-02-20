@@ -16,6 +16,7 @@ let project = Project.dori(
       resources: [.glob(pattern: "Resources/**", excluding: ["Resources/info.plist"])],
       dependencies: [
         DoriModules.onboarding.module.projectDependency,
+        DoriModules.addDori.module.projectDependency,
         DoriModules.calendar.module.projectDependency,
         DoriModules.history.module.projectDependency,
         DoriModules.myPage.module.projectDependency,

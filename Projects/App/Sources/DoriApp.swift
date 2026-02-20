@@ -12,6 +12,7 @@ import DoriNetwork
 import DoriNetworkImpl
 import FeatureMyPage
 import FeatureOnboarding
+import FeatureAddDori
 import PlatformKakaoAuth
 import PlatformKeychain
 
@@ -43,6 +44,9 @@ struct DoriApp: App {
         networkService: networkService,
         tokenStore: tokenStore
       )
+      
+      $0.addDoriAPIClient = .live(networkService: networkService)
+      
       $0.myPageAPIClient = .live(
         networkService: networkService,
         tokenStore: tokenStore
