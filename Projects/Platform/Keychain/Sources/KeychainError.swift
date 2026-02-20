@@ -25,7 +25,7 @@ extension KeychainError: LocalizedError {
     case .invalidData:
       return "유효하지 않은 데이터입니다."
     case .unexpectedPasswordData:
-          return "암호화된 데이터를 얻기 위해 예상치 못한 오류가 발생했습니다."
+      return "암호화된 데이터를 얻기 위해 예상치 못한 오류가 발생했습니다."
     case .unexpected(let status):
       return "Keychain 에러: \(status)"
     }
