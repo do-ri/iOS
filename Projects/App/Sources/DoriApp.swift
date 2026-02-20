@@ -10,6 +10,7 @@ import ComposableArchitecture
 import DoriDesignSystem
 import DoriNetwork
 import DoriNetworkImpl
+import FeatureMyPage
 import FeatureOnboarding
 import PlatformKakaoAuth
 import PlatformKeychain
@@ -39,6 +40,10 @@ struct DoriApp: App {
       AppFeature()
     } withDependencies: {
       $0.kakaoServerLoginClient = .live(
+        networkService: networkService,
+        tokenStore: tokenStore
+      )
+      $0.myPageAPIClient = .live(
         networkService: networkService,
         tokenStore: tokenStore
       )

@@ -35,6 +35,7 @@ public enum TypoStyle {
   public func getFontStyle(with provider: FontProvider) -> FontStyle {
     let spec = styleSpec
     let fontName = spec.weight.getFontName(from: provider)
+
     return FontStyle(.custom(fontName), size: spec.size)
   }
 }

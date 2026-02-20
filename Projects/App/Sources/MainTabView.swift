@@ -30,6 +30,11 @@ struct MainTabFeature {
     case calendar(CalendarFeature.Action)
     case history(HistoryFeature.Action)
     case myPage(MyPageFeature.Action)
+    case delegate(Delegate)
+
+    enum Delegate: Equatable {
+      case needsAuthentication
+    }
   }
 
   var body: some ReducerOf<Self> {
@@ -48,7 +53,16 @@ struct MainTabFeature {
         state.selectedTab = tab
         return .none
 
-      case .calendar, .history, .myPage:
+      case .myPage(.delegate(.didLogout)):
+        return .send(.delegate(.needsAuthentication))
+
+      case .myPage(.delegate(.didWithdraw)):
+        return .send(.delegate(.needsAuthentication))
+
+      case .myPage(.delegate(.authExpired)):
+        return .send(.delegate(.needsAuthentication))
+
+      case .calendar, .history, .myPage, .delegate:
         return .none
       }
     }
