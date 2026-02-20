@@ -11,6 +11,7 @@ import DoriDesignSystem
 import DoriNetwork
 import DoriNetworkImpl
 import FeatureOnboarding
+import FeatureAddDori
 import PlatformKakaoAuth
 import PlatformKeychain
 
@@ -42,6 +43,7 @@ struct DoriApp: App {
         networkService: networkService,
         tokenStore: tokenStore
       )
+      $0.addDoriAPIClient = .live(networkService: networkService)
     }
 
     FontManager.registerAllFonts()
