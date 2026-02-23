@@ -54,11 +54,11 @@ struct AddDoriFeatureTests {
   @Suite("초기 상태 확인")
   struct InitialStateTests {
 
-    @Test("create 모드 기본값 확인")
-    func createModeInitialState() {
-      let state = AddDoriFeature.State(mode: .create)
+    @Test("기본값 확인")
+    func initialState() {
+      let state = AddDoriFeature.State()
       #expect(state.currentPage == 0)
-      #expect(state.transactionType == .given)
+      #expect(state.transactionType == .judori)
       #expect(state.searchQuery == "")
       #expect(state.searchResults == [])
       #expect(state.selectedPartner == nil)
@@ -71,50 +71,6 @@ struct AddDoriFeatureTests {
       #expect(state.isVisited == .yes)
       #expect(state.memo == "")
       #expect(state.isSubmitting == false)
-      #expect(state.navigationTitle == "내역 추가")
-    }
-
-    @Test("edit 모드 - known relationship/eventType 초기화")
-    func editModeWithKnownTypes() {
-      let dto = DoriResponsesDTO.mock(
-        direction: "받도리",
-        partnerName: "이영희",
-        relationship: "가족",
-        eventType: "장례식",
-        amount: 50_000,
-        isVisited: false,
-        memo: "메모 내용"
-      )
-      let state = AddDoriFeature.State(mode: .edit(dto))
-
-      #expect(state.transactionType == .received)
-      #expect(state.searchQuery == "이영희")
-      #expect(state.selectedRelationship == .family)
-      #expect(state.customRelationship == "")
-      #expect(state.selectedEventType == .funeral)
-      #expect(state.customEventType == "")
-      #expect(state.amountText == "50,000")
-      #expect(state.isVisited == .no)
-      #expect(state.memo == "메모 내용")
-      #expect(state.navigationTitle == "내역 수정")
-    }
-
-    @Test("edit 모드 - unknown relationship 초기화")
-    func editModeWithUnknownRelationship() {
-      let dto = DoriResponsesDTO.mock(relationship: "동네친구")
-      let state = AddDoriFeature.State(mode: .edit(dto))
-
-      #expect(state.selectedRelationship == .other)
-      #expect(state.customRelationship == "동네친구")
-    }
-
-    @Test("edit 모드 - unknown eventType 초기화")
-    func editModeWithUnknownEventType() {
-      let dto = DoriResponsesDTO.mock(eventType: "회갑잔치")
-      let state = AddDoriFeature.State(mode: .edit(dto))
-
-      #expect(state.selectedEventType == .other)
-      #expect(state.customEventType == "회갑잔치")
     }
   }
 
@@ -125,21 +81,21 @@ struct AddDoriFeatureTests {
 
     @Test("isPage1Valid - searchQuery만 있을 때 유효")
     func page1ValidWithSearchQuery() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.searchQuery = "홍길동"
       #expect(state.isPage1Valid == true)
     }
 
     @Test("isPage1Valid - selectedPartner만 있을 때 유효")
     func page1ValidWithSelectedPartner() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedPartner = .mock()
       #expect(state.isPage1Valid == true)
     }
 
     @Test("isPage1Valid - 공백 searchQuery, partner 없으면 무효")
     func page1InvalidWhenEmpty() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.searchQuery = "   "
       state.selectedPartner = nil
       #expect(state.isPage1Valid == false)
@@ -147,7 +103,7 @@ struct AddDoriFeatureTests {
 
     @Test("isPage2Valid - other 관계에 customRelationship 없으면 무효")
     func page2InvalidWithOtherRelationshipEmpty() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedRelationship = .other
       state.customRelationship = ""
       #expect(state.isPage2Valid == false)
@@ -155,7 +111,7 @@ struct AddDoriFeatureTests {
 
     @Test("isPage2Valid - other 관계에 customRelationship 있으면 유효")
     func page2ValidWithOtherRelationshipFilled() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedRelationship = .other
       state.customRelationship = "동창"
       state.selectedEventType = .wedding
@@ -164,7 +120,7 @@ struct AddDoriFeatureTests {
 
     @Test("isPage3Valid - 유효한 금액이면 true")
     func page3ValidWithAmount() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.amountText = "50000"
       state.isVisited = .yes
       #expect(state.isPage3Valid == true)
@@ -172,21 +128,21 @@ struct AddDoriFeatureTests {
 
     @Test("isPage3Valid - 금액 0이면 무효")
     func page3InvalidWithZeroAmount() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.amountText = "0"
       #expect(state.isPage3Valid == false)
     }
 
     @Test("isPage3Valid - 금액 비어있으면 무효")
     func page3InvalidWithEmptyAmount() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.amountText = ""
       #expect(state.isPage3Valid == false)
     }
 
     @Test("isPage3Valid - 포맷된 문자열 '100,000'으로도 유효")
     func page3ValidWithFormattedAmount() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.amountText = "100,000"
       state.isVisited = .yes
       #expect(state.isPage3Valid == true)
@@ -194,7 +150,7 @@ struct AddDoriFeatureTests {
 
     @Test("isPage3Valid - 공백 문자 포함된 포맷 문자열도 유효")
     func page3ValidWithLargeFormattedAmount() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.amountText = "1,000,000"
       state.isVisited = .yes
       #expect(state.isPage3Valid == true)
@@ -209,7 +165,7 @@ struct AddDoriFeatureTests {
     @Test("nextPageTapped - 0에서 1로 이동")
     func nextPageFrom0To1() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -221,7 +177,7 @@ struct AddDoriFeatureTests {
 
     @Test("nextPageTapped - 1에서 2로 이동")
     func nextPageFrom1To2() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.currentPage = 1
 
       let store = TestStore(
@@ -237,7 +193,7 @@ struct AddDoriFeatureTests {
 
     @Test("nextPageTapped - 2에서 no-op")
     func nextPageFrom2IsNoOp() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.currentPage = 2
 
       let store = TestStore(
@@ -251,7 +207,7 @@ struct AddDoriFeatureTests {
 
     @Test("previousPageTapped - 2에서 1로 이동")
     func previousPageFrom2To1() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.currentPage = 2
 
       let store = TestStore(
@@ -267,7 +223,7 @@ struct AddDoriFeatureTests {
 
     @Test("previousPageTapped - 1에서 0으로 이동")
     func previousPageFrom1To0() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.currentPage = 1
 
       let store = TestStore(
@@ -284,7 +240,7 @@ struct AddDoriFeatureTests {
     @Test("previousPageTapped - 0에서 no-op")
     func previousPageFrom0IsNoOp() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -301,13 +257,13 @@ struct AddDoriFeatureTests {
     @Test("transactionTypeChanged - 받도리로 변경")
     func transactionTypeChanged() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
 
-      await store.send(.transactionTypeChanged(.received)) {
-        $0.transactionType = .received
+      await store.send(.transactionTypeChanged(.baddori)) {
+        $0.transactionType = .baddori
       }
     }
 
@@ -316,7 +272,7 @@ struct AddDoriFeatureTests {
       let mockResults = [DoriResponsesDTO.mock(partnerName: "김철수")]
 
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       } withDependencies: {
@@ -339,7 +295,7 @@ struct AddDoriFeatureTests {
     @Test("searchQueryChanged - 10자 초과 시 앞 10자만 저장")
     func searchQueryChangedTruncatedAt10() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       } withDependencies: {
@@ -362,7 +318,7 @@ struct AddDoriFeatureTests {
 
     @Test("searchQueryChanged - 빈 문자열 입력 시 results 초기화, isSearching = false")
     func searchQueryChangedWithEmptyStringClearsResults() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchQuery = "김"
       initial.searchResults = [.mock()]
       initial.isSearching = true
@@ -383,7 +339,7 @@ struct AddDoriFeatureTests {
 
     @Test("searchQueryChanged - 공백만 입력 시 results 초기화")
     func searchQueryChangedWithWhitespaceOnlyClearsResults() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchResults = [.mock()]
 
       let store = TestStore(
@@ -402,7 +358,7 @@ struct AddDoriFeatureTests {
 
     @Test("searchResponse - results 업데이트 및 isSearching = false")
     func searchResponseUpdatesResults() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.isSearching = true
 
       let store = TestStore(
@@ -420,7 +376,7 @@ struct AddDoriFeatureTests {
 
     @Test("partnerSelected - 파트너 선택 시 searchQuery, relationship 업데이트")
     func partnerSelectedUpdatesState() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchResults = [.mock(partnerName: "박민수", relationship: "회사")]
 
       let store = TestStore(
@@ -445,7 +401,7 @@ struct AddDoriFeatureTests {
     @Test("partnerSelected - unknown relationship 파트너 선택 시 customRelationship 설정")
     func partnerSelectedWithUnknownRelationship() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -466,7 +422,7 @@ struct AddDoriFeatureTests {
 
     @Test("partnerSelected(nil) - 선택 해제")
     func partnerDeselected() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.selectedPartner = .mock()
 
       let store = TestStore(
@@ -484,7 +440,7 @@ struct AddDoriFeatureTests {
     func clearSearchTappedResetsSearchState() async {
       // clearSearchTapped Reducer는 isSearching을 별도로 변경하지 않으므로
       // initial에서 isSearching은 기본값(false)으로 유지한다
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchQuery = "김철수"
       initial.searchResults = [.mock()]
       initial.selectedPartner = .mock()
@@ -511,7 +467,7 @@ struct AddDoriFeatureTests {
     @Test("relationshipSelected - 관계 변경")
     func relationshipSelected() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -523,7 +479,7 @@ struct AddDoriFeatureTests {
 
     @Test("relationshipSelected - other 아닌 값 선택 시 customRelationship 초기화")
     func relationshipSelectedClearsCustomWhenNotOther() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.selectedRelationship = .other
       initial.customRelationship = "동창"
 
@@ -542,7 +498,7 @@ struct AddDoriFeatureTests {
     @Test("customRelationshipChanged - 10자 이내 저장")
     func customRelationshipChangedWithinLimit() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -555,7 +511,7 @@ struct AddDoriFeatureTests {
     @Test("customRelationshipChanged - 10자 초과 시 앞 10자만 저장")
     func customRelationshipChangedTruncatedAt10() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -569,7 +525,7 @@ struct AddDoriFeatureTests {
     @Test("eventTypeSelected - 경조사 변경")
     func eventTypeSelected() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -581,7 +537,7 @@ struct AddDoriFeatureTests {
 
     @Test("eventTypeSelected - other 아닌 값 선택 시 customEventType 초기화")
     func eventTypeSelectedClearsCustomWhenNotOther() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.selectedEventType = .other
       initial.customEventType = "회갑잔치"
 
@@ -600,7 +556,7 @@ struct AddDoriFeatureTests {
     @Test("customEventTypeChanged - 10자 초과 시 앞 10자만 저장")
     func customEventTypeChangedTruncatedAt10() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -620,7 +576,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - 빈 문자열 입력 시 빈 문자열 저장")
     func amountTextChangedWithEmptyString() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -633,7 +589,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - 문자 포함 입력 시 숫자만 추출 후 포맷")
     func amountTextChangedFiltersNumbers() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -646,7 +602,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - 100,000 포맷팅 검증")
     func amountTextChangedFormatsDecimal() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -659,7 +615,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - 순수 숫자 입력")
     func amountTextChangedWithPureNumbers() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -672,7 +628,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - 21억 초과 입력 시 Int32.max로 클리핑")
     func amountTextChangedClipsAtInt32Max() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -685,7 +641,7 @@ struct AddDoriFeatureTests {
     @Test("amountTextChanged - Int32.max 정확히 입력 시 그대로 저장")
     func amountTextChangedWithExactInt32Max() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -697,7 +653,7 @@ struct AddDoriFeatureTests {
 
     @Test("addAmountTapped - 기존 금액에 추가")
     func addAmountTappedAddsToExisting() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.amountText = "30,000"
 
       let store = TestStore(
@@ -714,7 +670,7 @@ struct AddDoriFeatureTests {
     @Test("addAmountTapped - 빈 금액에서 추가")
     func addAmountTappedFromEmpty() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -726,7 +682,7 @@ struct AddDoriFeatureTests {
 
     @Test("addAmountTapped - 21억 초과 시 Int32.max로 클리핑")
     func addAmountTappedClipsAtInt32Max() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.amountText = Int(Int32.max - 100).decimalFormatted
 
       let store = TestStore(
@@ -743,7 +699,7 @@ struct AddDoriFeatureTests {
     @Test("eventDateChanged - 날짜 변경")
     func eventDateChanged() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -757,7 +713,7 @@ struct AddDoriFeatureTests {
     @Test("isVisitedChanged - 방문 여부 변경")
     func isVisitedChanged() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -770,7 +726,7 @@ struct AddDoriFeatureTests {
     @Test("memoChanged - 40자 이내 저장")
     func memoChangedWithinLimit() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -783,7 +739,7 @@ struct AddDoriFeatureTests {
     @Test("memoChanged - 40자 초과 시 앞 40자만 저장")
     func memoChangedTruncatedAt40() async {
       let store = TestStore(
-        initialState: AddDoriFeature.State(mode: .create)
+        initialState: AddDoriFeature.State()
       ) {
         AddDoriFeature()
       }
@@ -803,7 +759,7 @@ struct AddDoriFeatureTests {
 
     @Test("create 모드 - 제출 성공 시 doriCreated delegate 발생")
     func createSubmitSuccess() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchQuery = "김철수"
       initial.selectedRelationship = .friend
       initial.selectedEventType = .wedding
@@ -838,7 +794,7 @@ struct AddDoriFeatureTests {
 
     @Test("create 모드 - 제출 실패 시 isSubmitting = false")
     func createSubmitFailure() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.searchQuery = "김철수"
       initial.amountText = "100,000"
 
@@ -872,8 +828,8 @@ struct AddDoriFeatureTests {
 
     @Test("create 모드 - request에 올바른 값이 전달되는지 검증")
     func createSubmitRequestValues() async {
-      var initial = AddDoriFeature.State(mode: .create)
-      initial.transactionType = .given
+      var initial = AddDoriFeature.State()
+      initial.transactionType = .judori
       initial.searchQuery = "박수진"
       initial.selectedRelationship = .friend
       initial.selectedEventType = .wedding
@@ -915,137 +871,9 @@ struct AddDoriFeatureTests {
       #expect(capturedRequest?.memo == "테스트 메모")
     }
 
-    @Test("edit 모드 - 제출 성공 시 doriUpdated delegate 발생")
-    func editSubmitSuccess() async {
-      let existingDori = DoriResponsesDTO.mock(
-        doriId: 42,
-        partnerName: "이영희",
-        relationship: "가족",
-        eventType: "생일",
-        amount: 50_000
-      )
-
-      var initial = AddDoriFeature.State(mode: .edit(existingDori))
-      initial.amountText = "80,000"
-
-      let updatedResponse = DoriResponsesDTO.mock(
-        doriId: 42,
-        partnerName: "이영희",
-        relationship: "가족",
-        eventType: "생일",
-        amount: 80_000
-      )
-
-      let store = TestStore(
-        initialState: initial
-      ) {
-        AddDoriFeature()
-      } withDependencies: {
-        $0.addDoriAPIClient.updateDori = { _, _ in updatedResponse }
-      }
-
-      await store.send(.submitTapped) {
-        $0.isSubmitting = true
-      }
-
-      await store.receive(.submitResponse(.success(updatedResponse))) {
-        $0.isSubmitting = false
-      }
-
-      await store.receive(.delegate(.doriUpdated(updatedResponse)))
-    }
-
-    @Test("edit 모드 - 제출 실패 시 isSubmitting = false")
-    func editSubmitFailure() async {
-      let existingDori = DoriResponsesDTO.mock()
-
-      var initial = AddDoriFeature.State(mode: .edit(existingDori))
-      initial.amountText = "80,000"
-
-      struct TestError: Error {
-        let message = "네트워크 오류"
-        var localizedDescription: String { message }
-      }
-
-      let store = TestStore(
-        initialState: initial
-      ) {
-        AddDoriFeature()
-      } withDependencies: {
-        $0.addDoriAPIClient.updateDori = { _, _ in throw TestError() }
-      }
-
-      await store.send(.submitTapped) {
-        $0.isSubmitting = true
-      }
-
-      await store.receive(
-        .submitResponse(
-          .failure(
-            AddDoriFeature.SubmitError(message: "네트워크 오류")
-          )
-        )
-      ) {
-        $0.isSubmitting = false
-      }
-    }
-
-    @Test("edit 모드 - request에 올바른 값이 전달되는지 검증")
-    func editSubmitRequestValues() async {
-      let existingDori = DoriResponsesDTO.mock(
-        doriId: 42,
-        direction: "받도리",
-        partnerName: "이영희",
-        relationship: "가족",
-        eventType: "장례식",
-        amount: 50_000
-      )
-
-      var initial = AddDoriFeature.State(mode: .edit(existingDori))
-      initial.amountText = "80,000"
-      initial.selectedEventType = .funeral
-
-      let updatedResponse = DoriResponsesDTO.mock(
-        doriId: 42,
-        direction: "받도리",
-        eventType: "장례식",
-        amount: 80_000
-      )
-
-      nonisolated(unsafe) var capturedDoriId: Int64?
-      nonisolated(unsafe) var capturedRequest: DoriUpdateRequest?
-
-      let store = TestStore(
-        initialState: initial
-      ) {
-        AddDoriFeature()
-      } withDependencies: {
-        $0.addDoriAPIClient.updateDori = { doriId, request in
-          capturedDoriId = doriId
-          capturedRequest = request
-          return updatedResponse
-        }
-      }
-
-      await store.send(.submitTapped) {
-        $0.isSubmitting = true
-      }
-
-      await store.receive(.submitResponse(.success(updatedResponse))) {
-        $0.isSubmitting = false
-      }
-
-      await store.receive(.delegate(.doriUpdated(updatedResponse)))
-
-      #expect(capturedDoriId == 42)
-      #expect(capturedRequest?.amount == 80_000)
-      #expect(capturedRequest?.eventType == "장례식")
-      #expect(capturedRequest?.direction == "받도리")
-    }
-
     @Test("isSubmitting = true 상태에서 submitTapped - no-op")
     func submitTappedWhileSubmittingIsNoOp() async {
-      var initial = AddDoriFeature.State(mode: .create)
+      var initial = AddDoriFeature.State()
       initial.isSubmitting = true
 
       let store = TestStore(
@@ -1065,7 +893,7 @@ struct AddDoriFeatureTests {
 
     @Test("partnerName - selectedPartner가 있으면 partnerName 반환")
     func partnerNameFromSelectedPartner() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedPartner = .mock(partnerName: "박철수")
       state.searchQuery = "박"
       #expect(state.partnerName == "박철수")
@@ -1073,7 +901,7 @@ struct AddDoriFeatureTests {
 
     @Test("partnerName - selectedPartner 없으면 searchQuery trim 반환")
     func partnerNameFromSearchQuery() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedPartner = nil
       state.searchQuery = "  홍길동  "
       #expect(state.partnerName == "홍길동")
@@ -1081,7 +909,7 @@ struct AddDoriFeatureTests {
 
     @Test("resolvedRelationship - other 선택 시 customRelationship 반환")
     func resolvedRelationshipWithOther() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedRelationship = .other
       state.customRelationship = "지인"
       #expect(state.resolvedRelationship == "지인")
@@ -1089,14 +917,14 @@ struct AddDoriFeatureTests {
 
     @Test("resolvedRelationship - known 선택 시 rawValue 반환")
     func resolvedRelationshipWithKnown() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedRelationship = .friend
       #expect(state.resolvedRelationship == "친구")
     }
 
     @Test("resolvedEventType - other 선택 시 customEventType 반환")
     func resolvedEventTypeWithOther() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedEventType = .other
       state.customEventType = "회갑잔치"
       #expect(state.resolvedEventType == "회갑잔치")
@@ -1104,7 +932,7 @@ struct AddDoriFeatureTests {
 
     @Test("resolvedEventType - known 선택 시 rawValue 반환")
     func resolvedEventTypeWithKnown() {
-      var state = AddDoriFeature.State(mode: .create)
+      var state = AddDoriFeature.State()
       state.selectedEventType = .wedding
       #expect(state.resolvedEventType == "결혼식")
     }

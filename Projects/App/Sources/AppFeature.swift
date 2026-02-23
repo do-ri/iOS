@@ -12,7 +12,7 @@ import FeatureOnboarding
 @Reducer
 struct AppFeature {
   @ObservableState
-  struct State: Equatable {
+  struct State {
     enum Route: Equatable {
       case splash
       case intro
@@ -25,7 +25,7 @@ struct AppFeature {
     var mainTab = MainTabFeature.State()
   }
 
-  enum Action: Equatable {
+  enum Action {
     case splash(SplashFeature.Action)
     case intro(IntroFeature.Action)
     case mainTab(MainTabFeature.Action)

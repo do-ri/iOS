@@ -15,8 +15,8 @@ struct Page1NameTypeView: View {
   @Bindable var store: StoreOf<AddDoriFeature>
 
   private let options2x2: [DoriSegmentOption<TransactionType>] = [
-    .init(id: .given, title: TransactionType.given.rawValue, role: .normal),
-    .init(id: .received, title: TransactionType.received.rawValue, role: .normal),
+    .init(id: .judori, title: TransactionType.judori.displayName, role: .normal),
+    .init(id: .baddori, title: TransactionType.baddori.displayName, role: .normal),
   ]
   
   var body: some View {
@@ -46,6 +46,7 @@ struct Page1NameTypeView: View {
             )
           )
           .pretendard(.body(.sb3))
+          .foregroundStyle(.doriBlack)
 
           if !store.searchQuery.isEmpty {
             Button {
@@ -100,14 +101,14 @@ struct Page1NameTypeView: View {
 
 #Preview("검색 결과 있음") {
   let state: AddDoriFeature.State = {
-    var s = AddDoriFeature.State(mode: .create)
+    var s = AddDoriFeature.State()
     s.searchQuery = ""
     s.searchResults = [
-      DoriResponsesDTO(
+      Dori(
         doriId: 1,
         userId: 1,
         partnerId: 1,
-        direction: "주도리",
+        direction: .judori,
         partnerName: "박수진수진수진수진수",
         relationship: "친구야친구야",
         eventType: "결혼식",
@@ -117,11 +118,11 @@ struct Page1NameTypeView: View {
         memo: "",
         createdAt: "2026-05-12"
       ),
-      DoriResponsesDTO(
+      Dori(
         doriId: 1,
         userId: 1,
         partnerId: 1,
-        direction: "주도리",
+        direction: .judori,
         partnerName: "박수진",
         relationship: "친구",
         eventType: "결혼식",
@@ -131,11 +132,11 @@ struct Page1NameTypeView: View {
         memo: "",
         createdAt: "2026-05-12"
       ),
-      DoriResponsesDTO(
+      Dori(
         doriId: 2,
         userId: 1,
         partnerId: 2,
-        direction: "받도리",
+        direction: .baddori,
         partnerName: "박지민",
         relationship: "직장동료",
         eventType: "돌잔치",
@@ -145,11 +146,11 @@ struct Page1NameTypeView: View {
         memo: "",
         createdAt: "2026-01-15"
       ),
-      DoriResponsesDTO(
+      Dori(
         doriId: 3,
         userId: 1,
         partnerId: 3,
-        direction: "주도리",
+        direction: .judori,
         partnerName: "박민준",
         relationship: "가족",
         eventType: "장례식",
@@ -175,7 +176,7 @@ struct Page1NameTypeView: View {
 #Preview("빈 상태") {
   NavigationStack {
     Page1NameTypeView(
-      store: Store(initialState: AddDoriFeature.State(mode: .create)) {
+      store: Store(initialState: AddDoriFeature.State()) {
         AddDoriFeature()
       }
     )

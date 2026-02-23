@@ -32,7 +32,7 @@ public enum BuildConfiguration: String, CaseIterable {
 // MARK: - Environment
 public struct Environment {
   public static let deploymentTarget = "17.6"
-  public static let teamID = "T5D2PB4P5T"
+  public static let teamID = "FL4QTRRKMD"
   public static let organizationName = "com.arex"
   public static let defaultRegion = "ko"
   public static let projectName = "Dori-iOS"

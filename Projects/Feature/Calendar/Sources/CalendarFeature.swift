@@ -34,7 +34,7 @@ public struct CalendarFeature {
         return .none
 
       case .fabTapped:
-        state.addDori = AddDoriFeature.State(mode: .create)
+        state.addDori = AddDoriFeature.State()
         return .none
 
       case .addDori(.presented(.delegate(.doriCreated))):

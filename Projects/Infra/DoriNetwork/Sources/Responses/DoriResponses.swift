@@ -20,7 +20,7 @@ public struct DoriResponsesDTO: Codable, Equatable, Sendable {
   public let amount: Int32
   public let eventDate: String
   public let isVisited: Bool
-  public let memo: String
+  public let memo: String?
   public let createdAt: String
   
   public init(
@@ -34,7 +34,7 @@ public struct DoriResponsesDTO: Codable, Equatable, Sendable {
     amount: Int32,
     eventDate: String,
     isVisited: Bool,
-    memo: String,
+    memo: String?,
     createdAt: String
   ) {
     self.doriId = doriId

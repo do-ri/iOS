@@ -1,24 +1,14 @@
 //
 //  DoriSegmentGridWithMemo.swift
-//  DoriFeature
+//  DoriCore
 //
-//  Created by 강동영 on 2/19/26.
+//  Created by 강동영 on 2/23/26.
 //  Copyright © 2026 com.arex. All rights reserved.
 //
 
 import SwiftUI
-import DoriDesignSystem
-import DoriCore
 
-struct DoriSegmentOption<ID: Hashable>: Identifiable {
-  enum Role { case normal, other }
-  
-  let id: ID
-  let title: String
-  let role: Role
-}
-
-struct DoriSegmentGridWithMemo<ID: Hashable>: View {
+public struct DoriSegmentGridWithMemo<ID: Hashable>: View {
   let options: [DoriSegmentOption<ID>]
   @Binding var selection: ID
   @Binding var memo: String
@@ -27,7 +17,7 @@ struct DoriSegmentGridWithMemo<ID: Hashable>: View {
   private var otherID: ID? { options.first(where: { $0.role == .other })?.id }
   private var isOtherSelected: Bool { selection == otherID }
   
-  init(
+  public init(
     options: [DoriSegmentOption<ID>],
     selection: Binding<ID>,
     memo: Binding<String> = .constant("")
@@ -37,7 +27,7 @@ struct DoriSegmentGridWithMemo<ID: Hashable>: View {
     self._memo = memo
   }
   
-  var body: some View {
+  public var body: some View {
     VStack(spacing: 12) {
       grid
       if isOtherSelected { memoField }
@@ -101,68 +91,3 @@ private func chunked<T>(_ array: [T], size: Int) -> [[T]] {
     Array(array[$0..<min($0 + size, array.count)])
   }
 }
-
-struct DoriSegmentButton<ID: Hashable>: View {
-  let option: DoriSegmentOption<ID>
-  @Binding var selection: ID
-  
-  var isOn: Bool { selection == option.id }
-  
-  var body: some View {
-    PrimaryButton(title: option.title) {
-      selection = option.id
-    }
-    .applyDoriSegmentStyle(isOn: isOn)
-  }
-}
-
-fileprivate extension PrimaryButton {
-  func applyDoriSegmentStyle(isOn: Bool) -> Self {
-    isOn ? self.doriSelected() : self.doriUnselected()
-  }
-}
-
-fileprivate extension PrimaryButton {
-  func doriSelected() -> Self {
-    self
-      .pretendard(.body(.sb3))
-      .backgroundColor(.main)
-      .foregroundColor(.doriWhite)
-      
-  }
-  
-  func doriUnselected() -> Self {
-    self
-      .pretendard(.body(.r3))
-      .backgroundColor(.doriWhite)
-      .foregroundColor(.grey500)
-      .strokeColor(.grey300)
-  }
-}
-
-extension Relationship {
-  func toSegmentOptions() -> DoriSegmentOption<Self> {
-    if self == .other {
-      DoriSegmentOption(id: self, title: self.rawValue, role: .other)
-    } else {
-      DoriSegmentOption(id: self, title: self.rawValue, role: .normal)
-    }
-  }
-}
-
-extension EventType {
-  func toSegmentOptions() -> DoriSegmentOption<Self> {
-    if self == .other {
-      DoriSegmentOption(id: self, title: self.rawValue, role: .other)
-    } else {
-      DoriSegmentOption(id: self, title: self.rawValue, role: .normal)
-    }
-  }
-}
-
-extension Visited {
-  func toSegmentOptions() -> DoriSegmentOption<Self> {
-    DoriSegmentOption(id: self, title: self.rawValue, role: .normal)
-  }
-}
-
