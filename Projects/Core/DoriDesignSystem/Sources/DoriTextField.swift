@@ -7,15 +7,14 @@
 //
 
 import SwiftUI
-import DoriDesignSystem
 
-struct DoriTextField: View {
+public struct DoriTextField: View {
   @Binding var memo: String
   
   private let placeholder: String
   private let maxLength: Int
   
-  init(
+  public init(
     _ placeholder: String,
     memo: Binding<String>,
     maxLength: Int = 10
@@ -24,7 +23,8 @@ struct DoriTextField: View {
     self.placeholder = placeholder
     self.maxLength = maxLength
   }
-  var body: some View {
+  
+  public var body: some View {
     ZStack(alignment: .center) {
       RoundedRectangle(cornerRadius: 10)
         .stroke(.grey300, lineWidth: 1)

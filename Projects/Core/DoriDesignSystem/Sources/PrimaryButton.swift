@@ -26,7 +26,8 @@ public struct PrimaryButton: View {
       Text(titleKey)
         .pretendard(titleStyle)
         .foregroundStyle(foregroundColor)
-        .frame(maxWidth: .infinity, maxHeight: 53)
+        .frame(maxWidth: .infinity)
+        .frame(height: 46)
         .background(
           RoundedRectangle(cornerRadius: cornerRadius)
             .fill(backgroundColor)
