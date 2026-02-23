@@ -14,7 +14,7 @@ import FeatureMyPage
 @Reducer
 struct MainTabFeature {
   @ObservableState
-  struct State: Equatable {
+  struct State {
     var selectedTab: Tab = .calendar
     var calendar = CalendarFeature.State()
     var history = HistoryFeature.State()
@@ -25,13 +25,13 @@ struct MainTabFeature {
     }
   }
 
-  enum Action: Equatable {
+  enum Action {
     case tabSelected(State.Tab)
     case calendar(CalendarFeature.Action)
     case history(HistoryFeature.Action)
     case myPage(MyPageFeature.Action)
     case delegate(Delegate)
-
+    
     enum Delegate: Equatable {
       case needsAuthentication
     }
