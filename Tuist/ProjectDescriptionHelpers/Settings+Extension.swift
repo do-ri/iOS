@@ -27,21 +27,20 @@ public extension Settings {
       "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES": "YES",
       "ENABLE_TESTABILITY": "YES",
       "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
-      "SWIFT_VERSION": "6.0"
+      "SWIFT_VERSION": "6.0",
+      "DEVELOPMENT_TEAM": .string(Environment.teamID)
     ]
   )
   
   /// 앱용 설정
-  static func appSettings(
-    teamID: String = Environment.teamID
-  ) -> Settings {
+  static func appSettings() -> Settings {
     let rootPath = "Projects/App"
     let xcconfigPath = "\(rootPath)/Resources/Common.xcconfig"
     
     let baseSettings: [String: SettingValue] = [
       "APP_NAME": .string(Environment.App.displayName),
       "CODE_SIGN_STYLE": "Automatic",
-      "DEVELOPMENT_TEAM": .string(teamID),
+      "DEVELOPMENT_TEAM": .string(Environment.teamID),
       "MARKETING_VERSION": .string(Environment.App.version),
       "CURRENT_PROJECT_VERSION": .string(Environment.App.buildNumber),
       "ENABLE_BITCODE": "NO",
@@ -87,7 +86,6 @@ public extension Settings {
   static let demoAppSettings: Settings = .settings(
     base: [
       "CODE_SIGN_STYLE": "Automatic",
-      "DEVELOPMENT_TEAM": .string(Environment.teamID),
       "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
       "SWIFT_VERSION": "6.0",
       "ENABLE_TESTABILITY": "YES"
