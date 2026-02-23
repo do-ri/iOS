@@ -11,7 +11,7 @@ public enum Visited: String, CaseIterable, Hashable, Sendable {
   case yes = "예"
   case no = "아니오"
   
-  var boolValue: Bool {
+  public var boolValue: Bool {
     switch self {
     case .yes: return true
     case .no: return false

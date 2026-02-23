@@ -8,28 +8,30 @@
 
 import Foundation
 
-public struct Dori: Equatable, Sendable {
+public struct Dori: Identifiable, Equatable, Hashable, Sendable {
+  public var id: Int64 { doriId }
+
   public let doriId: Int64
   public let userId: Int64
   public let partnerId: Int64
-  public let direction: Direction
+  public let direction: TransactionType
   public let partnerName: String
-  public let relationship: Relationship
-  public let eventType: EventType
+  public let relationship: String
+  public let eventType: String
   public let amount: Int32
   public let eventDate: String
   public let isVisited: Bool
   public let memo: String
   public let createdAt: String
-  
+
   public init(
     doriId: Int64,
     userId: Int64,
     partnerId: Int64,
-    direction: Direction,
+    direction: TransactionType,
     partnerName: String,
-    relationship: Relationship,
-    eventType: EventType,
+    relationship: String,
+    eventType: String,
     amount: Int32,
     eventDate: String,
     isVisited: Bool,
@@ -48,12 +50,5 @@ public struct Dori: Equatable, Sendable {
     self.isVisited = isVisited
     self.memo = memo
     self.createdAt = createdAt
-  }
-}
-
-public extension Dori {
-  enum Direction: String, Equatable, Sendable {
-    case `in` = "IN"
-    case out = "OUT"
   }
 }

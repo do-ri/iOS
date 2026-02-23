@@ -8,8 +8,17 @@
 import Foundation
 
 public enum TransactionType: String, CaseIterable, Codable, Equatable, Sendable, Hashable, Identifiable {
-  case given = "주도리"
-  case received = "받도리"
+  case judori = "OUT"
+  case baddori = "IN"
 
   public var id: String { rawValue }
+  
+  public var displayName: String {
+    switch self {
+    case .judori:
+      "주도리"
+    case .baddori:
+      "받도리"
+    }
+  }
 }
