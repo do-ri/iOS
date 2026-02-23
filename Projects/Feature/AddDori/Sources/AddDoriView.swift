@@ -26,18 +26,9 @@ public struct AddDoriView: View {
           value: store.currentPage
         )
     }
-    .navigationTitle(store.state.navigationTitle)
+    .background(.doriWhite)
+    .navigationTitle("내역 추가")
     .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarLeading) {
-        Button {
-          store.send(.previousPageTapped)
-        } label: {
-          Image(systemName: "chevron.left")
-            .font(.system(size: 17, weight: .semibold))
-        }
-      }
-    }
   }
   
   private var pageIndicator: some View {
@@ -86,7 +77,7 @@ public struct AddDoriView: View {
 #Preview {
   NavigationStack {
     AddDoriView(
-      store: Store(initialState: AddDoriFeature.State(mode: .create)) {
+      store: Store(initialState: AddDoriFeature.State()) {
         AddDoriFeature()
       }
     )

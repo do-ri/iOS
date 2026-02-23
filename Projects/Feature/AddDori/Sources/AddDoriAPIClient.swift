@@ -7,17 +7,18 @@
 
 import Foundation
 import ComposableArchitecture
+import DoriCore
 import DoriNetwork
 
 public struct AddDoriAPIClient: Sendable {
-  public var searchPartners: @Sendable (_ query: String) async throws -> [DoriResponsesDTO]
-  public var createDori: @Sendable (DoriPostRequest) async throws -> DoriResponsesDTO
-  public var updateDori: @Sendable (_ doriId: Int64, _ request: DoriUpdateRequest) async throws -> DoriResponsesDTO
+  public var searchPartners: @Sendable (_ query: String) async throws -> [Dori]
+  public var createDori: @Sendable (DoriPostInput) async throws -> Dori
+  public var updateDori: @Sendable (_ doriId: Int64, _ input: DoriUpdateInput) async throws -> Dori
 
   public init(
-    searchPartners: @escaping @Sendable (_ query: String) async throws -> [DoriResponsesDTO],
-    createDori: @escaping @Sendable (DoriPostRequest) async throws -> DoriResponsesDTO,
-    updateDori: @escaping @Sendable (_ doriId: Int64, _ request: DoriUpdateRequest) async throws -> DoriResponsesDTO
+    searchPartners: @escaping @Sendable (_ query: String) async throws -> [Dori],
+    createDori: @escaping @Sendable (DoriPostInput) async throws -> Dori,
+    updateDori: @escaping @Sendable (_ doriId: Int64, _ input: DoriUpdateInput) async throws -> Dori
   ) {
     self.searchPartners = searchPartners
     self.createDori = createDori
@@ -52,11 +53,11 @@ extension AddDoriAPIClient: DependencyKey {
   public static let previewValue = Self(
     searchPartners: { query in
       [
-        DoriResponsesDTO(
+        Dori(
           doriId: 1,
           userId: 1,
           partnerId: 1,
-          direction: "주도리",
+          direction: .judori,
           partnerName: "박수진",
           relationship: "친구",
           eventType: "결혼식",
@@ -66,11 +67,11 @@ extension AddDoriAPIClient: DependencyKey {
           memo: "",
           createdAt: "2026-01-10"
         ),
-        DoriResponsesDTO(
+        Dori(
           doriId: 2,
           userId: 1,
           partnerId: 2,
-          direction: "주도리",
+          direction: .judori,
           partnerName: "박민준",
           relationship: "가족",
           eventType: "장례식",
@@ -80,11 +81,11 @@ extension AddDoriAPIClient: DependencyKey {
           memo: "많이 힘드셨을텐데",
           createdAt: "2025-08-20"
         ),
-        DoriResponsesDTO(
+        Dori(
           doriId: 3,
           userId: 1,
           partnerId: 3,
-          direction: "받도리",
+          direction: .baddori,
           partnerName: "김철수",
           relationship: "직장동료",
           eventType: "돌잔치",
@@ -94,11 +95,11 @@ extension AddDoriAPIClient: DependencyKey {
           memo: "",
           createdAt: "2025-11-05"
         ),
-        DoriResponsesDTO(
+        Dori(
           doriId: 4,
           userId: 1,
           partnerId: 4,
-          direction: "받도리",
+          direction: .baddori,
           partnerName: "김영희",
           relationship: "친척",
           eventType: "생신",
@@ -110,35 +111,35 @@ extension AddDoriAPIClient: DependencyKey {
         ),
       ].filter { $0.partnerName.contains(query) }
     },
-    createDori: { request in
-      DoriResponsesDTO(
+    createDori: { input in
+      Dori(
         doriId: 1,
         userId: 1,
-        partnerId: 0,
-        direction: request.direction,
-        partnerName: request.partnerName,
-        relationship: request.relationship,
-        eventType: request.eventType,
-        amount: request.amount,
-        eventDate: request.eventDate,
-        isVisited: request.isVisited,
-        memo: request.memo ?? "",
+        partnerId: input.partnerId ?? 0,
+        direction: input.direction,
+        partnerName: input.partnerName,
+        relationship: input.relationship,
+        eventType: input.eventType,
+        amount: input.amount,
+        eventDate: input.eventDate,
+        isVisited: input.isVisited,
+        memo: input.memo ?? "",
         createdAt: "2026-02-15"
       )
     },
-    updateDori: { doriId, request in
-      DoriResponsesDTO(
+    updateDori: { doriId, input in
+      Dori(
         doriId: doriId,
         userId: 1,
         partnerId: 1,
-        direction: request.direction ?? "주도리",
+        direction: input.direction ?? .judori,
         partnerName: "김철수",
         relationship: "친구",
-        eventType: request.eventType ?? "결혼식",
-        amount: request.amount ?? 50_000,
-        eventDate: request.eventDate ?? "2026-02-15",
-        isVisited: request.isVisited ?? true,
-        memo: request.memo ?? "",
+        eventType: input.eventType ?? "결혼식",
+        amount: input.amount ?? 50_000,
+        eventDate: input.eventDate ?? "2026-02-15",
+        isVisited: input.isVisited ?? true,
+        memo: input.memo ?? "",
         createdAt: "2026-02-15"
       )
     }
@@ -146,28 +147,28 @@ extension AddDoriAPIClient: DependencyKey {
 
   public static let testValue = Self(
     searchPartners: { _ in [] },
-    createDori: { request in
-      DoriResponsesDTO(
+    createDori: { input in
+      Dori(
         doriId: 1,
         userId: 1,
-        partnerId: 0,
-        direction: request.direction,
-        partnerName: request.partnerName,
-        relationship: request.relationship,
-        eventType: request.eventType,
-        amount: request.amount,
-        eventDate: request.eventDate,
-        isVisited: request.isVisited,
-        memo: request.memo ?? "",
+        partnerId: input.partnerId ?? 0,
+        direction: input.direction,
+        partnerName: input.partnerName,
+        relationship: input.relationship,
+        eventType: input.eventType,
+        amount: input.amount,
+        eventDate: input.eventDate,
+        isVisited: input.isVisited,
+        memo: input.memo ?? "",
         createdAt: "2026-02-15"
       )
     },
     updateDori: { _, _ in
-      DoriResponsesDTO(
+      Dori(
         doriId: 1,
         userId: 1,
         partnerId: 1,
-        direction: "주도리",
+        direction: .judori,
         partnerName: "테스트",
         relationship: "친구",
         eventType: "결혼식",
@@ -206,10 +207,10 @@ public extension AddDoriAPIClient {
           throw AddDoriAPIClientError.invalidResponse
         }
 
-        return data
+        return data.map { $0.toDomain() }
       },
-      createDori: { request in
-        let endpoint = CreateDoriEndpoint(request: request)
+      createDori: { input in
+        let endpoint = CreateDoriEndpoint(request: input.toRequest())
         let response = try await networkService.request(
           endpoint,
           responseType: SuccessResponse<DoriResponsesDTO>.self
@@ -223,10 +224,10 @@ public extension AddDoriAPIClient {
           throw AddDoriAPIClientError.invalidResponse
         }
 
-        return data
+        return data.toDomain()
       },
-      updateDori: { doriId, request in
-        let endpoint = UpdateDoriEndpoint(doriId: doriId, request: request)
+      updateDori: { doriId, input in
+        let endpoint = UpdateDoriEndpoint(doriId: doriId, request: input.toRequest())
         let response = try await networkService.request(
           endpoint,
           responseType: SuccessResponse<DoriResponsesDTO>.self
@@ -240,8 +241,58 @@ public extension AddDoriAPIClient {
           throw AddDoriAPIClientError.invalidResponse
         }
 
-        return data
+        return data.toDomain()
       }
+    )
+  }
+}
+
+// MARK: - DTO → Domain 매핑
+
+private extension DoriResponsesDTO {
+  func toDomain() -> Dori {
+    Dori(
+      doriId: doriId,
+      userId: userId,
+      partnerId: partnerId,
+      direction: direction == "OUT" ? .judori : .baddori,
+      partnerName: partnerName,
+      relationship: relationship,
+      eventType: eventType,
+      amount: amount,
+      eventDate: eventDate,
+      isVisited: isVisited,
+      memo: memo ?? "",
+      createdAt: createdAt
+    )
+  }
+}
+
+private extension DoriPostInput {
+  func toRequest() -> DoriPostRequest {
+    DoriPostRequest(
+      partnerId: partnerId,
+      direction: direction.rawValue,
+      partnerName: partnerName,
+      relationship: relationship,
+      eventType: eventType,
+      amount: amount,
+      eventDate: eventDate,
+      isVisited: isVisited,
+      memo: memo
+    )
+  }
+}
+
+private extension DoriUpdateInput {
+  func toRequest() -> DoriUpdateRequest {
+    DoriUpdateRequest(
+      direction: direction?.rawValue,
+      eventType: eventType,
+      amount: amount,
+      eventDate: eventDate,
+      isVisited: isVisited,
+      memo: memo
     )
   }
 }

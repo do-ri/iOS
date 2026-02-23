@@ -8,10 +8,11 @@
 import SwiftUI
 import DoriDesignSystem
 import DoriNetwork
+import DoriCore
 
 struct PartnerSearchResultRow: View {
   @Binding var searchQuery: String
-  let partner: DoriResponsesDTO
+  let partner: Dori
 
   var body: some View {
     HStack(spacing: 6) {
@@ -76,11 +77,11 @@ public extension Font {
   @Previewable @State var searchQuery = "박수진"
   PartnerSearchResultRow(
     searchQuery: $searchQuery,
-    partner: DoriResponsesDTO(
+    partner: Dori(
       doriId: 1,
       userId: 1,
       partnerId: 1,
-      direction: "주도리",
+      direction: .judori,
       partnerName: "박수진수진수진수진수",
       relationship: "친구야친구야",
       eventType: "결혼식",

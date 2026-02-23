@@ -63,7 +63,7 @@ struct Page2RelationEventView: View {
 
 #Preview {
   Page2RelationEventView(
-    store: Store(initialState: AddDoriFeature.State(mode: .create)) {
+    store: Store(initialState: AddDoriFeature.State()) {
       AddDoriFeature()
     }
   )

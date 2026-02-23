@@ -157,7 +157,7 @@ struct Page3AmountDateView: View {
 struct AmountPreset: Hashable {
   let title: String
   let amount: Int
-  
+
   init(_ title: String, _ amount: Int) {
     self.title = title
     self.amount = amount
@@ -175,7 +175,7 @@ extension [AmountPreset] {
 
 #Preview {
   Page3AmountDateView(
-    store: Store(initialState: AddDoriFeature.State(mode: .create)) {
+    store: Store(initialState: AddDoriFeature.State()) {
       AddDoriFeature()
     }
   )
