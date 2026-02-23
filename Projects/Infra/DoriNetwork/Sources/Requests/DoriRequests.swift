@@ -9,7 +9,7 @@ import Foundation
 
 // MARK: - Dori Request DTOs
 public struct DoriPostRequest: Codable, Equatable, Sendable {
-    public let partnerId: Int64
+    public let partnerId: Int64?
     public let direction: String
     public let partnerName: String
     public let relationship: String
@@ -20,7 +20,7 @@ public struct DoriPostRequest: Codable, Equatable, Sendable {
     public let memo: String?
 
     public init(
-        partnerId: Int64,
+        partnerId: Int64?,
         direction: String,
         partnerName: String,
         relationship: String,

@@ -36,8 +36,8 @@ public final class NetworkServiceImpl: NetworkService {
 #endif
       
       let dataTask = session.request(urlRequest)
-        .validate()
-        .serializingDecodable(T.self, decoder: decoder)
+        .validate(statusCode: 200..<300)
+        .serializingData()
       
       let response = await dataTask.response
       
@@ -47,14 +47,20 @@ public final class NetworkServiceImpl: NetworkService {
         throw mapAlamofireError(error)
       }
       
-#if DEBUG
-      guard let httpResponse = response.response, let data = response.data else {
+      guard let httpResponse = response.response else {
         throw NetworkError.invalidResponse
       }
+      
+      guard let data = response.data else {
+        throw NetworkError.noData
+      }
+#if DEBUG
       self.logger?.responseLogger(response: httpResponse, data: data)
 #endif
       
-      return try await dataTask.value
+      let decodedData = try JSONDecoder().decode(T.self, from: data)
+      
+      return decodedData
     } catch let error as AFError {
       throw mapAlamofireError(error)
     } catch let error as DecodingError {
