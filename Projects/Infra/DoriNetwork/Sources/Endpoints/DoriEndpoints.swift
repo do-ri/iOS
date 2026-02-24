@@ -49,3 +49,21 @@ public struct UpdateDoriEndpoint: Endpoint {
     self.body = try? JSONEncoder().encode(request)
   }
 }
+
+public struct DoriListEndpoint: Endpoint {
+  public let baseURL: String
+  public let path: String = "/dori/list"
+  public let method: HTTPMethod = .GET
+  public let headers: [String: String] = [:]
+  public let queryParameters: [String: String]
+  public let body: Data? = nil
+
+  public init(request: DoriListRequest, baseURL: String = NetworkConfig.baseURL) {
+    self.baseURL = baseURL
+    self.queryParameters = [
+      "direction": request.direction,
+      "year": request.year,
+      "month": request.month
+    ]
+  }
+}
