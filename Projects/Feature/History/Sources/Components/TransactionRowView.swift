@@ -60,8 +60,8 @@ public struct TransactionRowView: View {
           .pretendard(.semiBold(.sb14))
           .foregroundStyle(.doriBlack)
 
-        if !(dori.memo ?? "").isEmpty {
-          Text(dori.memo ?? "")
+        if !dori.memo.isEmpty {
+          Text(dori.memo)
             .pretendard(.regular(.r12))
             .foregroundStyle(.grey600)
         }
