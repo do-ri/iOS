@@ -66,3 +66,19 @@ public struct DoriUpdateRequest: Codable, Equatable, Sendable {
         self.memo = memo
     }
 }
+
+public struct DoriListRequest: Codable, Equatable, Sendable {
+    public let direction: String
+    public let year: String
+    public let month: String
+
+    public init(
+        direction: String,
+        year: String,
+        month: String
+    ) {
+        self.direction = direction
+        self.year = year
+        self.month = month
+    }
+}
