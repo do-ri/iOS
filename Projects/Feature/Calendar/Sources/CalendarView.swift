@@ -8,7 +8,7 @@
 import SwiftUI
 import ComposableArchitecture
 import DoriDesignSystem
-
+import FeatureAddDori
 
 public struct CalendarView: View {
   @Bindable var store: StoreOf<CalendarFeature>
@@ -69,6 +69,17 @@ public struct CalendarView: View {
       .navigationTitle("캘린더")
       .toolbarTitleDisplayMode(.inline)
       .onAppear { store.send(.onAppear) }
+      .overlay(alignment: .bottomTrailing) {
+        FloatingActionButton {
+          store.send(.fabTapped)
+        }
+        .padding(20)
+      }
+      .navigationDestination(
+        item: $store.scope(state: \.addDori, action: \.addDori)
+      ) { addDoriStore in
+        AddDoriView(store: addDoriStore)
+      }
       .sheet(
         isPresented: Binding(
           get: { store.selectedDay != nil },

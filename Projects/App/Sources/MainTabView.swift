@@ -23,6 +23,13 @@ struct MainTabFeature {
     enum Tab: Equatable {
       case calendar, history, myPage
     }
+
+    // 파생 상태: 모든 탭이 root depth면 TabBar 표시
+    var isTabBarVisible: Bool {
+      history.path.isEmpty &&
+      calendar.addDori == nil &&
+      myPage.navigationPath.isEmpty
+    }
   }
 
   enum Action {
@@ -31,7 +38,7 @@ struct MainTabFeature {
     case history(HistoryFeature.Action)
     case myPage(MyPageFeature.Action)
     case delegate(Delegate)
-    
+
     enum Delegate: Equatable {
       case needsAuthentication
     }
@@ -73,19 +80,29 @@ struct MainTabView: View {
   @Bindable var store: StoreOf<MainTabFeature>
 
   var body: some View {
-    TabView(selection: $store.selectedTab.sending(\.tabSelected)) {
-      CalendarView(store: store.scope(state: \.calendar, action: \.calendar))
-        .tag(MainTabFeature.State.Tab.calendar)
-        .tabItem { Label("캘린더", systemImage: "calendar") }
+    VStack(spacing: 0) {
+      // Content
+      Group {
+        switch store.selectedTab {
+        case .calendar:
+          CalendarView(store: store.scope(state: \.calendar, action: \.calendar))
+        case .history:
+          HistoryView(store: store.scope(state: \.history, action: \.history))
+        case .myPage:
+          MyPageView(store: store.scope(state: \.myPage, action: \.myPage))
+        }
+      }
 
-      HistoryView(store: store.scope(state: \.history, action: \.history))
-        .tag(MainTabFeature.State.Tab.history)
-        .tabItem { Label("내역", systemImage: "list.bullet.rectangle") }
-
-      MyPageView(store: store.scope(state: \.myPage, action: \.myPage))
-        .tag(MainTabFeature.State.Tab.myPage)
-        .tabItem { Label("마이페이지", systemImage: "person.circle") }
+      // TabBar
+      if store.isTabBarVisible {
+        CustomTabBar(
+          selectedTab: $store.selectedTab.sending(\.tabSelected)
+        )
+        .transition(.move(edge: .bottom))
+      }
     }
+    .ignoresSafeArea(.keyboard)
+    .animation(.easeInOut(duration: 0.2), value: store.isTabBarVisible)
   }
 }
 

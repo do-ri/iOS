@@ -41,11 +41,6 @@ public struct HistoryFeature {
   public enum Action {
     case doriList(DoriListFeature.Action)
     case path(StackActionOf<Path>)
-    case delegate(Delegate)
-
-    public enum Delegate: Equatable, Sendable {
-      case setTabBarVisible(Bool)
-    }
   }
 
   // MARK: - Reducer
@@ -61,7 +56,6 @@ public struct HistoryFeature {
       // MARK: DoriList delegate
 
       case .doriList(.delegate(.partnerTapped(let partner))):
-        print("push dori before path count result: \(state.path.count)")
         state.path.append(
           .partnerHistory(
             PartnerDoriHistoryFeature.State(
@@ -71,11 +65,11 @@ public struct HistoryFeature {
             )
           )
         )
-        return .send(.delegate(.setTabBarVisible(false)))
+        return .none
 
       case .doriList(.delegate(.fabTapped)):
         state.path.append(.addDori(AddDoriFeature.State()))
-        return .send(.delegate(.setTabBarVisible(false)))
+        return .none
 
       case .doriList:
         return .none
@@ -117,19 +111,7 @@ public struct HistoryFeature {
         state.path.removeAll()
         return .send(.doriList(.refresh))
 
-      // Path pop 감지 → TabBar 표시 여부
-      case .path(.popFrom(id: _)):
-        print("pop result path count: \(state.path.count)")
-        // popFrom은 pop 시작 시점이므로 count == 1이면 root로 돌아감
-        if state.path.count == 1 {
-          return .send(.delegate(.setTabBarVisible(true)))
-        }
-        return .none
-
       case .path:
-        return .none
-
-      case .delegate:
         return .none
       }
     }
@@ -164,9 +146,6 @@ public struct HistoryView: View {
       case .editDori(let editDoriStore):
         EditDoriView(store: editDoriStore)
       }
-    }
-    .task {
-      print("HistoryView showed: \(store.state.path.count)")
     }
   }
 }
