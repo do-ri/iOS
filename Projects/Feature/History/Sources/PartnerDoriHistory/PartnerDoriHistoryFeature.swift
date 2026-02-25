@@ -36,7 +36,6 @@ public struct PartnerDoriHistoryFeature {
     public var showDeleteAlert: Bool = false
     public var showFilterSheet: Bool = false
     public var toast: DoriToast? = nil
-    @Presents public var doriDetail: PartnerDoriDetailFeature.State?
 
     public var doriByDate: [(date: String, doris: [Dori])] {
       let filtered: [Dori]
@@ -76,12 +75,10 @@ public struct PartnerDoriHistoryFeature {
     case doriTapped(Dori)
     case toastDismissed
     case setFilterSheet(Bool)
-    case doriDetail(PresentationAction<PartnerDoriDetailFeature.Action>)
     case delegate(Delegate)
 
     public enum Delegate: Equatable, Sendable {
       case allDoriDeleted
-      case editTapped(Dori)
     }
   }
 
@@ -163,8 +160,8 @@ public struct PartnerDoriHistoryFeature {
       case .bulkDeleteResponse(.failure):
         return .none
 
-      case let .doriTapped(dori):
-        state.doriDetail = PartnerDoriDetailFeature.State(dori: dori)
+      case .doriTapped:
+        // 부모가 가로채서 push 처리
         return .none
 
       case .toastDismissed:
@@ -175,28 +172,9 @@ public struct PartnerDoriHistoryFeature {
         state.showFilterSheet = value
         return .none
 
-      // doriDetail 위임 처리
-      case .doriDetail(.presented(.delegate(.editTapped(let dori)))):
-        return .send(.delegate(.editTapped(dori)))
-
-      case .doriDetail(.presented(.delegate(.doriDeleted))):
-        let removedId = state.doriDetail?.doriId
-        state.doriDetail = nil
-        if let id = removedId {
-          state.inDoriList.removeAll { $0.doriId == id }
-          state.outDoriList.removeAll { $0.doriId == id }
-        }
-        return .none
-
-      case .doriDetail:
-        return .none
-
       case .delegate:
         return .none
       }
-    }
-    .ifLet(\.$doriDetail, action: \.doriDetail) {
-      PartnerDoriDetailFeature()
     }
   }
 }

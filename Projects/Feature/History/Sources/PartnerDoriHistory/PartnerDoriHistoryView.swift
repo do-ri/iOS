@@ -100,11 +100,6 @@ public struct PartnerDoriHistoryView: View {
         }
       }
     }
-    .navigationDestination(
-      item: $store.scope(state: \.doriDetail, action: \.doriDetail)
-    ) { detailStore in
-      PartnerDoriDetailView(store: detailStore)
-    }
     .sheet(
       isPresented: Binding(
         get: { store.showFilterSheet },
