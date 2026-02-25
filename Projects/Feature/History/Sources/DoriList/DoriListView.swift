@@ -44,13 +44,6 @@ public struct DoriListView: View {
     .background(.grey100)
     .navigationTitle("내역")
     .navigationBarTitleDisplayMode(.inline)
-    .searchable(
-      text: Binding(
-        get: { store.searchText },
-        set: { store.send(.searchTextChanged($0)) }
-      ),
-      prompt: "이름 또는 관계 검색"
-    )
     .refreshable {
       store.send(.refresh)
     }

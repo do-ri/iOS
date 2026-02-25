@@ -17,14 +17,22 @@ import FeatureAddDori
 public struct HistoryFeature {
   public init() {}
 
+  // MARK: - Path Reducer
+
+  @Reducer
+  public enum Path {
+    case partnerHistory(PartnerDoriHistoryFeature)
+    case partnerDoriDetail(PartnerDoriDetailFeature)
+    case addDori(AddDoriFeature)
+    case editDori(EditDoriFeature)
+  }
+
   // MARK: - State
 
   @ObservableState
   public struct State {
     public var doriList: DoriListFeature.State = .init()
-    @Presents public var partnerHistory: PartnerDoriHistoryFeature.State?
-    @Presents public var addDori: AddDoriFeature.State?
-    @Presents public var editDori: EditDoriFeature.State?
+    public var path = StackState<Path.State>()
     public init() {}
   }
 
@@ -32,9 +40,7 @@ public struct HistoryFeature {
 
   public enum Action {
     case doriList(DoriListFeature.Action)
-    case partnerHistory(PresentationAction<PartnerDoriHistoryFeature.Action>)
-    case addDori(PresentationAction<AddDoriFeature.Action>)
-    case editDori(PresentationAction<EditDoriFeature.Action>)
+    case path(StackActionOf<Path>)
   }
 
   // MARK: - Reducer
@@ -50,66 +56,66 @@ public struct HistoryFeature {
       // MARK: DoriList delegate
 
       case .doriList(.delegate(.partnerTapped(let partner))):
-        state.partnerHistory = PartnerDoriHistoryFeature.State(
-          partnerId: partner.partnerId,
-          partnerName: partner.partnerName,
-          relationship: partner.relationship
+        state.path.append(
+          .partnerHistory(
+            PartnerDoriHistoryFeature.State(
+              partnerId: partner.partnerId,
+              partnerName: partner.partnerName,
+              relationship: partner.relationship
+            )
+          )
         )
         return .none
 
       case .doriList(.delegate(.fabTapped)):
-        state.addDori = AddDoriFeature.State()
+        state.path.append(.addDori(AddDoriFeature.State()))
         return .none
 
       case .doriList:
         return .none
 
-      // MARK: PartnerDoriHistory delegate
+      // MARK: Path delegate 처리
 
-      case .partnerHistory(.presented(.delegate(.allDoriDeleted))):
-        state.partnerHistory = nil
+      // PartnerDoriHistory에서 doriTapped → Detail push
+      case .path(.element(id: _, action: .partnerHistory(.doriTapped(let dori)))):
+        state.path.append(.partnerDoriDetail(PartnerDoriDetailFeature.State(dori: dori)))
+        return .none
+
+      // PartnerDoriHistory에서 전체 삭제
+      case .path(.element(id: _, action: .partnerHistory(.delegate(.allDoriDeleted)))):
+        state.path.removeAll()
         return .send(.doriList(.refresh))
 
-      case .partnerHistory(.presented(.delegate(.editTapped(let dori)))):
-        state.editDori = EditDoriFeature.State(dori: dori)
+      // PartnerDoriDetail에서 editTapped → Edit push
+      case .path(.element(id: _, action: .partnerDoriDetail(.delegate(.editTapped(let dori))))):
+        state.path.append(.editDori(EditDoriFeature.State(dori: dori)))
         return .none
 
-      case .partnerHistory:
+      // PartnerDoriDetail에서 단건 삭제 → History로 복귀
+      case .path(.element(id: _, action: .partnerDoriDetail(.delegate(.doriDeleted)))):
+        state.path.removeLast()
         return .none
 
-      // MARK: AddDori
-
-      case .addDori(.presented(.delegate(.doriCreated(_)))):
-        state.addDori = nil
+      // AddDori 완료 → 리스트로 복귀
+      case .path(.element(id: _, action: .addDori(.delegate(.doriCreated(_))))):
+        state.path.removeAll()
         return .send(.doriList(.refresh))
 
-      case .addDori(.presented(.delegate(.dismissed))):
-        state.addDori = nil
+      // AddDori dismiss
+      case .path(.element(id: _, action: .addDori(.delegate(.dismissed)))):
+        state.path.removeAll()
         return .none
 
-      case .addDori:
-        return .none
-
-      // MARK: EditDori
-
-      case .editDori(.presented(.delegate(.doriUpdated(_)))):
-        state.editDori = nil
-        state.partnerHistory = nil
+      // EditDori 완료 → 리스트로 복귀
+      case .path(.element(id: _, action: .editDori(.delegate(.doriUpdated(_))))):
+        state.path.removeAll()
         return .send(.doriList(.refresh))
 
-      case .editDori:
+      case .path:
         return .none
       }
     }
-    .ifLet(\.$partnerHistory, action: \.partnerHistory) {
-      PartnerDoriHistoryFeature()
-    }
-    .ifLet(\.$addDori, action: \.addDori) {
-      AddDoriFeature()
-    }
-    .ifLet(\.$editDori, action: \.editDori) {
-      EditDoriFeature()
-    }
+    .forEach(\.path, action: \.path)
   }
 }
 
@@ -123,26 +129,22 @@ public struct HistoryView: View {
   }
 
   public var body: some View {
-    NavigationStack {
+    NavigationStack(
+      path: $store.scope(state: \.path, action: \.path)
+    ) {
       DoriListView(
         store: store.scope(state: \.doriList, action: \.doriList)
       )
-      .navigationDestination(
-        item: $store.scope(state: \.partnerHistory, action: \.partnerHistory)
-      ) { historyStore in
+    } destination: { store in
+      switch store.case {
+      case .partnerHistory(let historyStore):
         PartnerDoriHistoryView(store: historyStore)
-      }
-      .navigationDestination(
-        item: $store.scope(state: \.addDori, action: \.addDori)
-      ) { addDoriStore in
+      case .partnerDoriDetail(let detailStore):
+        PartnerDoriDetailView(store: detailStore)
+      case .addDori(let addDoriStore):
         AddDoriView(store: addDoriStore)
-      }
-      .navigationDestination(
-        item: $store.scope(state: \.editDori, action: \.editDori)
-      ) { editDoriStore in
-        NavigationStack {
-          EditDoriView(store: editDoriStore)
-        }
+      case .editDori(let editDoriStore):
+        EditDoriView(store: editDoriStore)
       }
     }
   }

@@ -52,9 +52,7 @@ public struct CalendarGridView: View {
         }
       }
     }
-    .padding()
     .background(.doriWhite)
-    .cornerRadius(10)
   }
 }
 
