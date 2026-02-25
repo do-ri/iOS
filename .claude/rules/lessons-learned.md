@@ -196,5 +196,73 @@ MyPage: AuthInterceptor.retry → RefreshCoordinator (기다림)
 
 ---
 
+## 6. TCA StackAction.popFrom 타이밍 (2026-02-25)
+
+### ❌ 잘못된 접근: isEmpty로 root 복귀 체크
+
+```swift
+// 하지 말 것!
+case .path(.popFrom(id: _)):
+  if state.path.isEmpty {  // pop 완료 전 시점이므로 항상 false
+    return .send(.delegate(.showTabBar))
+  }
+  return .none
+```
+
+**문제점**:
+- `.popFrom`은 pop **시작** 시점에 호출됨 (pop 완료 전)
+- 1depth → root로 pop 시:
+  - `.popFrom` 호출 시점: `path.count = 1` (아직 pop 전)
+  - `isEmpty` 체크 → `false` ❌
+  - pop 완료 후: `path.count = 0`
+- 결과: root로 돌아가도 TabBar가 표시되지 않음
+
+### ✅ 올바른 접근: count == 1로 root 복귀 체크
+
+```swift
+case .path(.popFrom(id: _)):
+  // popFrom은 pop 시작 시점이므로 count == 1이면 root로 돌아감
+  if state.path.count == 1 {
+    return .send(.delegate(.showTabBar))
+  }
+  return .none
+```
+
+**타임라인**:
+```
+1depth → root로 pop:
+  1. .popFrom 호출 → path.count = 1 ✅
+  2. count == 1 체크 → true
+  3. TabBar 표시 액션 전송
+  4. pop 완료 → path.count = 0
+
+2depth → 1depth로 pop:
+  1. .popFrom 호출 → path.count = 2
+  2. count == 1 체크 → false
+  3. TabBar 숨김 유지
+  4. pop 완료 → path.count = 1
+```
+
+**핵심**:
+- **`.popFrom`은 pop 시작 시점, pop 완료 전**
+- `path.count == 1`로 체크해야 root 복귀 감지 가능
+- `isEmpty`는 절대 true가 될 수 없음 (pop 전이므로)
+
+**참고**: TCA Navigation 문서 - StackAction lifecycle
+
+---
+
+## 요약
+
+| 항목 | ❌ 하지 말 것 | ✅ 해야 할 것 |
+|------|-------------|-------------|
+| **토큰 검증** | 클라이언트에서 만료 시간 체크 | 서버 401 응답에 반응 |
+| **Splash** | refresh 시도 | 토큰 존재만 체크 |
+| **AuthInterceptor** | 메인 Session 사용 | 별도 Session 사용 |
+| **복잡도** | 과도한 최적화 | 단순하고 검증된 방법 |
+| **StackAction.popFrom** | isEmpty로 체크 | count == 1로 체크 |
+
+---
+
 **업데이트 일자**: 2026-02-25
-**관련 이슈**: 자동 로그인 기능 구현
+**관련 이슈**: 자동 로그인 기능 구현, History Stack 네비게이션 전환
