@@ -43,7 +43,11 @@ struct AppFeature {
     }
     Reduce { state, action in
       switch action {
-      case .splash(.delegate(.finished)):
+      case .splash(.delegate(.authenticated)):
+        state.route = .mainTab
+        return .none
+
+      case .splash(.delegate(.unauthenticated)):
         state.route = .intro
         return .none
       
