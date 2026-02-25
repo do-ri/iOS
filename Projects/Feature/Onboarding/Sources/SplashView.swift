@@ -8,6 +8,7 @@
 
 import SwiftUI
 import DoriDesignSystem
+import DoriNetwork
 import ComposableArchitecture
 
 public struct SplashView: View {
@@ -67,25 +68,38 @@ public struct SplashFeature : Sendable {
     case delegate(Delegate)
     
     public enum Delegate: Equatable, Sendable {
-      case finished
+      case authenticated
+      case unauthenticated
     }
   }
-  
+
+  @Dependency(AuthTokenStoreClient.self) var tokenStore
+
   public func reduce(into state: inout State, action: Action) -> Effect<Action> {
     switch action {
     case .isAppeared:
       return .run { send in
         try await Task.sleep(for: .seconds(1.5))
-        await send(.delegate(.finished))
+
+        // 토큰 존재 여부만 체크 (서버가 만료 여부 판단)
+        let hasToken = (try? tokenStore.exists()) ?? false
+
+        if hasToken {
+          // 바로 진입 → API 호출 시 401 발생하면 AuthInterceptor가 자동 refresh
+          await send(.delegate(.authenticated))
+        } else {
+          await send(.delegate(.unauthenticated))
+        }
       }
+
     case .delegate:
       return .none
     }
   }
 }
-//
-//#Preview {
-//  SplashView(store: Store(initialState: SplashFeature.State(), reducer: {
-//    SplashFeature()
-//  }))
-//}
+
+#Preview {
+  SplashView(store: Store(initialState: SplashFeature.State(), reducer: {
+    SplashFeature()
+  }))
+}

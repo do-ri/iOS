@@ -42,6 +42,7 @@ struct DoriApp: App {
     self.store = Store(initialState: AppFeature.State()) {
       AppFeature()
     } withDependencies: {
+      $0.authTokenStore = .live(tokenStore: tokenStore)
       $0.kakaoServerLoginClient = .live(
         networkService: networkService,
         tokenStore: tokenStore
