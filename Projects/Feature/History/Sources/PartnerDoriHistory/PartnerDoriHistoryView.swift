@@ -11,6 +11,7 @@ import DoriDesignSystem
 
 public struct PartnerDoriHistoryView: View {
   @Bindable var store: StoreOf<PartnerDoriHistoryFeature>
+  @Environment(\.dismiss) private var dismiss
 
   public init(store: StoreOf<PartnerDoriHistoryFeature>) {
     self.store = store
@@ -89,17 +90,15 @@ public struct PartnerDoriHistoryView: View {
       }
     }
     .background(.doriWhite)
-    .navigationTitle(store.partnerName)
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        Button {
-          store.send(.bulkDeleteTapped)
-        } label: {
-          Image(.iconDelete)
-        }
-      }
-    }
+    .doriNavigationBar(
+      DoriNavigationBarConfig.backWithTitleAndActions(
+        store.partnerName,
+        onBack: { dismiss() },
+        trailing: [
+          .iconButton(image: Image(.iconDelete), action: { store.send(.bulkDeleteTapped) })
+        ]
+      )
+    )
     .sheet(
       isPresented: Binding(
         get: { store.showFilterSheet },

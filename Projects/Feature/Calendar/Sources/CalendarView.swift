@@ -68,6 +68,7 @@ public struct CalendarView: View {
       }
       .navigationTitle("캘린더")
       .toolbarTitleDisplayMode(.inline)
+      .doriNavigationBar(DoriNavigationBarConfig.titleWithActions("캘린더"))
       .onAppear { store.send(.onAppear) }
       .overlay(alignment: .bottomTrailing) {
         FloatingActionButton {

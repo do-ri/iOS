@@ -42,8 +42,7 @@ public struct DoriListView: View {
       .padding(20)
     }
     .background(.grey100)
-    .navigationTitle("내역")
-    .navigationBarTitleDisplayMode(.inline)
+    .doriNavigationBar(.titleWithActions("내역"))
     .refreshable {
       store.send(.refresh)
     }

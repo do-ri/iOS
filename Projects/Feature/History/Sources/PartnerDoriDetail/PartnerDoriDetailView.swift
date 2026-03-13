@@ -12,6 +12,7 @@ import DoriCore
 
 public struct PartnerDoriDetailView: View {
   @Bindable var store: StoreOf<PartnerDoriDetailFeature>
+  @Environment(\.dismiss) private var dismiss
 
   public init(store: StoreOf<PartnerDoriDetailFeature>) {
     self.store = store
@@ -50,25 +51,16 @@ public struct PartnerDoriDetailView: View {
       }
     }
     .background(.doriWhite)
-    .navigationTitle(store.doriDetail?.partnerName ?? "")
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .navigationBarTrailing) {
-        HStack(spacing: 16) {
-          Button {
-            store.send(.editTapped)
-          } label: {
-            Image(.iconEdit)
-          }
-
-          Button {
-            store.send(.deleteTapped)
-          } label: {
-            Image(.iconDelete)
-          }
-        }
-      }
-    }
+    .doriNavigationBar(
+      DoriNavigationBarConfig.backWithTitleAndActions(
+        store.doriDetail?.partnerName ?? "",
+        onBack: { dismiss() },
+        trailing: [
+          .iconButton(image: Image(.iconEdit), action: { store.send(.editTapped) }),
+          .iconButton(image: Image(.iconDelete), action: { store.send(.deleteTapped) })
+        ]
+      )
+    )
     .overlay {
       if store.showDeleteAlert {
         DoriCommonAlert(
