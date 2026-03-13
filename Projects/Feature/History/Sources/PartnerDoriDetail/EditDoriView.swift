@@ -138,7 +138,6 @@ public struct EditDoriView: View {
       .padding(.bottom, 20)
     }
     .scrollDismissesKeyboard(.interactively)
-    .doriKeyboardDismissable()
     .doriNavigationBar(
       DoriNavigationBarConfig.backWithTitle(
         store.dori.partnerName,
