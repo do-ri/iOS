@@ -28,7 +28,6 @@ public struct AddDoriView: View {
         )
     }
     .background(.doriWhite)
-    .doriKeyboardDismissable()
     .doriNavigationBar(
       DoriNavigationBarConfig.backWithTitle(
         "내역 추가",
