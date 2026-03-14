@@ -13,6 +13,7 @@ import DoriCore
 
 public struct EditDoriView: View {
   @Bindable var store: StoreOf<EditDoriFeature>
+  @Environment(\.dismiss) private var dismiss
 
   private let options2x2: [DoriSegmentOption<TransactionType>] = [
     .init(id: .judori, title: TransactionType.judori.displayName, role: .normal),
@@ -44,7 +45,7 @@ public struct EditDoriView: View {
             )
           )
         }
-        
+
         // 내역 구분
         VStack(alignment: .leading, spacing: 10) {
           Text("내역 구분")
@@ -129,8 +130,13 @@ public struct EditDoriView: View {
       .padding(.bottom, 20)
     }
     .doriKeyboardDismissable()
-    .navigationTitle(store.dori.partnerName)
-    .navigationBarTitleDisplayMode(.inline)
+    .scrollDismissesKeyboard(.interactively)
+    .doriNavigationBar(
+      DoriNavigationBarConfig.backWithTitle(
+        store.dori.partnerName,
+        onBack: { dismiss() }
+      )
+    )
     .overlay {
       if store.isDatePickerVisible {
         Color.black.opacity(0.4)

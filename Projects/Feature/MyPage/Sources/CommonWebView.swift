@@ -5,6 +5,7 @@
 //  Created by 강동영 on 2/5/26.
 //
 
+import DoriDesignSystem
 import SwiftUI
 import WebKit
 
@@ -180,7 +181,8 @@ struct WKWebViewRepresentable: UIViewRepresentable {
 struct CommonWebView: View {
   let navigationTitle: String
   let url: URL
-  
+
+  @Environment(\.dismiss) private var dismiss
   @State private var isLoading = false
   @State private var progress: Double = 0
   @State private var canGoBack = false
@@ -228,8 +230,7 @@ struct CommonWebView: View {
       // 네비게이션 툴바
       toolbarView
     }
-    .navigationTitle(navigationTitle)
-    .navigationBarTitleDisplayMode(.inline)
+    .doriNavigationBar(.backWithTitle(navigationTitle, onBack: { dismiss() }))
   }
   
   private var toolbarView: some View {

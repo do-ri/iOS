@@ -64,6 +64,7 @@ struct DoriApp: App {
   var body: some Scene {
     WindowGroup {
       AppView(store: store)
+        .preferredColorScheme(.light)  // 다크모드 비활성화
         .onOpenURL { url in
           _ = KakaoSDKHandler.handleOpenURL(url)
         }

@@ -24,16 +24,19 @@ public struct MyPageView: View {
 
   public var body: some View {
     NavigationStack(path: navigationPathBinding) {
-      VStack(alignment: .leading, spacing: 24) {
-        settingInfoView
-        accountInfoView
-        
-        Spacer()
+      ZStack {
+        UIAsset.Colors.doriWhite.color
+          .ignoresSafeArea()
+
+        VStack(alignment: .leading, spacing: 24) {
+          settingInfoView
+          accountInfoView
+
+          Spacer()
+        }
+        .padding(.horizontal, 16)
       }
-      .padding(.horizontal, 16)
-      .background(.doriWhite)
-      .navigationTitle("마이페이지")
-      .toolbarTitleDisplayMode(.inline)
+      .doriNavigationBar(.titleWithActions("마이페이지"))
       .overlay {
         if store.isLoading {
           ProgressView()

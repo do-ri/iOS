@@ -11,15 +11,16 @@ import DoriDesignSystem
 
 public struct AddDoriView: View {
   @Bindable var store: StoreOf<AddDoriFeature>
-  
+  @Environment(\.dismiss) private var dismiss
+
   public init(store: StoreOf<AddDoriFeature>) {
     self.store = store
   }
-  
+
   public var body: some View {
     VStack(spacing: 32) {
       pageIndicator
-      
+
       pageContent
         .animation(
           .easeInOut(duration: 0.3),
@@ -28,8 +29,12 @@ public struct AddDoriView: View {
     }
     .background(.doriWhite)
     .doriKeyboardDismissable()
-    .navigationTitle("내역 추가")
-    .navigationBarTitleDisplayMode(.inline)
+    .doriNavigationBar(
+      DoriNavigationBarConfig.backWithTitle(
+        "내역 추가",
+        onBack: { dismiss() }
+      )
+    )
   }
   
   private var pageIndicator: some View {
