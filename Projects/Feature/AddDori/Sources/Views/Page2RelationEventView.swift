@@ -42,7 +42,8 @@ struct Page2RelationEventView: View {
           DoriSegmentGridWithMemo(
             options: options3x2,
             selection: $store.selectedEventType.sending(\.eventTypeSelected),
-            memo: $store.customEventType.sending(\.customEventTypeChanged)
+            memo: $store.customEventType.sending(\.customEventTypeChanged),
+            memoPlaceholder: "경조사를 입력하세요. (10자)"
           )
         }
       }

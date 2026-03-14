@@ -50,6 +50,12 @@ let project = Project.dori(
         .external(.composableArchitecture)
       ]
     ),
+    .doriUnitTests(
+      DoriModules.history.module,
+      dependencies: [
+        .external(.composableArchitecture)
+      ]
+    ),
     .doriFramework(
       DoriModules.myPage.module,
       dependencies: [

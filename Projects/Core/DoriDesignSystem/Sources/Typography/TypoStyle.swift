@@ -8,7 +8,7 @@
 import Foundation
 
 @MainActor
-public enum TypoSemantic {
+public enum TypoSemantic: Equatable {
   case headline(TypoSemantic.Heading)
   case title(TypoSemantic.Title)
   case subtitle(TypoSemantic.SubTitle)

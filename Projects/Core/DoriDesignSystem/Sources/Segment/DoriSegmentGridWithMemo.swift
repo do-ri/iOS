@@ -12,19 +12,22 @@ public struct DoriSegmentGridWithMemo<ID: Hashable>: View {
   let options: [DoriSegmentOption<ID>]
   @Binding var selection: ID
   @Binding var memo: String
-  
+  private let memoPlaceholder: String
+
   private let columns: Int = 2
   private var otherID: ID? { options.first(where: { $0.role == .other })?.id }
   private var isOtherSelected: Bool { selection == otherID }
-  
+
   public init(
     options: [DoriSegmentOption<ID>],
     selection: Binding<ID>,
-    memo: Binding<String> = .constant("")
+    memo: Binding<String> = .constant(""),
+    memoPlaceholder: String = "관계를 입력하세요. (10자)"
   ) {
     self.options = options
     self._selection = selection
     self._memo = memo
+    self.memoPlaceholder = memoPlaceholder
   }
   
   public var body: some View {
@@ -61,7 +64,7 @@ public struct DoriSegmentGridWithMemo<ID: Hashable>: View {
   }
   
   private var memoField: some View {
-    DoriTextField("관계를 입력하세요. (10자)", memo: $memo)
+    DoriTextField(memoPlaceholder, memo: $memo)
   }
   
   // memo가 있으면 other를 강제 선택
