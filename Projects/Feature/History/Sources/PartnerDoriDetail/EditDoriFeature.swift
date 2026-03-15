@@ -9,6 +9,7 @@ import Foundation
 import ComposableArchitecture
 import DoriCore
 import DoriNetwork
+import DoriDesignSystem
 
 @Reducer
 public struct EditDoriFeature {
@@ -24,7 +25,7 @@ public struct EditDoriFeature {
     public var selectedEventType: EventType
     public var customEventType: String
 
-    public var amountText: String
+    public var amountInput: InputFieldFeature.State
     public var eventDate: Date
     public var isDatePickerVisible: Bool = false
     public var isVisited: Visited
@@ -42,10 +43,9 @@ public struct EditDoriFeature {
     }
 
     public var isFormValid: Bool {
-      let digits = amountText.filter(\.isNumber)
-      guard let amount = Int(digits), amount > 0 else { return false }
+      guard let amount = Int(amountInput.text), amount > 0 else { return false }
       let hasEventType = selectedEventType != .other || !customEventType.trimmingCharacters(in: .whitespaces).isEmpty
-      return hasEventType
+      return hasEventType && !amountInput.state.isError
     }
 
     // MARK: - Init
@@ -64,7 +64,12 @@ public struct EditDoriFeature {
         self.customEventType = dori.eventType
       }
 
-      self.amountText = Int(dori.amount).decimalFormatted
+      self.amountInput = InputFieldFeature.State(
+        text: String(dori.amount),
+        variant: .amount(maxAmount: 2_100_000_000),
+        trailing: .unitAndClear(unitText: "원"),
+        placeholder: "금액을 입력해주세요"
+      )
 
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy-MM-dd"
@@ -82,7 +87,7 @@ public struct EditDoriFeature {
     case eventTypeSelected(EventType)
     case customEventTypeChanged(String)
 
-    case amountTextChanged(String)
+    case amountInput(InputFieldFeature.Action)
     case addAmountTapped(Int)
 
     case datePickerToggled
@@ -115,6 +120,10 @@ public struct EditDoriFeature {
   // MARK: - Reducer
 
   public var body: some ReducerOf<Self> {
+    Scope(state: \.amountInput, action: \.amountInput) {
+      InputFieldFeature()
+    }
+
     Reduce { state, action in
       switch action {
       case let .transactionTypeChanged(type):
@@ -132,21 +141,17 @@ public struct EditDoriFeature {
         state.customEventType = String(text.prefix(10))
         return .none
 
-      case let .amountTextChanged(text):
-        let digits = text.filter(\.isNumber)
-        if let amount = Int(digits), amount > 0 {
-          let capped = min(amount, Self.maxAmount)
-          state.amountText = capped.decimalFormatted
-        } else {
-          state.amountText = ""
-        }
+      case .amountInput:
         return .none
 
       case let .addAmountTapped(amount):
-        let current = Int(state.amountText.filter(\.isNumber)) ?? 0
+        if state.amountInput.state.isError {
+          return .none
+        }
+
+        let current = Int(state.amountInput.text) ?? 0
         let total = min(current + amount, Self.maxAmount)
-        state.amountText = total.decimalFormatted
-        return .none
+        return .send(.amountInput(.textChanged(String(total))))
 
       case .datePickerToggled:
         state.isDatePickerVisible.toggle()
@@ -175,7 +180,7 @@ public struct EditDoriFeature {
         let request = DoriUpdateInput(
           direction: state.transactionType,
           eventType: state.resolvedEventType,
-          amount: Int32(state.amountText.filter(\.isNumber)) ?? 0,
+          amount: Int32(state.amountInput.text) ?? 0,
           eventDate: eventDateString,
           isVisited: state.isVisited.boolValue,
           memo: state.memo.isEmpty ? nil : state.memo

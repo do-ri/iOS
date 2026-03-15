@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import UIKit
 import ComposableArchitecture
 import DoriDesignSystem
 import DoriCore
@@ -37,21 +38,12 @@ public struct EditDoriView: View {
           Text("도리")
             .addDoriSectionTitleStyle()
 
-          HStack {
-            TextField(
-              "금액을 입력해주세요",
-              text: $store.amountText.sending(\.amountTextChanged)
+          DoriInputFieldView(
+            store: store.scope(
+              state: \.amountInput,
+              action: \.amountInput
             )
-            .keyboardType(.numberPad)
-            .pretendard(.body(.sb3))
-
-            Spacer()
-
-            Text("원")
-              .pretendard(.semiBold(.sb15))
-          }
-          .roundedStyle()
-
+          )
         }
 
         // 내역 구분
@@ -73,7 +65,8 @@ public struct EditDoriView: View {
           DoriSegmentGridWithMemo(
             options: options3x2,
             selection: $store.selectedEventType.sending(\.eventTypeSelected),
-            memo: $store.customEventType.sending(\.customEventTypeChanged)
+            memo: $store.customEventType.sending(\.customEventTypeChanged),
+            memoPlaceholder: "경조사를 입력하세요. (10자)"
           )
         }
 
@@ -120,12 +113,11 @@ public struct EditDoriView: View {
           Text("메모(선택)")
             .addDoriSectionTitleStyle()
 
-          DoriTextField(
+          EditDoriMemoField(
             "메모를 입력해주세요 (40자)",
-            memo: $store.memo.sending(\.memoChanged),
+            text: $store.memo.sending(\.memoChanged),
             maxLength: 40
           )
-          .lineLimit(3...5)
         }
 
         // 저장 버튼
@@ -137,6 +129,7 @@ public struct EditDoriView: View {
       .padding(.horizontal, 16)
       .padding(.bottom, 20)
     }
+    .doriKeyboardDismissable()
     .scrollDismissesKeyboard(.interactively)
     .doriNavigationBar(
       DoriNavigationBarConfig.backWithTitle(
@@ -157,6 +150,130 @@ public struct EditDoriView: View {
               store.send(.datePickerToggled)
             }
           }
+      }
+    }
+  }
+}
+
+// MARK: - Memo Field
+
+struct EditDoriMemoField: View {
+  @Binding private var text: String
+
+  private let placeholder: String
+  private let maxLength: Int
+
+  static let minHeight: CGFloat = 46
+
+  init(
+    _ placeholder: String,
+    text: Binding<String>,
+    maxLength: Int
+  ) {
+    self._text = text
+    self.placeholder = placeholder
+    self.maxLength = maxLength
+  }
+
+  var body: some View {
+    ZStack(alignment: .topLeading) {
+      EditDoriMemoTextView(
+        text: $text,
+        maxLength: maxLength
+      )
+      .frame(minHeight: Self.minHeight)
+
+      if text.isEmpty {
+        Text(placeholder)
+          .pretendard(.body(.r3))
+          .foregroundStyle(.grey400)
+          .padding(.horizontal, 16)
+          .padding(.vertical, 12)
+          .allowsHitTesting(false)
+      }
+    }
+    .background(
+      RoundedRectangle(cornerRadius: 10)
+        .fill(.doriWhite)
+    )
+    .overlay(
+      RoundedRectangle(cornerRadius: 10)
+        .stroke(.grey300, lineWidth: 1)
+    )
+  }
+}
+
+struct EditDoriMemoTextView: UIViewRepresentable {
+  @Binding var text: String
+
+  let maxLength: Int
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(parent: self)
+  }
+
+  func makeUIView(context: Context) -> UITextView {
+    FontManager.registerFontIfNeeded("Pretendard-Regular")
+
+    let textView = UITextView()
+    textView.delegate = context.coordinator
+    textView.backgroundColor = .clear
+    textView.isScrollEnabled = false
+    textView.font = UIFont(name: "Pretendard-Regular", size: 15) ?? .systemFont(ofSize: 15)
+    textView.textColor = UIColor.label
+    textView.textContainer.lineFragmentPadding = 0
+    textView.textContainerInset = UIEdgeInsets(top: 12, left: 16, bottom: 12, right: 16)
+    textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    textView.text = String(text.prefix(maxLength))
+    return textView
+  }
+
+  func updateUIView(_ uiView: UITextView, context: Context) {
+    context.coordinator.parent = self
+
+    let truncated = String(text.prefix(maxLength))
+    if uiView.text != truncated {
+      uiView.text = truncated
+    }
+
+    if truncated != text {
+      DispatchQueue.main.async {
+        text = truncated
+      }
+    }
+  }
+
+  func sizeThatFits(
+    _ proposal: ProposedViewSize,
+    uiView: UITextView,
+    context: Context
+  ) -> CGSize? {
+    let width = proposal.width ?? UIScreen.main.bounds.width
+    let fittingSize = uiView.sizeThatFits(
+      CGSize(width: width, height: .greatestFiniteMagnitude)
+    )
+
+    return CGSize(
+      width: width,
+      height: max(EditDoriMemoField.minHeight, fittingSize.height)
+    )
+  }
+
+  final class Coordinator: NSObject, UITextViewDelegate {
+    var parent: EditDoriMemoTextView
+
+    init(parent: EditDoriMemoTextView) {
+      self.parent = parent
+    }
+
+    func textViewDidChange(_ textView: UITextView) {
+      let truncated = String(textView.text.prefix(parent.maxLength))
+      if textView.text != truncated {
+        textView.text = truncated
+      }
+
+      if parent.text != truncated {
+        parent.text = truncated
       }
     }
   }

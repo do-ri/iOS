@@ -65,15 +65,14 @@ struct Page3AmountDateView: View {
     VStack(alignment: .leading, spacing: 12) {
       Text("도리")
         .addDoriSectionTitleStyle()
-      
-      TextField(
-        "금액을 입력해주세요",
-        text: $store.amountText.sending(\.amountTextChanged)
+
+      DoriInputFieldView(
+        store: store.scope(
+          state: \.amountInput,
+          action: \.amountInput
+        )
       )
-      .keyboardType(.numberPad)
-      .pretendard(.body(.sb3))
-      .roundedStyle()
-      
+
       HStack(spacing: 8) {
         ForEach(
           amountPresets,

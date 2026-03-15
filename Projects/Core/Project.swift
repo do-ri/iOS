@@ -11,13 +11,24 @@ import ProjectDescriptionHelpers
 let project = Project.dori(
   name: DoriLayer.core.projectName,
   targets: [
-    .doriFramework(DoriModules.core.module),
+    .doriFramework(
+      DoriModules.core.module,
+      dependencies: [
+        .external(.composableArchitecture),
+      ]
+    ),
     .doriFramework(
       DoriModules.designSystem.module,
       dependencies: [
         DoriModules.core.module.targetDependency,
       ],
       hasResources: true
+    ),
+    .doriUnitTests(
+      DoriModules.designSystem.module,
+      dependencies: [
+        .external(.composableArchitecture),
+      ]
     ),
   ],
   resourceSynthesizers: [
