@@ -34,7 +34,7 @@ struct CustomTabBar: View {
       
       TabBarItem(
         icon: selectedTab == .myPage ? Image(.tabbarMypageFill) : Image(.tabbarMypage),
-        title: "마이페이지",
+        title: "마이홈",
         isSelected: selectedTab == .myPage
       ) {
         selectedTab = .myPage

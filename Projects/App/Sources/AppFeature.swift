@@ -29,6 +29,7 @@ struct AppFeature {
     case splash(SplashFeature.Action)
     case intro(IntroFeature.Action)
     case mainTab(MainTabFeature.Action)
+    case forceLogout  // AuthInterceptor에서 발생하는 강제 로그아웃
   }
 
   var body: some ReducerOf<Self> {
@@ -50,12 +51,18 @@ struct AppFeature {
       case .splash(.delegate(.unauthenticated)):
         state.route = .intro
         return .none
-      
+
       case .intro(.delegate(.loginSucceeded)):
         state.route = .mainTab
         return .none
-        
+
       case .mainTab(.delegate(.needsAuthentication)):
+        state.route = .intro
+        return .none
+
+      case .forceLogout:
+        // Refresh token 만료로 인한 강제 로그아웃
+        print("⚠️ Refresh token expired. Forcing logout.")
         state.route = .intro
         return .none
 

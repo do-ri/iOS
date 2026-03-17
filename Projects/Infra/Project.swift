@@ -18,6 +18,7 @@ let project = Project.dori(
       dependencies: [
         DoriModules.network.module.targetDependency,
         .external(.alamofire),
+        .external(.composableArchitecture),
       ]
     ),
   ]

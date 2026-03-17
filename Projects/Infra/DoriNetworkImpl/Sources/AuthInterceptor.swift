@@ -15,10 +15,15 @@ public final class AuthInterceptor: RequestInterceptor {
   private let maxRetryCount = 1
   private let coordinator = RefreshCoordinator()
   private let session: Session
-  
-  public init(tokenStore: any AuthTokenStoring) {
+  private let logoutHandler: @Sendable () async -> Void
+
+  public init(
+    tokenStore: any AuthTokenStoring,
+    logoutHandler: @escaping @Sendable () async -> Void = {}
+  ) {
     self.tokenStore = tokenStore
     self.session = Session()
+    self.logoutHandler = logoutHandler
   }
   
   private actor RefreshCoordinator {
@@ -48,9 +53,11 @@ public final class AuthInterceptor: RequestInterceptor {
     completion: @escaping (Result<URLRequest, Error>) -> Void
   ) {
     var request = urlRequest
-    let accessToken = tokenStore.load().accessToken
-    
-    if let accessToken, !accessToken.isEmpty {
+    let token = tokenStore.load()
+
+    if let accessToken = token.accessToken, !accessToken.isEmpty {
+      print("🔑 accessToken: \(accessToken)")
+      print("🔑 refreshToken: \(token.refreshToken)")
       request.setValue(
         "Bearer \(accessToken)",
         forHTTPHeaderField: authorizationKey
@@ -66,7 +73,7 @@ public final class AuthInterceptor: RequestInterceptor {
     dueTo error: any Error,
     completion: @escaping @Sendable (RetryResult) -> Void) {
       print(#function)
-      guard let response = request.task?.response as? HTTPURLResponse,
+      guard let response = request.response,
             response.statusCode == 401 else {
         completion(.doNotRetryWithError(error))
         return
@@ -100,7 +107,7 @@ public final class AuthInterceptor: RequestInterceptor {
     guard let refreshToken = tokens.refreshToken else {
       return false
     }
-    
+    print("🔑 refreshToken: \(refreshToken)")
     guard let request = try? RefreshEndpoint(refreshToken: refreshToken).createURLRequest() else {
       return false
     }
@@ -128,6 +135,11 @@ public final class AuthInterceptor: RequestInterceptor {
   
   private func handleLogout() {
     try? tokenStore.clear()
+
+    // TCA 방식으로 강제 로그아웃 전파
+    Task { @MainActor in
+      await logoutHandler()
+    }
   }
   
 }

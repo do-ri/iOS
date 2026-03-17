@@ -175,6 +175,7 @@ private struct DoriFilterSheet: View {
       
     }
     .padding(.top, 12)
+    .background(.doriWhite)
   }
 }
 

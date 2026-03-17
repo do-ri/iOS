@@ -18,23 +18,50 @@ public struct AddDoriView: View {
   }
 
   public var body: some View {
-    VStack(spacing: 32) {
-      pageIndicator
+    ZStack {
+      VStack(spacing: 32) {
+        pageIndicator
 
-      pageContent
-        .animation(
-          .easeInOut(duration: 0.3),
-          value: store.currentPage
+        pageContent
+          .animation(
+            .easeInOut(duration: 0.3),
+            value: store.currentPage
+          )
+      }
+      .background(.doriWhite)
+      .doriKeyboardDismissable()
+      .doriNavigationBar(
+        DoriNavigationBarConfig.backWithTitle(
+          "내역 추가",
+          onBack: {
+            if store.currentPage == 0 {
+              dismiss()
+            } else {
+              store.send(.previousPageTapped)
+            }
+          }
         )
-    }
-    .background(.doriWhite)
-    .doriKeyboardDismissable()
-    .doriNavigationBar(
-      DoriNavigationBarConfig.backWithTitle(
-        "내역 추가",
-        onBack: { dismiss() }
       )
-    )
+      .allowsHitTesting(!store.isDatePickerVisible)
+
+      if store.isDatePickerVisible {
+        Color.black.opacity(0.4)
+          .ignoresSafeArea()
+          .allowsHitTesting(false)
+
+        Color.clear
+          .ignoresSafeArea()
+          .contentShape(Rectangle())
+          .onTapGesture { store.send(.datePickerToggled) }
+
+        AddDoriCalendarView(initialDate: store.eventDate) {
+          store.send(.datePickerToggled)
+        } selecionAction: { date in
+          store.send(.eventDateChanged(date))
+          store.send(.datePickerToggled)
+        }
+      }
+    }
   }
   
   private var pageIndicator: some View {

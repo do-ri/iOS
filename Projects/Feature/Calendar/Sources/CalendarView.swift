@@ -19,53 +19,49 @@ public struct CalendarView: View {
 
   public var body: some View {
     NavigationStack {
-      ZStack {
-        UIAsset.Colors.doriWhite.color
-          .ignoresSafeArea()
+      ScrollView {
+        VStack(spacing: 20) {
+          // 총 금액 표시
+          CalendarTotalAmountView(store.selectedType, totalAmount: store.totalAmount)
 
-        ScrollView {
-          VStack(spacing: 20) {
-            // 총 금액 표시
-            CalendarTotalAmountView(store.selectedType, totalAmount: store.totalAmount)
-
-            HStack(spacing: 0) {
-              // 월 선택기
-              MonthSelectorView(
-                currentMonth: store.currentMonth,
-                onPrevious: { store.send(.goToPreviousMonth) },
-                onNext: { store.send(.goToNextMonth) }
-              )
-
-              Spacer()
-              
-              // 세그먼트 컨트롤
-              DoriSegmentControl(
-                selectedType: $store.selectedType.sending(\.selectedTypeChanged)
-              )
-              .frame(maxWidth: 120)
-              .frame(height: 32)
-            }
-
-            // 캘린더 그리드
-            CalendarGridView(
-              days: store.calendarDays,
-              selectedType: store.selectedType,
-              onDayTapped: { day in
-                store.send(.dayTapped(day))
-              }
+          HStack(spacing: 0) {
+            // 월 선택기
+            MonthSelectorView(
+              currentMonth: store.currentMonth,
+              onPrevious: { store.send(.goToPreviousMonth) },
+              onNext: { store.send(.goToNextMonth) }
             )
 
-            if let errorMessage = store.errorMessage {
-              Text(errorMessage)
-                .font(.caption)
-                .foregroundColor(.red)
-                .padding(.horizontal)
-            }
+            Spacer()
+
+            // 세그먼트 컨트롤
+            DoriSegmentControl(
+              selectedType: $store.selectedType.sending(\.selectedTypeChanged)
+            )
+            .frame(maxWidth: 120)
+            .frame(height: 32)
           }
-          .padding(.horizontal, 16)
-          .padding(.bottom, 80)
+
+          // 캘린더 그리드
+          CalendarGridView(
+            days: store.calendarDays,
+            selectedType: store.selectedType,
+            onDayTapped: { day in
+              store.send(.dayTapped(day))
+            }
+          )
+
+          if let errorMessage = store.errorMessage {
+            Text(errorMessage)
+              .font(.caption)
+              .foregroundColor(.red)
+              .padding(.horizontal)
+          }
         }
+        .padding(.horizontal, 16)
+        .padding(.bottom, 80)
       }
+      .scrollDisabled(true)
       .navigationTitle("캘린더")
       .toolbarTitleDisplayMode(.inline)
       .doriNavigationBar(DoriNavigationBarConfig.titleWithActions("캘린더"))

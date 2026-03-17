@@ -39,7 +39,7 @@ public struct CalendarGridView: View {
         }
       }
 
-      // 날짜 그리드 (5줄 고정)
+      // 날짜 그리드 (최대 6줄, 42칸)
       LazyVGrid(columns: columns, spacing: 8) {
         ForEach(days) { calendarDay in
           CalendarDayCell(
@@ -71,7 +71,8 @@ struct CalendarDayCell: View {
   }
   
   var isTodayCircleColor: Color {
-    isToday ? UIAsset.Colors.secondary.color : .clear
+    guard isToday else { return .clear }
+    return selectedType == .judori ? UIAsset.Colors.secondary.color : UIAsset.Colors.grey600.color
   }
   
   var dotColor: UIAsset.Colors {
@@ -86,16 +87,17 @@ struct CalendarDayCell: View {
   var body: some View {
     VStack(spacing: 7) {
       textContent
-      
+
       dotContent
     }
     .frame(maxWidth: .infinity)
     .frame(height: 44)
     .padding(.top, 8)
     .padding(.bottom, 26)
+    .contentShape(Rectangle())
     .background(alignment: .top, content: {
       Rectangle()
-        .frame(width: 50, height: 0.5)
+        .frame(height: 0.5)
         .foregroundStyle(.grey300)
     })
   }
@@ -126,7 +128,7 @@ struct CalendarDayCell: View {
 
 #Preview {
   CalendarGridView(
-    days: (0..<35).map { index in
+    days: (0..<42).map { index in
       CalendarDay(
         id: index,
         day: index < 2 ? 29 + index : (index - 1 > 28 ? index - 29 : index - 1),
@@ -139,4 +141,3 @@ struct CalendarDayCell: View {
   )
   .padding()
 }
-

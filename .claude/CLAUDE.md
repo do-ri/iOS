@@ -231,6 +231,9 @@ feature/* → develop → main
 ### 9.3 민감 설정 관리
 See @rules/frontend/security.md
 
+### 9.4 Git Worktree 워크플로우
+See @rules/git-worktree.md
+
 ---
 
 ## 10. 테스트 전략
@@ -240,3 +243,32 @@ See @rules/frontend/test-strategy.md
 ### 10.3 MVP 제외 항목
 
 - UI 테스트 / 스냅샷 테스트는 MVP에서 제외
+
+---
+
+## 11. 빌드 검증 규칙
+
+### 11.1 작업 완료 후 필수 검증
+
+작업이 완료되면 반드시 **xcodebuildmcp**로 빌드 검증을 수행한다.
+
+1. `session_show_defaults` — 프로젝트/스킴/시뮬레이터 확인
+2. `build_sim` — 빌드 검증 (DoriApp 스킴 기준)
+
+### 11.2 검증 실패 시 재시도
+
+- 빌드 실패 시 원인을 분석하고 수정 후 **최대 5회까지** 재시도한다
+- 5회 초과 시 사용자에게 실패 원인을 보고하고 중단한다
+
+### 11.4 검증 중 질문 금지
+
+- 검증이 **모두 완료될 때까지** 사용자에게 질문하거나 진행 여부를 묻지 않는다
+- 검증 결과를 모아서 완료 후 한 번에 보고한다
+
+### 11.3 검증 대상 스킴
+
+| 스킴 | 용도 |
+|------|------|
+| `DoriApp` | 전체 앱 빌드 (기본 검증) |
+| `DoriDesignSystem` | 디자인 시스템 단독 검증 |
+| `FeatureCalendar` / `FeatureHistory` 등 | Feature 단독 검증 |
