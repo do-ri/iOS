@@ -69,13 +69,14 @@ struct Page3AmountDateView: View {
             Text(preset.title)
               .pretendard(.body(.r3))
               .foregroundStyle(DoriColors.grey600.color)
-              .padding(.horizontal, 20)
+              .frame(maxWidth: .infinity)
               .padding(.vertical, 14)
               .background(
                 RoundedRectangle(cornerRadius: 8)
                   .stroke(DoriColors.grey300.color)
               )
           }
+          .frame(maxWidth: .infinity)
         }
       }
     }
