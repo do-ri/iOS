@@ -117,9 +117,15 @@ public struct CalendarFeature {
         return .none
         
       case let .dayTapped(day):
-        guard day.isCurrentMonth, let date = day.date else { return .none }
+        guard day.isSelectable, let date = day.date else { return .none }
+        let dayDoris = doris(for: date, state: state)
+        guard !dayDoris.isEmpty else {
+          state.selectedDay = nil
+          state.dayDoris = []
+          return .none
+        }
         state.selectedDay = day
-        state.dayDoris = currentTypeDoris(state: state).filter { $0.eventDate.isSameDay(as: date) }
+        state.dayDoris = dayDoris
         return .none
         
       case .sheetDismissed:
@@ -228,7 +234,13 @@ public struct CalendarFeature {
 
   private func updateSelectedDayDoris(state: inout State) {
     guard let selectedDay = state.selectedDay, let date = selectedDay.date else { return }
-    state.dayDoris = currentTypeDoris(state: state).filter { $0.eventDate.isSameDay(as: date) }
+    let dayDoris = doris(for: date, state: state)
+    guard !dayDoris.isEmpty else {
+      state.selectedDay = nil
+      state.dayDoris = []
+      return
+    }
+    state.dayDoris = dayDoris
   }
 
   private func currentTypeDayList(state: State) -> [Int] {
@@ -247,5 +259,9 @@ public struct CalendarFeature {
     case .baddori:
       return state.calendarData.inDoriList
     }
+  }
+
+  private func doris(for date: Date, state: State) -> [CalendarDori] {
+    currentTypeDoris(state: state).filter { $0.eventDate.isSameDay(as: date) }
   }
 }

@@ -46,6 +46,7 @@ public struct CalendarGridView: View {
             day: calendarDay,
             selectedType: selectedType
           )
+          .allowsHitTesting(calendarDay.isSelectable)
           .onTapGesture {
             onDayTapped(calendarDay)
           }
