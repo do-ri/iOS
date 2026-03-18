@@ -30,6 +30,12 @@ git worktree add ../Dori-iOS-fix32 fix/32-textfield-validation
 git worktree add ../Dori-iOS-develop develop
 ```
 
+### 생성 직후 필수 체크
+
+- 새 worktree를 만든 직후 `Projects/App/Resources/Common.xcconfig` 파일 존재 여부를 확인한다.
+- 파일이 없으면 `~/Desktop/Dori-Workspace/Security_Common/Common.xcconfig`를 복사해서 동일 경로에 둔다.
+- 이 파일이 없으면 `Tuist generate`, 앱 런치, 네트워크 설정이 모두 깨질 수 있다.
+
 ### 네이밍 규칙
 
 | 브랜치 | 워크트리 폴더명 |

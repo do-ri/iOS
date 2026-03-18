@@ -74,17 +74,8 @@ struct Page1NameTypeView: View {
           searchResultsList
         }
       }
-
-      Spacer()
-      
-      // 다음 버튼
-      PrimaryButton(title: "다음") {
-        store.send(.nextPageTapped)
-      }
-      .isEnable(store.isPage1Valid)
     }
     .padding(.horizontal, 16)
-    .padding(.bottom, 20)
   }
 
   private var searchResultsList: some View {
@@ -192,4 +183,3 @@ struct Page1NameTypeView: View {
     )
   }
 }
-

@@ -12,6 +12,7 @@ import DoriCore
 
 struct Page3AmountDateView: View {
   @Bindable var store: StoreOf<AddDoriFeature>
+  let isScrollEnabled: Bool
   
   private let amountPresets: [AmountPreset] = .presets
   private let options1x2: [DoriSegmentOption<Visited>] = Visited.allCases.map {
@@ -19,29 +20,26 @@ struct Page3AmountDateView: View {
   }
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 24) {
-      // 금액
-      amountSection
+    ScrollView {
+      VStack(alignment: .leading, spacing: 24) {
+        // 금액
+        amountSection
 
-      // 날짜
-      dateSection
+        // 날짜
+        dateSection
 
-      // 방문 여부
-      visitedSection
+        // 방문 여부
+        visitedSection
 
-      // 메모
-      memoSection
-
-      Spacer()
-
-      // 다음 버튼
-      PrimaryButton(title: "완료") {
-        store.send(.submitTapped)
+        // 메모
+        memoSection
       }
-      .isEnable(store.isPage3Valid)
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(.horizontal, 16)
-    .padding(.bottom, 20)
+    .padding(.bottom, 16)
+    .scrollDisabled(!isScrollEnabled)
+    .scrollIndicators(.hidden)
   }
   
   // MARK: - Sections
@@ -129,12 +127,11 @@ struct Page3AmountDateView: View {
       Text("메모(선택)")
         .addDoriSectionTitleStyle()
       
-      DoriTextField(
+      DoriExpandingTextView(
         "메모를 입력해주세요 (40자)",
-        memo: $store.memo.sending(\.memoChanged),
+        text: $store.memo.sending(\.memoChanged),
         maxLength: 40
       )
-      .lineLimit(3...5)
     }
   }
 }
@@ -162,7 +159,8 @@ extension [AmountPreset] {
   Page3AmountDateView(
     store: Store(initialState: AddDoriFeature.State()) {
       AddDoriFeature()
-    }
+    },
+    isScrollEnabled: false
   )
 }
 

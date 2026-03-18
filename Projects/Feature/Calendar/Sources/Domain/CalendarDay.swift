@@ -30,4 +30,8 @@ public struct CalendarDay: Identifiable, Equatable, Sendable {
     self.hasTransaction = hasTransaction
     self.isCurrentMonth = isCurrentMonth
   }
+
+  public var isSelectable: Bool {
+    isCurrentMonth && hasTransaction
+  }
 }
