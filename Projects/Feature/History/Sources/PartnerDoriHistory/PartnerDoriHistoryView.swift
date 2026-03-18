@@ -111,6 +111,7 @@ public struct PartnerDoriHistoryView: View {
           store.send(.filterChanged(filter))
         }
       )
+      .presentationBackground(DoriDesignSystem.DoriColors.doriWhite.color)
       .presentationDetents([.height(200)])
     }
     .overlay {
@@ -175,7 +176,6 @@ private struct DoriFilterSheet: View {
       
     }
     .padding(.top, 12)
-    .background(.doriWhite)
   }
 }
 
