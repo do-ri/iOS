@@ -12,6 +12,7 @@ import DoriCore
 
 struct Page2RelationEventView: View {
   @Bindable var store: StoreOf<AddDoriFeature>
+  let isScrollEnabled: Bool
 
   @State private var memo: String = ""
   
@@ -20,7 +21,7 @@ struct Page2RelationEventView: View {
   private let options3x2: [DoriSegmentOption<EventType>] = EventType.allCases.map { $0.toSegmentOptions() }
   
   var body: some View {
-    VStack(spacing: 0) {
+    ScrollView {
       VStack(alignment: .leading, spacing: 32) {
         // 관계
         VStack(alignment: .leading, spacing: 12) {
@@ -47,17 +48,12 @@ struct Page2RelationEventView: View {
           )
         }
       }
-      
-      Spacer()
-      
-      // 다음 버튼
-      PrimaryButton(title: "다음") {
-        store.send(.nextPageTapped)
-      }
-      .isEnable(store.isPage2Valid)
+      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .padding(.horizontal, 16)
-    .padding(.bottom, 20)
+    .padding(.bottom, 16)
+    .scrollDisabled(!isScrollEnabled)
+    .scrollIndicators(.hidden)
   }
   
 }
@@ -66,6 +62,7 @@ struct Page2RelationEventView: View {
   Page2RelationEventView(
     store: Store(initialState: AddDoriFeature.State()) {
       AddDoriFeature()
-    }
+    },
+    isScrollEnabled: false
   )
 }

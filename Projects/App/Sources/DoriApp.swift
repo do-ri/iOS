@@ -21,8 +21,15 @@ import PlatformKeychain
 @main
 struct DoriApp: App {
   let store: StoreOf<AppFeature>
+  #if DEBUG
+  private let debugLaunchRoute: DebugLaunchRoute?
+  #endif
 
   init() {
+    #if DEBUG
+    self.debugLaunchRoute = DebugLaunchRoute(environment: ProcessInfo.processInfo.environment)
+    #endif
+
     let tokenStore = KeychainAuthTokenStore(service: DoriKeychainKey.serviceID)
 
     // Store 참조를 위한 Box pattern
@@ -79,11 +86,66 @@ struct DoriApp: App {
 
   var body: some Scene {
     WindowGroup {
-      AppView(store: store)
-        .preferredColorScheme(.light)  // 다크모드 비활성화
-        .onOpenURL { url in
-          _ = KakaoSDKHandler.handleOpenURL(url)
-        }
+      rootView
+        .preferredColorScheme(.light)
     }
   }
+
+  @ViewBuilder
+  private var rootView: some View {
+    #if DEBUG
+    if let debugLaunchRoute {
+      debugLaunchRoute.makeView()
+    } else {
+      appView
+    }
+    #else
+    appView
+    #endif
+  }
+
+  private var appView: some View {
+    AppView(store: store)
+      .onOpenURL { url in
+        _ = KakaoSDKHandler.handleOpenURL(url)
+      }
+  }
 }
+
+#if DEBUG
+private struct DebugLaunchRoute {
+  private let route: String
+  private let memo: String
+
+  init?(environment: [String: String]) {
+    guard let route = environment["DORI_DEBUG_ROUTE"] else { return nil }
+    self.route = route
+    self.memo = environment["DORI_DEBUG_MEMO"] ?? ""
+  }
+
+  @MainActor
+  @ViewBuilder
+  func makeView() -> some View {
+    switch route {
+    case "addDoriPage3":
+      NavigationStack {
+        AddDoriView(
+          store: Store(initialState: configuredState) {
+            AddDoriFeature()
+          }
+        )
+      }
+    default:
+      EmptyView()
+    }
+  }
+
+  @MainActor
+  private var configuredState: AddDoriFeature.State {
+    var state = AddDoriFeature.State()
+    state.currentPage = 2
+    state.memo = memo
+    return state
+  }
+}
+#endif
