@@ -24,10 +24,23 @@ struct DoriApp: App {
 
   init() {
     let tokenStore = KeychainAuthTokenStore(service: DoriKeychainKey.serviceID)
-    let interceptor = AuthInterceptor(tokenStore: tokenStore)
+
+    // Store 참조를 위한 Box pattern
+    final class StoreBox: @unchecked Sendable {
+      var store: StoreOf<AppFeature>?
+    }
+    let storeBox = StoreBox()
+
+    let interceptor = AuthInterceptor(tokenStore: tokenStore) { @MainActor in
+      storeBox.store?.send(.forceLogout)
+    }
+
     #if DEBUG
+    let config = URLSessionConfiguration.default
+    config.requestCachePolicy = .reloadIgnoringLocalCacheData
+    config.urlCache = nil
     let networkService = NetworkServiceImpl(
-      configuration: .default,
+      configuration: config,
       logger: NetworkLogger(),
       interceptor: interceptor
     )
@@ -39,7 +52,7 @@ struct DoriApp: App {
     )
     #endif
 
-    self.store = Store(initialState: AppFeature.State()) {
+    let store = Store(initialState: AppFeature.State()) {
       AppFeature()
     } withDependencies: {
       $0.authTokenStore = .live(tokenStore: tokenStore)
@@ -47,7 +60,7 @@ struct DoriApp: App {
         networkService: networkService,
         tokenStore: tokenStore
       )
-      
+
       $0.addDoriAPIClient = .live(networkService: networkService)
       $0.calendarClient = .live(networkService: networkService)
       $0.historyAPIClient = .live(networkService: networkService)
@@ -56,6 +69,9 @@ struct DoriApp: App {
         tokenStore: tokenStore
       )
     }
+
+    storeBox.store = store
+    self.store = store
 
     FontManager.registerAllFonts()
     KakaoSDKHandler.initializeFromMainBundle()

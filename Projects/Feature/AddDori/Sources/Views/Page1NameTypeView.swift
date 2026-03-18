@@ -13,6 +13,7 @@ import DoriNetwork
 
 struct Page1NameTypeView: View {
   @Bindable var store: StoreOf<AddDoriFeature>
+  @State private var localNameText: String = ""
 
   private let options2x2: [DoriSegmentOption<TransactionType>] = [
     .init(id: .judori, title: TransactionType.judori.displayName, role: .normal),
@@ -40,15 +41,24 @@ struct Page1NameTypeView: View {
         HStack {
           TextField(
             "상대방 이름을 입력하세요. (10자)",
-            text: Binding(
-              get: { store.searchQuery },
-              set: { store.send(.searchQueryChanged(String($0.prefix(10)))) }
-            )
+            text: $localNameText
           )
           .pretendard(.body(.sb3))
           .foregroundStyle(.doriBlack)
+          .onChange(of: localNameText) { _, newValue in
+            let truncated = String(newValue.prefix(10))
+            if localNameText != truncated {
+              localNameText = truncated
+            }
+            store.send(.searchQueryChanged(truncated))
+          }
+          .onChange(of: store.searchQuery) { _, newValue in
+            if localNameText != newValue {
+              localNameText = newValue
+            }
+          }
 
-          if !store.searchQuery.isEmpty {
+          if !localNameText.isEmpty {
             Button {
               store.send(.clearSearchTapped)
             } label: {

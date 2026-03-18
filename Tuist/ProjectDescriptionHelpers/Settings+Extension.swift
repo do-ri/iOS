@@ -17,6 +17,23 @@ public extension Settings {
       "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
       "SWIFT_VERSION": "6.0",
       "CLANG_ENABLE_MODULES": "YES"
+    ],
+    configurations: [
+      .debug(
+        name: .debug,
+        settings: [
+          "ENABLE_TESTABILITY": "YES",
+          "SWIFT_OPTIMIZATION_LEVEL": "-Onone"
+        ]
+      ),
+      .release(
+        name: .release,
+        settings: [
+          "ENABLE_TESTABILITY": "NO",
+          "SWIFT_OPTIMIZATION_LEVEL": "-O",
+          "SWIFT_COMPILATION_MODE": "wholemodule"
+        ]
+      )
     ]
   )
   

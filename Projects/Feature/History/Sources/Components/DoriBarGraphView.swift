@@ -70,16 +70,17 @@ public struct DoriBarGraphView: View {
           Spacer()
 
           // 오른쪽 사람 아이콘 (받도리)
-          HStack(spacing: 3) {
-            Text("받도리")
-              .pretendard(.body(.sb6))
-            UIAsset.Icons.iconBaddori.image
-              .resizable()
-              .frame(width: 26, height: 26)
-              .padding(.trailing, 4)
+          if receivedAmount > 0 {
+            HStack(spacing: 3) {
+              Text("받도리")
+                .pretendard(.body(.sb6))
+              UIAsset.Icons.iconBaddori.image
+                .resizable()
+                .frame(width: 26, height: 26)
+                .padding(.trailing, 4)
+            }
+            .foregroundStyle(.grey500)
           }
-          .foregroundStyle(.grey500)
-          
         }
       }
     }

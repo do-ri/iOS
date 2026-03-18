@@ -42,21 +42,6 @@ struct Page3AmountDateView: View {
     }
     .padding(.horizontal, 16)
     .padding(.bottom, 20)
-    .overlay {
-      if store.isDatePickerVisible {
-        Color.black.opacity(0.4)
-          .ignoresSafeArea()
-          .onTapGesture { store.send(.datePickerToggled) }
-          .overlay {
-            AddDoriCalendarView(initialDate: store.eventDate) {
-              store.send(.datePickerToggled)
-            } selecionAction: { date in
-              store.send(.eventDateChanged(date))
-              store.send(.datePickerToggled)
-            }
-          }
-      }
-    }
   }
   
   // MARK: - Sections
@@ -84,13 +69,14 @@ struct Page3AmountDateView: View {
             Text(preset.title)
               .pretendard(.body(.r3))
               .foregroundStyle(DoriColors.grey600.color)
-              .padding(.horizontal, 20)
+              .frame(maxWidth: .infinity)
               .padding(.vertical, 14)
               .background(
                 RoundedRectangle(cornerRadius: 8)
                   .stroke(DoriColors.grey300.color)
               )
           }
+          .frame(maxWidth: .infinity)
         }
       }
     }
@@ -204,7 +190,7 @@ struct AddDoriCalendarView: View {
         displayedComponents: .date
       )
       .datePickerStyle(.graphical)
-      .tint(DoriColors.main.color)
+      .tint(DoriColors.secondary.color)
       .padding()
       .background(DoriColors.doriWhite.color)
       .clipShape(RoundedRectangle(cornerRadius: 16))

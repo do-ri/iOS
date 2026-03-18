@@ -29,14 +29,16 @@ public struct DoriKeyboardDismissModifier: ViewModifier {
   public func body(content: Content) -> some View {
     content
       .contentShape(Rectangle())  // 빈 영역도 탭 인식
-      .onTapGesture {
-        UIApplication.shared.sendAction(
-          #selector(UIResponder.resignFirstResponder),
-          to: nil,
-          from: nil,
-          for: nil
-        )
-      }
+      .simultaneousGesture(
+        TapGesture().onEnded {
+          UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder),
+            to: nil,
+            from: nil,
+            for: nil
+          )
+        }
+      )
   }
 }
 

@@ -13,6 +13,7 @@ extension InfoPlist {
     "BASE_URL": "$(BASE_URL)",
     "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
     "Appearance": "Light",
+    "ITSAppUsesNonExemptEncryption": .boolean(false),
     "CFBundleURLTypes": [
       [
         "CFBundleTypeRole": "Editor",

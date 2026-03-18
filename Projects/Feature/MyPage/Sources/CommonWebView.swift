@@ -182,13 +182,13 @@ struct CommonWebView: View {
   let navigationTitle: String
   let url: URL
 
-  @Environment(\.dismiss) private var dismiss
   @State private var isLoading = false
   @State private var progress: Double = 0
   @State private var canGoBack = false
   @State private var canGoForward = false
   @State private var webViewStore = WebViewStore()
-  
+  @Environment(\.dismiss) private var dismiss
+
   init(
     navigationTitle: String,
     url: URL

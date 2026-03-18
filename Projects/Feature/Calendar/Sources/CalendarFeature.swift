@@ -199,23 +199,28 @@ public struct CalendarFeature {
       )
     }
 
-    // 다음달 날짜 채우기 (총 35칸 = 5줄)
-    let remaining = 35 - days.count
-    for i in 0..<remaining {
-      let day = i + 1
-      let date = calendar.date(
-        byAdding: .day,
-        value: i,
-        to: currentMonth.nextMonth.startOfMonth
-      )
-      days.append(
-        CalendarDay(
-          id: prefixCount + daysInMonth + i,
-          day: day,
-          date: date,
-          isCurrentMonth: false
+    // 다음달 날짜 채우기 (기본 5줄=35칸, 월이 넘치면 6줄=42칸)
+    let requiredCells = prefixCount + daysInMonth
+    let targetCells = requiredCells <= 35 ? 35 : 42
+    let remaining = max(0, targetCells - days.count)
+
+    if remaining > 0 {
+      for i in 0..<remaining {
+        let day = i + 1
+        let date = calendar.date(
+          byAdding: .day,
+          value: i,
+          to: currentMonth.nextMonth.startOfMonth
         )
-      )
+        days.append(
+          CalendarDay(
+            id: prefixCount + daysInMonth + i,
+            day: day,
+            date: date,
+            isCurrentMonth: false
+          )
+        )
+      }
     }
 
     state.calendarDays = days
