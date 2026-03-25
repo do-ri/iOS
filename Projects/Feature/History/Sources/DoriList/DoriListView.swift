@@ -42,7 +42,17 @@ public struct DoriListView: View {
       .padding(20)
     }
     .background(.grey100)
-    .doriNavigationBar(.titleWithActions("내역"))
+    .doriNavigationBar(
+      .titleWithActions(
+        "내역",
+        trailing: [
+          .iconButton(
+            image: Image(systemName: "magnifyingglass"),
+            action: { store.send(.searchTapped) }
+          )
+        ]
+      )
+    )
     .refreshable {
       store.send(.refresh)
     }

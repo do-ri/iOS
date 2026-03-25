@@ -205,7 +205,7 @@ extension HistoryAPIClient: DependencyKey {
       ]
     },
     searchPartners: { query in
-      [
+      let allPartners: [Dori] = [
         Dori(
           doriId: 1,
           userId: 1,
@@ -219,8 +219,37 @@ extension HistoryAPIClient: DependencyKey {
           isVisited: true,
           memo: "",
           createdAt: "2026-02-17T09:00:00"
+        ),
+        Dori(
+          doriId: 100,
+          userId: 1,
+          partnerId: 100,
+          direction: .judori,
+          partnerName: "조카 1",
+          relationship: "가족",
+          eventType: "생일",
+          amount: 50_000,
+          eventDate: "2025-05-01",
+          isVisited: true,
+          memo: "",
+          createdAt: "2026-02-17T09:00:00"
+        ),
+        Dori(
+          doriId: 101,
+          userId: 1,
+          partnerId: 101,
+          direction: .baddori,
+          partnerName: "조카1",
+          relationship: "친구",
+          eventType: "결혼식",
+          amount: 100_000,
+          eventDate: "2025-08-20",
+          isVisited: true,
+          memo: "",
+          createdAt: "2026-02-17T09:00:00"
         )
-      ].filter { $0.partnerName.contains(query) }
+      ]
+      return allPartners.filter { $0.partnerName.contains(query) }
     },
     fetchPartnerDoriList: { partnerId in
       PartnerDoriList(

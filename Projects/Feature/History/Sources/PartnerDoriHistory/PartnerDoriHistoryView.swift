@@ -62,28 +62,23 @@ public struct PartnerDoriHistoryView: View {
 
           Divider()
 
-          if store.doriByDate.isEmpty && !store.isLoading {
-            DoriEmptyView(.doriHistory)
-              .frame(height: 200)
-          } else {
-            ForEach(store.doriByDate, id: \.date) { group in
-              VStack(alignment: .leading, spacing: 8) {
-                DateHeaderView(date: group.date.parsedEventDate)
-                  .padding(.horizontal)
+          ForEach(store.doriByDate, id: \.date) { group in
+            VStack(alignment: .leading, spacing: 8) {
+              DateHeaderView(date: group.date.parsedEventDate)
+                .padding(.horizontal)
 
-                VStack(spacing: 0) {
-                  ForEach(group.doris, id: \.doriId) { dori in
-                    Button {
-                      store.send(.doriTapped(dori))
-                    } label: {
-                      TransactionRowView(dori: dori)
-                        .padding(.horizontal)
-                    }
-                    .buttonStyle(.plain)
+              VStack(spacing: 0) {
+                ForEach(group.doris, id: \.doriId) { dori in
+                  Button {
+                    store.send(.doriTapped(dori))
+                  } label: {
+                    TransactionRowView(dori: dori)
+                      .padding(.horizontal)
                   }
+                  .buttonStyle(.plain)
                 }
-                .cornerRadius(10)
               }
+              .cornerRadius(10)
             }
           }
         }

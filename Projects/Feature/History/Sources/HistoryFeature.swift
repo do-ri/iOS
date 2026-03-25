@@ -16,45 +16,49 @@ import FeatureAddDori
 @Reducer
 public struct HistoryFeature {
   public init() {}
-
+  
   // MARK: - Path Reducer
-
+  
   @Reducer
   public enum Path {
     case partnerHistory(PartnerDoriHistoryFeature)
     case partnerDoriDetail(PartnerDoriDetailFeature)
     case addDori(AddDoriFeature)
     case editDori(EditDoriFeature)
+    case search(SearchFeature)
   }
-
+  
   // MARK: - State
-
+  
   @ObservableState
   public struct State {
     public var doriList: DoriListFeature.State = .init()
     public var path = StackState<Path.State>()
     public init() {}
   }
-
+  
   // MARK: - Action
-
+  
   public enum Action {
     case doriList(DoriListFeature.Action)
     case path(StackActionOf<Path>)
   }
-
+  
   // MARK: - Reducer
-
+  
   public var body: some ReducerOf<Self> {
     Scope(state: \.doriList, action: \.doriList) {
       DoriListFeature()
     }
-
+    
+//    Scope(state: \.doriSearch, action: \.doriSearch) {
+//      SearchFeature()
+//    }
+    
     Reduce { state, action in
       switch action {
-
-      // MARK: DoriList delegate
-
+        
+        // MARK: DoriList delegate
       case .doriList(.delegate(.partnerTapped(let partner))):
         state.path.append(
           .partnerHistory(
@@ -66,51 +70,73 @@ public struct HistoryFeature {
           )
         )
         return .none
-
+        
       case .doriList(.delegate(.fabTapped)):
         state.path.append(.addDori(AddDoriFeature.State()))
         return .none
-
+        
+      case .doriList(.delegate(.searchTapped)):
+        state.path.append(.search(SearchFeature.State()))
+        return .none
+        
       case .doriList:
         return .none
-
-      // MARK: Path delegate 처리
-
-      // PartnerDoriHistory에서 doriTapped → Detail push
+        
+        // MARK: Path delegate 처리
+        
+        // PartnerDoriHistory에서 doriTapped → Detail push
       case .path(.element(id: _, action: .partnerHistory(.doriTapped(let dori)))):
         state.path.append(.partnerDoriDetail(PartnerDoriDetailFeature.State(dori: dori)))
         return .none
-
-      // PartnerDoriHistory에서 전체 삭제
+        
+        // PartnerDoriHistory에서 전체 삭제
       case .path(.element(id: _, action: .partnerHistory(.delegate(.allDoriDeleted)))):
         state.path.removeAll()
         return .send(.doriList(.refresh))
-
-      // PartnerDoriDetail에서 editTapped → Edit push
+        
+        // PartnerDoriDetail에서 editTapped → Edit push
       case .path(.element(id: _, action: .partnerDoriDetail(.delegate(.editTapped(let dori))))):
         state.path.append(.editDori(EditDoriFeature.State(dori: dori)))
         return .none
-
-      // PartnerDoriDetail에서 단건 삭제 → History로 복귀
+        
+        // PartnerDoriDetail에서 단건 삭제 → History로 복귀
       case .path(.element(id: _, action: .partnerDoriDetail(.delegate(.doriDeleted)))):
         state.path.removeLast()
         return .none
-
-      // AddDori 완료 → 리스트로 복귀
+        
+        // AddDori 완료 → 리스트로 복귀
       case .path(.element(id: _, action: .addDori(.delegate(.doriCreated(_))))):
         state.path.removeAll()
         return .send(.doriList(.refresh))
-
-      // AddDori dismiss
+        
+        // AddDori dismiss
       case .path(.element(id: _, action: .addDori(.delegate(.dismissed)))):
         state.path.removeAll()
         return .none
-
-      // EditDori 완료 → 리스트로 복귀
+        
+        // EditDori 완료 → 리스트로 복귀
       case .path(.element(id: _, action: .editDori(.delegate(.doriUpdated(_))))):
         state.path.removeAll()
         return .send(.doriList(.refresh))
+        
+        // Search에서 partnerTapped → PartnerDoriHistory push
+      case .path(.element(id: _, action: .search(.delegate(.partnerTapped(let partner))))):
+        state.path.append(
+          .partnerHistory(
+            PartnerDoriHistoryFeature.State(
+              partnerId: partner.partnerId,
+              partnerName: partner.partnerName,
+              relationship: partner.relationship
+            )
+          )
+        )
+        return .none
 
+        // Search dismiss → 리스트로 복귀
+      case .path(.element(id: _, action: .search(.delegate(.dismissed)))):
+        state.path.removeLast()
+        return .none
+        
       case .path:
         return .none
       }
@@ -123,11 +149,11 @@ public struct HistoryFeature {
 
 public struct HistoryView: View {
   @Bindable var store: StoreOf<HistoryFeature>
-
+  
   public init(store: StoreOf<HistoryFeature>) {
     self.store = store
   }
-
+  
   public var body: some View {
     NavigationStack(
       path: $store.scope(state: \.path, action: \.path)
@@ -145,6 +171,8 @@ public struct HistoryView: View {
         AddDoriView(store: addDoriStore)
       case .editDori(let editDoriStore):
         EditDoriView(store: editDoriStore)
+      case .search(let searchStore):
+        SearchView(store: searchStore)
       }
     }
   }

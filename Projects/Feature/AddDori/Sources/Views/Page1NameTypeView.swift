@@ -85,11 +85,12 @@ struct Page1NameTypeView: View {
           Array(store.searchResults.enumerated()),
           id: \.offset
         ) { _, partner in
-          PartnerSearchResultRow(searchQuery: $store.searchQuery.sending(\.searchQueryChanged), partner: partner)
-            .contentShape(Rectangle())
-            .onTapGesture {
-              store.send(.partnerSelected(partner))
-            }
+          PartnerSearchResultRow(searchQuery: $store.searchQuery.sending(\.searchQueryChanged), partner: partner
+          )
+          .contentShape(Rectangle())
+          .onTapGesture {
+            store.send(.partnerSelected(partner))
+          }
         }
       }
     }
