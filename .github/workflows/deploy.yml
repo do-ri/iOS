@@ -1,18 +1,17 @@
-name: Deploy to TestFlight
+name: Deploy
 
 on:
   push:
-    branches: [ "main" ]   # main 머지 시 자동 배포
-  workflow_run:
-    workflows: ["Build App"] # CI(build.yml) 통과 후 트리거
-    branches: [ "main" ]
-    types:
-      - completed
+    branches: [ "develop" ]  # feature → develop 병합 시 TestFlight
+    tags:
+      - "v*"                 # v1.0.0 태그 푸시 시 App Store
 
 jobs:
-  deploy:
-    # CI가 성공한 경우에만 실행
-    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+  # -----------------------------------------------
+  # TestFlight 배포 (develop 브랜치)
+  # -----------------------------------------------
+  beta:
+    if: github.ref_type == 'branch'
     runs-on: macos-latest
 
     steps:
@@ -47,6 +46,51 @@ jobs:
 
       - name: Deploy to TestFlight
         run: bundle exec fastlane beta
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_CONTENT: ${{ secrets.ASC_KEY_CONTENT }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+  # -----------------------------------------------
+  # App Store 빌드 등록 (v* 태그)
+  # -----------------------------------------------
+  release:
+    if: github.ref_type == 'tag'
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: latest-stable
+
+      - name: Setup mise and Tuist
+        uses: jdx/mise-action@v2
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Prepare xcconfig
+        run: |
+          mkdir -p Projects/App/Resources
+          printf "BASE_URL = ${{ vars.BASE_URL }}\nKAKAO_NATIVE_APP_KEY = ${{ secrets.KAKAO_NATIVE_APP_KEY }}\n" \
+            > Projects/App/Resources/Common.xcconfig
+
+      - name: Install Tuist dependencies
+        run: tuist install
+
+      - name: Generate workspace
+        run: tuist generate --no-open
+
+      - name: Deploy to App Store
+        run: bundle exec fastlane release
         env:
           ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
           ASC_ISSUER_ID: ${{ secrets.ASC_ISSUER_ID }}

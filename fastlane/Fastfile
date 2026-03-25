@@ -13,9 +13,10 @@ platform :ios do
   end
 
   # -----------------------------------------------
-  # TestFlight 배포
+  # TestFlight 배포 (feature → develop 병합 시)
+  # 대상: 도리팀 외부 그룹
   # -----------------------------------------------
-  desc "TestFlight에 빌드 업로드"
+  desc "TestFlight 도리팀 배포"
   lane :beta do
     setup_api_key
 
@@ -38,7 +39,8 @@ platform :ios do
     )
 
     upload_to_testflight(
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: true,
+      groups: ["도리팀"]
     )
 
     discord_notifier(
@@ -50,13 +52,53 @@ platform :ios do
   end
 
   # -----------------------------------------------
+  # App Store 빌드 등록 (git tag 푸시 시)
+  # 심사 제출은 App Store Connect에서 수동으로
+  # -----------------------------------------------
+  desc "App Store 빌드 등록"
+  lane :release do
+    setup_api_key
+
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: "Projects/App/Dori-iOS.xcodeproj"
+    )
+
+    build_app(
+      workspace: "Dori-iOS.xcworkspace",
+      scheme: "DoriApp",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.arex.dori" => "Dori App Store"
+        }
+      },
+      xcargs: "-skipMacroValidation"
+    )
+
+    upload_to_app_store(
+      submit_for_review: false,
+      skip_screenshots: true,
+      skip_metadata: true
+    )
+
+    discord_notifier(
+      webhook_url: ENV["DISCORD_WEBHOOK_URL"],
+      title: "✅ Dori App Store 빌드 등록 완료",
+      description: "빌드 번호: #{get_build_number}\n태그: #{last_git_tag}\n심사 제출은 App Store Connect에서 수동으로 진행해주세요.",
+      success: true
+    )
+  end
+
+  # -----------------------------------------------
   # 에러 핸들링
   # -----------------------------------------------
   error do |lane, exception|
     discord_notifier(
       webhook_url: ENV["DISCORD_WEBHOOK_URL"],
-      title: "❌ Dori 배포 실패",
-      description: "Lane: #{lane}\n브랜치: #{git_branch}\n원인: #{exception.message}",
+      title: "❌ Dori 배포 실패 (#{lane})",
+      description: "브랜치: #{git_branch}\n원인: #{exception.message}",
       success: false
     )
   end
