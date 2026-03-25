@@ -1,0 +1,89 @@
+default_platform(:ios)
+
+platform :ios do
+
+  # App Store Connect API Key 설정
+  def setup_api_key
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_CONTENT"],
+      is_key_content_base64: true
+    )
+  end
+
+  # Discord 알림
+  def notify_discord(message:, color:, fields: {})
+    webhook_url = ENV["DISCORD_WEBHOOK_URL"]
+    return unless webhook_url
+
+    embed_fields = fields.map { |name, value| { name: name, value: value.to_s, inline: true } }
+
+    payload = {
+      embeds: [{
+        description: message,
+        color: color,
+        fields: embed_fields
+      }]
+    }.to_json
+
+    sh("curl -s -o /dev/null -X POST '#{webhook_url}' -H 'Content-Type: application/json' -d '#{payload.gsub("'", "'\\''")}' || true")
+  end
+
+  # -----------------------------------------------
+  # TestFlight 배포
+  # -----------------------------------------------
+  desc "TestFlight에 빌드 업로드"
+  lane :beta do
+    setup_api_key
+
+    # 빌드 번호 자동 증가 (App Store Connect 최신 빌드 기준)
+    increment_build_number(
+      build_number: latest_testflight_build_number + 1,
+      xcodeproj: "Projects/App/Dori-iOS.xcodeproj"
+    )
+
+    build_app(
+      workspace: "Dori-iOS.xcworkspace",
+      scheme: "DoriApp",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        provisioningProfiles: {
+          "com.arex.dori" => "Dori App Store"
+        }
+      },
+      xcargs: "-skipMacroValidation"
+    )
+
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+
+    notify_discord(
+      message: "✅ TestFlight 배포 완료!",
+      color: 5763719, # 초록색
+      fields: {
+        "앱" => "Dori",
+        "빌드 번호" => get_build_number,
+        "브랜치" => git_branch,
+        "커밋" => last_git_commit[:message]
+      }
+    )
+  end
+
+  # -----------------------------------------------
+  # 에러 핸들링
+  # -----------------------------------------------
+  error do |lane, exception|
+    notify_discord(
+      message: "❌ 배포 실패: #{exception.message}",
+      color: 15548997, # 빨간색
+      fields: {
+        "Lane" => lane.to_s,
+        "브랜치" => git_branch
+      }
+    )
+  end
+
+end

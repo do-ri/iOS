@@ -1,0 +1,5 @@
+app_identifier("com.arex.dori")
+team_id("FL4QTRRKMD")
+
+# App Store Connect API Key
+# 실제 값은 GitHub Secrets에서 환경변수로 주입
