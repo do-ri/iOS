@@ -35,7 +35,8 @@ platform :ios do
           "com.arex.dori" => "Dori App Store"
         }
       },
-      xcargs: "-skipMacroValidation"
+      xcargs: "-skipMacroValidation",
+      export_xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_testflight(
@@ -74,7 +75,8 @@ platform :ios do
           "com.arex.dori" => "Dori App Store"
         }
       },
-      xcargs: "-skipMacroValidation"
+      xcargs: "-skipMacroValidation",
+      export_xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_app_store(
