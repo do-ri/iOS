@@ -46,11 +46,13 @@ public struct DoriListFeature {
     case refresh
     case fabTapped
     case partnerTapped(PartnerSummary)
+    case searchTapped
     case delegate(Delegate)
 
     public enum Delegate: Equatable, Sendable {
       case partnerTapped(PartnerSummary)
       case fabTapped
+      case searchTapped
     }
   }
 
@@ -100,6 +102,9 @@ public struct DoriListFeature {
 
       case .fabTapped:
         return .send(.delegate(.fabTapped))
+
+      case .searchTapped:
+        return .send(.delegate(.searchTapped))
 
       case .delegate:
         return .none

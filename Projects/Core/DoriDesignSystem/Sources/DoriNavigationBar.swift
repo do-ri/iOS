@@ -32,7 +32,7 @@ public struct DoriNavigationBarConfig {
   public enum CenterItem {
     case none
     case title(String)
-    case searchField(text: Binding<String>, placeholder: String)
+    case searchField(text: Binding<String>, placeholder: String, onClear: (@MainActor () -> Void)? = nil)
   }
 
   public enum TrailingItem {
@@ -131,6 +131,17 @@ public struct DoriNavigationBar: View {
     .background(.doriWhite)
   }
 
+  // MARK: - Helpers
+
+  private var searchFieldLeadingPadding: CGFloat {
+    if case .none = config.leading { return 8 }
+    return 52  // 8pt outer leading + 44pt back button
+  }
+
+  private var searchFieldTrailingPadding: CGFloat {
+    16 + CGFloat(config.trailing.count) * 44  // 16pt outer trailing + 44pt per trailing item
+  }
+
   // MARK: - Leading
 
   @ViewBuilder
@@ -163,16 +174,27 @@ public struct DoriNavigationBar: View {
         .foregroundStyle(.doriBlack)
         .frame(maxWidth: .infinity)
 
-    case .searchField(let text, let placeholder):
-      TextField(placeholder, text: text)
-        .pretendard(.body(.r3))
-        .padding(.horizontal, 12)
-        .frame(height: 36)
-        .background(
-          RoundedRectangle(cornerRadius: 8)
-            .fill(.grey100)
-        )
-        .padding(.horizontal, 8)
+    case .searchField(let text, let placeholder, let onClear):
+      HStack {
+        TextField(placeholder, text: text)
+          .pretendard(.body(.sb3))
+          .foregroundStyle(.doriBlack)
+
+        if !text.wrappedValue.isEmpty, let onClear {
+          Button(action: onClear) {
+            Image(systemName: "xmark.circle.fill")
+              .foregroundStyle(.grey400)
+          }
+        }
+      }
+      .padding(.horizontal, 12)
+      .frame(height: 36)
+      .background(
+        RoundedRectangle(cornerRadius: 8)
+          .fill(.grey100)
+      )
+      .padding(.leading, searchFieldLeadingPadding)
+      .padding(.trailing, searchFieldTrailingPadding)
     }
   }
 
@@ -187,6 +209,7 @@ public struct DoriNavigationBar: View {
         case .iconButton(let image, let action):
           Button(action: action) {
             image
+              .foregroundStyle(.doriBlack)
               .frame(width: 44, height: 44)
               .contentShape(Rectangle())
           }

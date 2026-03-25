@@ -10,11 +10,16 @@ import DoriDesignSystem
 import DoriNetwork
 import DoriCore
 
-struct PartnerSearchResultRow: View {
-  @Binding var searchQuery: String
-  let partner: Dori
+public struct PartnerSearchResultRow: View {
+  @Binding public var searchQuery: String
+  public let partner: Dori
 
-  var body: some View {
+  public init(searchQuery: Binding<String>, partner: Dori) {
+    self._searchQuery = searchQuery
+    self.partner = partner
+  }
+
+  public var body: some View {
     HStack(spacing: 6) {
       HStack(spacing: 6) {
         Text(highlightedName)
