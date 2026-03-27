@@ -26,5 +26,13 @@ let project = Project.dori(
         DoriModules.network.module.projectDependency,
       ]
     ),
+    .doriFramework(
+      DoriModules.fcm.module,
+      dependencies: [
+        .external(.firebaseCore),
+        .external(.firebaseMessaging),
+        .external(.composableArchitecture),
+      ]
+    ),
   ]
 )

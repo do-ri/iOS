@@ -39,3 +39,4 @@ Derived/
 *.xcodeproj
 *.xcworkspace
 .claude/worktrees
+GoogleService-Info.plist

@@ -12,11 +12,13 @@ public enum DoriKeychainKey: Sendable {
 
   case accessToken
   case refreshToken
+  case fcmToken
 
   public var rawValue: String {
     switch self {
     case .accessToken: return "access_token"
     case .refreshToken: return "refresh_token"
+    case .fcmToken: return "fcm_token"
     }
   }
 }

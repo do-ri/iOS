@@ -12,7 +12,9 @@ public enum DoriDependency: String {
   case kakaoSDKCommon
   case kakaoSDKAuth
   case kakaoSDKUser
-  
+  case firebaseCore = "FirebaseCore"
+  case firebaseMessaging = "FirebaseMessaging"
+
   var name: String {
     rawValue
   }

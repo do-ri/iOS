@@ -14,6 +14,8 @@ extension InfoPlist {
     "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
     "Appearance": "Light",
     "ITSAppUsesNonExemptEncryption": .boolean(false),
+    "FirebaseAppDelegateProxyEnabled": .boolean(false),
+    "FirebaseMessagingAutoInitEnabled": .boolean(true),
     "CFBundleURLTypes": [
       [
         "CFBundleTypeRole": "Editor",

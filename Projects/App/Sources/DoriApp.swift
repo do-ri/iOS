@@ -17,9 +17,11 @@ import FeatureHistory
 import FeatureCalendar
 import PlatformKakaoAuth
 import PlatformKeychain
+import PlatformFCM
 
 @main
 struct DoriApp: App {
+  @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
   let store: StoreOf<AppFeature>
   #if DEBUG
   private let debugLaunchRoute: DebugLaunchRoute?
@@ -82,6 +84,15 @@ struct DoriApp: App {
 
     FontManager.registerAllFonts()
     KakaoSDKHandler.initializeFromMainBundle()
+
+    FCMService.shared.tokenRefreshHandler = { token in
+      try? tokenStore.saveFCMToken(token)
+      let endpoint = RegisterFCMTokenEndpoint(token: token)
+      _ = try? await networkService.request(
+        endpoint,
+        responseType: SuccessResponse<EmptyResponse>.self
+      )
+    }
   }
 
   var body: some Scene {
@@ -108,6 +119,9 @@ struct DoriApp: App {
     AppView(store: store)
       .onOpenURL { url in
         _ = KakaoSDKHandler.handleOpenURL(url)
+      }
+      .task {
+        await FCMService.shared.requestAuthorization()
       }
   }
 }
