@@ -1,13 +1,13 @@
 # TCA Network API Client 레퍼런스
 
-이 문서는 템플릿 예시 모음이다. 현재 프로젝트의 실제 네트워크 계층 설명은 `docs/network-layer.md`를 우선한다.
+이 문서는 템플릿 예시 모음이다. 현재 프로젝트의 실제 네트워크 계층 설명은 `docs/backend/network-layer.md`를 우선한다.
 
 API Client를 TCA `@Dependency` 패턴으로 생성할 때 참조하는 문서. Live/Mock 구현은 API 스펙에 의존하므로 도메인에 맞게 조정한다.
 
 ## 참조
 
 - `AGENTS.md`
-- `docs/network-layer.md`
+- `docs/backend/network-layer.md`
 - `.claude/skills/tca-client/SKILL.md` — 기본 Client 골격 생성 스킬
 
 ---

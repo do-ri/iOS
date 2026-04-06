@@ -19,4 +19,4 @@ Dori는 경조사 금전 거래를 기록하고 탐색하는 iOS 앱이다. 핵�
 
 - 이 문서는 제품의 큰 범위만 설명한다.
 - 세부 화면 상태와 액션명은 코드에서 읽는다.
-- 구조 규칙은 `docs/constitution.md`와 `ARCHITECTURE.md`를 우선한다.
+- 구조 규칙은 `docs/core/constitution.md`와 `ARCHITECTURE.md`를 우선한다.

@@ -1,6 +1,24 @@
 # Dori-iOS Agent Index
 
-이 파일은 프로젝트 백과사전이 아니라 진입점이다. 구현 세부보다 오래 가는 규칙은 `docs/constitution.md`와 `ARCHITECTURE.md`에 둔다.
+- 이 파일은 프로젝트 백과사전이 아니라 진입점이다.
+- 구현 세부보다 오래 가는 규칙은 `docs/` 디렉토리에 구조화 된 하위문서로 둔다.
+- 아키텍처에 대한 지침과 규칙은 `ARCHITECTURE.md`에 둔다.
+
+## Document Contract
+
+- `AGENTS.md` 는 문서 읽기 순서, 역할 분담, 참조 규칙을 정의하는 인덱스다.
+- `ARCHITECTURE.md` 는 시스템의 큰 그림, 경계, 변경 비용이 큰 결정을 설명한다.
+- `docs/` 는 오래 가는 규칙과 운영 지침을 주제별 하위 문서로 유지한다.
+- 세 문서는 독립적으로 읽혀야 하지만, 같은 결론을 가리켜야 한다.
+- 구조가 바뀌면 `AGENTS.md`, `ARCHITECTURE.md`, 관련 `docs/` 문서를 함께 갱신한다.
+
+## Docs Map
+
+- `docs/core/`: 프로젝트 헌법, 제품 범위, 모듈 경계, 기능 표면, 기술 기준
+- `docs/frontend/`: iOS 프론트엔드 구현 규칙
+- `docs/backend/`: 서버 통신과 백엔드 경계 규칙
+- `docs/workflows/`: 저장소 운영과 작업 절차
+- `docs/reference/`: 템플릿, 예시, 학습용 참고 자료
 
 ## Role
 
@@ -23,28 +41,28 @@
 
 ## Read Order
 
-1. `docs/constitution.md`
+1. `docs/core/constitution.md`
 2. `ARCHITECTURE.md`
-3. `docs/project-overview.md`
-4. `docs/directory-structure.md`
-5. `docs/network-layer.md`
-6. `docs/swift-language-guide.md`
+3. `docs/core/project-overview.md`
+4. `docs/core/directory-structure.md`
+5. `docs/backend/network-layer.md`
+6. `docs/frontend/swift-language-guide.md`
 7. `docs/frontend/security.md`
 8. `docs/frontend/test-strategy.md`
-9. `docs/git-worktree.md`
-10. `docs/lessons-learned.md`
+9. `docs/workflows/git-worktree.md`
+10. `docs/core/lessons-learned.md`
 
 ## Compatibility Paths
 
 - `.claude/CLAUDE.md` 는 이 파일을 가리키는 심볼릭 링크다.
 - `.claude/rules` 는 `docs/` 를 가리키는 심볼릭 링크다.
-- 기존 `@rules/...`, `@network-layer.md`, `@swift-language-guide.md` 참조는 계속 동작해야 한다.
+- 문서 참조는 루트 파일명이 아니라 실제 하위 경로를 기준으로 유지한다.
 
 ## Reference Docs
 
 아래 문서는 템플릿 또는 학습용 참고 자료다. 현재 구현 설명보다 예시 제공이 목적이며, 충돌 시 상단 Read Order 문서를 우선한다.
 
-- `docs/tca-navigation.md`
-- `docs/tca-network.md`
-- `docs/tca-test.md`
-- `docs/routing-guide.md`
+- `docs/reference/tca-navigation.md`
+- `docs/reference/tca-network.md`
+- `docs/reference/tca-test.md`
+- `docs/reference/routing-guide.md`

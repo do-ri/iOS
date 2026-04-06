@@ -24,5 +24,5 @@
 ## Related Docs
 
 - `ARCHITECTURE.md`
-- `docs/lessons-learned.md`
-- `docs/tca-network.md`
+- `docs/core/lessons-learned.md`
+- `docs/reference/tca-network.md`

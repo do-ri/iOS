@@ -1,6 +1,6 @@
 # TCA Navigation 패턴 레퍼런스
 
-이 문서는 템플릿과 학습용 예시다. 현재 프로젝트의 실제 구조 설명이 아니며, 충돌 시 `docs/constitution.md`와 `ARCHITECTURE.md`를 우선한다.
+이 문서는 템플릿과 학습용 예시다. 현재 프로젝트의 실제 구조 설명이 아니며, 충돌 시 `docs/core/constitution.md`와 `ARCHITECTURE.md`를 우선한다.
 
 Navigation 유형에 따라 적절한 패턴(Tree/Stack/Tab/AppRoot)을 선택하여 적용한다.
 
@@ -8,7 +8,7 @@ Navigation 유형에 따라 적절한 패턴(Tree/Stack/Tab/AppRoot)을 선택�
 
 - `AGENTS.md`
 - `ARCHITECTURE.md`
-- `docs/feature-spec.md`
+- `docs/core/feature-spec.md`
 
 ---
 

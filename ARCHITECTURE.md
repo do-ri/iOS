@@ -4,6 +4,8 @@
 
 이 문서 구성은 matklad의 `ARCHITECTURE.md`와 rust-analyzer의 architecture 문서처럼, 큰 그림과 변경 비용이 큰 경계를 먼저 설명하는 방식을 따른다.
 
+`AGENTS.md`가 읽기 순서와 문서 계약을 정의한다면, 이 문서는 그 계약 아래에서 시스템 구조를 설명한다. 세부 규칙과 운영 기준은 `docs/` 하위 문서로 분리하고, 여기서는 왜 그런 경계가 필요한지에 집중한다.
+
 ## 1. System Shape
 
 Dori-iOS는 TCA 기반 iOS 클라이언트다. 앱은 인증 상태를 확인한 뒤 온보딩 또는 메인 경험으로 진입하고, 각 화면은 독립 Feature가 상태를 소유한다.
@@ -115,8 +117,8 @@ AppFeature
 
 ## 8. Related Docs
 
-- `docs/constitution.md`
-- `docs/project-overview.md`
-- `docs/directory-structure.md`
-- `docs/network-layer.md`
-- `docs/swift-language-guide.md`
+- `docs/core/constitution.md`
+- `docs/core/project-overview.md`
+- `docs/core/directory-structure.md`
+- `docs/backend/network-layer.md`
+- `docs/frontend/swift-language-guide.md`
