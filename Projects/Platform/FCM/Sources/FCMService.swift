@@ -70,6 +70,7 @@ extension FCMService: MessagingDelegate {
     didReceiveRegistrationToken fcmToken: String?
   ) {
     guard let token = fcmToken else { return }
+    print("FCM Token: \"\(token)\"")
     Task { @MainActor [weak self] in
       await self?.tokenRefreshHandler?(token)
     }

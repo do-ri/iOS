@@ -24,6 +24,8 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     _ application: UIApplication,
     didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
   ) {
+    let token = deviceToken.map { String(format: "%02x", $0) }.joined()
+    print("APNS Token: \"\(token)\"")
     FCMService.shared.setAPNSToken(deviceToken)
   }
 
@@ -31,6 +33,6 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     _ application: UIApplication,
     didFailToRegisterForRemoteNotificationsWithError error: Error
   ) {
-    // 실제 기기에서만 APNs 등록 가능 — 시뮬레이터 실패는 무시
+    print("APNs 등록 실패: \(error.localizedDescription)")
   }
 }

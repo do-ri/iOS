@@ -77,6 +77,8 @@ struct DoriApp: App {
         networkService: networkService,
         tokenStore: tokenStore
       )
+      $0.fcmPushTestAPIClient = .live(networkService: networkService)
+      $0.notificationSettingsAPIClient = .live(networkService: networkService)
     }
 
     storeBox.store = store
@@ -128,11 +130,13 @@ struct DoriApp: App {
 
 #if DEBUG
 private struct DebugLaunchRoute {
+  private let environment: [String: String]
   private let route: String
   private let memo: String
 
   init?(environment: [String: String]) {
     guard let route = environment["DORI_DEBUG_ROUTE"] else { return nil }
+    self.environment = environment
     self.route = route
     self.memo = environment["DORI_DEBUG_MEMO"] ?? ""
   }
@@ -146,6 +150,11 @@ private struct DebugLaunchRoute {
         AddDoriView(
           store: Store(initialState: configuredState) {
             AddDoriFeature()
+          } withDependencies: {
+            $0.addDoriAPIClient = .testValue
+            $0.userNotificationSettingsClient.isNotificationEnabled = {
+              environment["DORI_DEBUG_NOTIFICATION_ENABLED"] == "true"
+            }
           }
         )
       }
@@ -158,6 +167,8 @@ private struct DebugLaunchRoute {
   private var configuredState: AddDoriFeature.State {
     var state = AddDoriFeature.State()
     state.currentPage = 2
+    state.searchQuery = environment["DORI_DEBUG_PARTNER_NAME"] ?? "김철수"
+    state.amountInput.text = environment["DORI_DEBUG_AMOUNT"] ?? "100000"
     state.memo = memo
     return state
   }
