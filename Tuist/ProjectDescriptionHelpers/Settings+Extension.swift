@@ -98,6 +98,7 @@ public extension Settings {
     
     let debugSettings: [String: SettingValue] = [
       "PRODUCT_NAME": .string(BuildConfiguration.debug.appName),
+      "APP_DISPLAY_NAME": .string(BuildConfiguration.debug.appName),
       "ENABLE_TESTABILITY": "YES",
       "GCC_OPTIMIZATION_LEVEL": "0",
       "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
@@ -108,6 +109,7 @@ public extension Settings {
 
     let releaseSettings: [String: SettingValue] = [
       "PRODUCT_NAME": .string(BuildConfiguration.release.appName),
+      "APP_DISPLAY_NAME": .string(Environment.App.displayName),
       "SWIFT_OPTIMIZATION_LEVEL": "-O",
       "ENABLE_TESTABILITY": "NO",
       "DEBUG_INFORMATION_FORMAT": "dwarf-with-dsym",
