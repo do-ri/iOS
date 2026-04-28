@@ -72,7 +72,35 @@ public struct AddDoriView: View {
           store.send(.datePickerToggled)
         }
       }
+
+      if store.isNotificationSettingsAlertPresented {
+        DoriCommonAlert(
+          isPresented: Binding(
+            get: { store.isNotificationSettingsAlertPresented },
+            set: { isPresented in
+              if !isPresented {
+                store.send(.notificationSettingsAlertDismissed)
+              }
+            }
+          ),
+          title: "도리 알림을 켜면\n등록한 도리를 놓치지 않아요!",
+          description: nil,
+          secondaryButton: AlertButton(title: "나중에") {
+            store.send(.notificationSettingsAlertDismissed)
+          },
+          primaryButton: AlertButton(title: "알림 켜기") {
+            openNotificationSettings()
+            store.send(.notificationSettingsAlertDismissed)
+          }
+        )
+      }
     }
+  }
+
+  @MainActor
+  private func openNotificationSettings() {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    UIApplication.shared.open(url)
   }
 
   @ViewBuilder

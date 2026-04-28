@@ -57,6 +57,7 @@ public struct DoriCommonAlert: View {
       Text(title)
         .pretendard(.headline(.h1))
         .foregroundStyle(.doriBlack)
+        .multilineTextAlignment(.center)
       
       if let description = description {
         Text(description)
@@ -102,11 +103,11 @@ public struct DoriCommonAlert: View {
 #Preview {
   DoriCommonAlert(
     isPresented: .constant(true),
-    title: "회원탈퇴",
-    description: "정말 도리를 탈퇴하실건가요?\n재가입 시에도 이용 내역은 복구되지 않습니다.",
-    secondaryButton: AlertButton(.no) {
+    title: "도리 알림을 켜면\n등록한 도리를 놓치지 않아요!",
+    description: nil,
+    secondaryButton: AlertButton(title: "나중에") {
     },
-    primaryButton: AlertButton(.yes) {
+    primaryButton: AlertButton(title: "알림 켜기") {
     }
   )
 }

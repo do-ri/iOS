@@ -789,6 +789,7 @@ struct AddDoriFeatureTests {
         $0.isSubmitting = false
       }
 
+      await store.receive(.notificationAuthorizationStatusResponse(true, mockResponse))
       await store.receive(.delegate(.doriCreated(mockResponse)))
     }
 
@@ -860,6 +861,7 @@ struct AddDoriFeatureTests {
         $0.isSubmitting = false
       }
 
+      await store.receive(.notificationAuthorizationStatusResponse(true, mockResponse))
       await store.receive(.delegate(.doriCreated(mockResponse)))
 
       #expect(capturedRequest?.direction == "주도리")
@@ -869,6 +871,49 @@ struct AddDoriFeatureTests {
       #expect(capturedRequest?.amount == 100_000)
       #expect(capturedRequest?.isVisited == true)
       #expect(capturedRequest?.memo == "테스트 메모")
+    }
+
+    @Test("create 모드 - 시스템 알림 OFF 시 알림 설정 팝업 노출 후 완료")
+    func createSubmitSuccessWithNotificationDisabled() async {
+      var initial = AddDoriFeature.State()
+      initial.searchQuery = "김철수"
+      initial.amountText = "100,000"
+
+      let mockResponse = DoriResponsesDTO.mock(
+        partnerName: "김철수",
+        relationship: "친구",
+        eventType: "결혼식",
+        amount: 100_000
+      )
+
+      let store = TestStore(
+        initialState: initial
+      ) {
+        AddDoriFeature()
+      } withDependencies: {
+        $0.addDoriAPIClient.createDori = { _ in mockResponse }
+        $0.userNotificationSettingsClient.isNotificationEnabled = { false }
+      }
+
+      await store.send(.submitTapped) {
+        $0.isSubmitting = true
+      }
+
+      await store.receive(.submitResponse(.success(mockResponse))) {
+        $0.isSubmitting = false
+      }
+
+      await store.receive(.notificationAuthorizationStatusResponse(false, mockResponse)) {
+        $0.pendingCreatedDori = mockResponse
+        $0.isNotificationSettingsAlertPresented = true
+      }
+
+      await store.send(.notificationSettingsAlertDismissed) {
+        $0.isNotificationSettingsAlertPresented = false
+        $0.pendingCreatedDori = nil
+      }
+
+      await store.receive(.delegate(.doriCreated(mockResponse)))
     }
 
     @Test("isSubmitting = true 상태에서 submitTapped - no-op")
