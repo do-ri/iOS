@@ -11,6 +11,7 @@ import SwiftUI
 
 struct NotificationSettingsView: View {
   @Bindable var store: StoreOf<NotificationSettingsFeature>
+  @Environment(\.scenePhase) private var scenePhase
 
   var body: some View {
     ZStack {
@@ -19,6 +20,10 @@ struct NotificationSettingsView: View {
 
       ScrollView {
         VStack(alignment: .leading, spacing: 24) {
+          if !store.isSystemNotificationEnabled {
+            systemNotificationDisabledBanner
+          }
+
           // 전체 푸시 수신 (Type 1: HStack { VStack { title, description }, switch })
           notificationRowWithDescription(
             title: "앱 알림 받기",
@@ -94,6 +99,52 @@ struct NotificationSettingsView: View {
         store.send(.backButtonTapped)
       }
     )
+    .onAppear { store.send(.onAppear) }
+    .onChange(of: scenePhase) { _, newPhase in
+      if newPhase == .active {
+        store.send(.scenePhaseBecameActive)
+      }
+    }
+  }
+
+  // MARK: - 기기 알림 OFF 배너
+
+  @ViewBuilder
+  private var systemNotificationDisabledBanner: some View {
+    Button {
+      store.send(.openSystemSettingsTapped)
+      openSystemNotificationSettings()
+    } label: {
+      HStack(alignment: .top, spacing: 12) {
+        
+        Image(.pushDisableBell)
+          .font(.system(size: 20))
+          .foregroundStyle(.grey600)
+
+        Text("기기알림은 켜시면 새로운 소식을\n확인할 수 있습니다.")
+          .pretendard(.body(.r6))
+          .foregroundStyle(.grey600)
+          .frame(maxWidth: .infinity, alignment: .leading)
+
+        HStack(spacing: 2) {
+          Text("설정")
+            .pretendard(.body(.m5))
+            .foregroundStyle(Color.settingColor)
+          Image(systemName: "chevron.right")
+            .font(.system(size: 12, weight: .semibold))
+            .foregroundStyle(Color.settingColor)
+        }
+      }
+      .frame(maxWidth: .infinity)
+      .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+    .buttonStyle(.plain)
+  }
+
+  @MainActor
+  private func openSystemNotificationSettings() {
+    guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+    UIApplication.shared.open(url)
   }
 
   // MARK: - Type 1: HStack { VStack { title, description }, Spacer, switch }
@@ -155,6 +206,10 @@ struct NotificationSettingsView: View {
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }
+}
+
+private extension Color {
+  static let settingColor: Color = .init(red: 100/255, green: 130/255, blue: 173/255)
 }
 
 #Preview {

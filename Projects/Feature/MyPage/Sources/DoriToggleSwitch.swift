@@ -11,9 +11,9 @@ import SwiftUI
 struct DoriToggleSwitch: View {
   @Binding var isOn: Bool
 
-  private let width: CGFloat = 26
-  private let height: CGFloat = 15
-  private let thumbSize: CGFloat = 13
+  private let width: CGFloat = 51
+  private let height: CGFloat = 31
+  private let thumbSize: CGFloat = 23
 
   var body: some View {
     ZStack {
