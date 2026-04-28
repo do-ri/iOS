@@ -13,7 +13,7 @@ let project = Project.dori(
     .app(
       name: "DoriApp",
       bundleId: Environment.App.baseBundleId,
-      resources: [.glob(pattern: "Resources/**", excluding: ["Resources/info.plist"])],
+      resources: [.glob(pattern: "Resources/**", excluding: ["Resources/info.plist", "Resources/*.entitlements"])],
       dependencies: [
         DoriModules.onboarding.module.projectDependency,
         DoriModules.addDori.module.projectDependency,
@@ -29,6 +29,19 @@ let project = Project.dori(
         DoriModules.core.module.projectDependency,
         .external(.composableArchitecture)
       ],
+      entitlements: .file(path: "Resources/DoriApp.entitlements")
+    ),
+    .target(
+      name: "DoriAppUITests",
+      destinations: .iOS,
+      product: .uiTests,
+      bundleId: "\(Environment.App.baseBundleId).UITests",
+      deploymentTargets: .iOS(Environment.deploymentTarget),
+      sources: ["UITests/**"],
+      dependencies: [
+        .target(name: "DoriApp")
+      ],
+      settings: .testSettings
     ),
   ]
 )

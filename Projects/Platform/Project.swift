@@ -32,7 +32,8 @@ let project = Project.dori(
         .external(.firebaseCore),
         .external(.firebaseMessaging),
         .external(.composableArchitecture),
-      ]
+      ],
+      settings: .frameworkSettingsWithObjC
     ),
   ]
 )

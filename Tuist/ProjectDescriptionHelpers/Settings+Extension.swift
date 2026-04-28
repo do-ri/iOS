@@ -37,6 +37,36 @@ public extension Settings {
     ]
   )
   
+  /// ObjC 카테고리 강제 로딩이 필요한 프레임워크용 설정 (Firebase 등)
+  static let frameworkSettingsWithObjC: Settings = .settings(
+    base: [
+      "SKIP_INSTALL": "YES",
+      "DEFINES_MODULE": "YES",
+      "ENABLE_BITCODE": "NO",
+      "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
+      "SWIFT_VERSION": "6.0",
+      "CLANG_ENABLE_MODULES": "YES",
+      "OTHER_LDFLAGS": .array(["$(inherited)", "-ObjC"]),
+    ],
+    configurations: [
+      .debug(
+        name: .debug,
+        settings: [
+          "ENABLE_TESTABILITY": "YES",
+          "SWIFT_OPTIMIZATION_LEVEL": "-Onone"
+        ]
+      ),
+      .release(
+        name: .release,
+        settings: [
+          "ENABLE_TESTABILITY": "NO",
+          "SWIFT_OPTIMIZATION_LEVEL": "-O",
+          "SWIFT_COMPILATION_MODE": "wholemodule"
+        ]
+      )
+    ]
+  )
+
   /// 테스트용 기본 설정
   static let testSettings: Settings = .settings(
     base: [
@@ -63,6 +93,7 @@ public extension Settings {
       "ENABLE_BITCODE": "NO",
       "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
       "SWIFT_VERSION": "6.0",
+      "OTHER_LDFLAGS": .array(["$(inherited)", "-ObjC"]),
     ]
     
     let debugSettings: [String: SettingValue] = [
@@ -71,15 +102,17 @@ public extension Settings {
       "GCC_OPTIMIZATION_LEVEL": "0",
       "SWIFT_OPTIMIZATION_LEVEL": "-Onone",
       "DEBUG_INFORMATION_FORMAT": "dwarf",
-      "GCC_PREPROCESSOR_DEFINITIONS": .array(["DEBUG=1"])
+      "GCC_PREPROCESSOR_DEFINITIONS": .array(["DEBUG=1"]),
+      "SWIFT_ACTIVE_COMPILATION_CONDITIONS": .array(["$(inherited)", "DEBUG"])
     ]
-    
+
     let releaseSettings: [String: SettingValue] = [
       "PRODUCT_NAME": .string(BuildConfiguration.release.appName),
       "SWIFT_OPTIMIZATION_LEVEL": "-O",
       "ENABLE_TESTABILITY": "NO",
       "DEBUG_INFORMATION_FORMAT": "dwarf-with-dsym",
-      "SWIFT_COMPILATION_MODE": "wholemodule"
+      "SWIFT_COMPILATION_MODE": "wholemodule",
+      "SWIFT_ACTIVE_COMPILATION_CONDITIONS": .array(["$(inherited)"])
     ]
     
     return .settings(
