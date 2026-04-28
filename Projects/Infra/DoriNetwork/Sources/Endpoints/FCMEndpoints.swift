@@ -33,6 +33,28 @@ public struct DeleteFCMTokenEndpoint: Endpoint {
   }
 }
 
+public struct FCMPushTestEndpoint: Endpoint {
+  public let baseURL: String = NetworkConfig.baseURL
+  public let path: String = "/fcm/test"
+  public let method: HTTPMethod = .POST
+  public let headers: [String: String] = [:]
+  public let queryParameters: [String: String]
+  public let body: Data? = nil
+
+  public init(
+    userId: Int64,
+    title: String,
+    body: String
+  ) {
+    self.queryParameters = [
+      "userId": String(userId),
+      "title": title,
+      "body": body
+    ]
+  }
+}
+
 private struct FCMTokenRequest: Encodable {
   let token: String
 }
+
