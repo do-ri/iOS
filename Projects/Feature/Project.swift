@@ -62,6 +62,7 @@ let project = Project.dori(
         DoriModules.designSystem.module.projectDependency,
         DoriModules.network.module.projectDependency,
         DoriModules.keychain.module.projectDependency,
+        DoriModules.core.module.projectDependency,
         .external(.composableArchitecture)
       ]
     ),

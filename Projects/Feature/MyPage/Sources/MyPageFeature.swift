@@ -30,13 +30,15 @@ public struct MyPageFeature {
     public var isWithdrawAlertPresented: Bool
     public var toastItem: DoriToast?
     public var notificationSettings: NotificationSettingsFeature.State
+    public var fcmPushTest: FCMPushTestFeature.State
 
     public init(
       isLoading: Bool = false,
       isLogoutAlertPresented: Bool = false,
       isWithdrawAlertPresented: Bool = false,
       toastItem: DoriToast? = nil,
-      notificationSettings: NotificationSettingsFeature.State = NotificationSettingsFeature.State()
+      notificationSettings: NotificationSettingsFeature.State = NotificationSettingsFeature.State(),
+      fcmPushTest: FCMPushTestFeature.State = FCMPushTestFeature.State()
     ) {
       self.navigationPath = []
       self.isLoading = isLoading
@@ -44,6 +46,7 @@ public struct MyPageFeature {
       self.isWithdrawAlertPresented = isWithdrawAlertPresented
       self.toastItem = toastItem
       self.notificationSettings = notificationSettings
+      self.fcmPushTest = fcmPushTest
     }
   }
 
@@ -51,8 +54,10 @@ public struct MyPageFeature {
     case onAppear
     case privacyPolicyTapped
     case notificationSettingsTapped
+    case fcmPushTestTapped
     case navigationPathChanged([Route])
     case notificationSettings(NotificationSettingsFeature.Action)
+    case fcmPushTest(FCMPushTestFeature.Action)
 
     case logoutButtonTapped
     case withdrawButtonTapped
@@ -80,6 +85,7 @@ public struct MyPageFeature {
   public enum Route: Hashable, Sendable {
     case privacyPolicy
     case notificationSettings
+    case fcmPushTest
   }
 
   public func reduce(into state: inout State, action: Action) -> Effect<Action> {
@@ -95,6 +101,11 @@ public struct MyPageFeature {
       state.navigationPath.append(.notificationSettings)
       return .none
 
+    case .fcmPushTestTapped:
+      state.fcmPushTest = FCMPushTestFeature.State()
+      state.navigationPath.append(.fcmPushTest)
+      return .none
+
     case .navigationPathChanged(let path):
       state.navigationPath = path
       return .none
@@ -107,6 +118,15 @@ public struct MyPageFeature {
       return NotificationSettingsFeature()
         .reduce(into: &state.notificationSettings, action: notifAction)
         .map(Action.notificationSettings)
+
+    case .fcmPushTest(.delegate(.didTapBack)):
+      state.navigationPath.removeAll(where: { $0 == .fcmPushTest })
+      return .none
+
+    case .fcmPushTest(let fcmAction):
+      return FCMPushTestFeature()
+        .reduce(into: &state.fcmPushTest, action: fcmAction)
+        .map(Action.fcmPushTest)
 
     case .logoutButtonTapped:
       state.isLogoutAlertPresented = true

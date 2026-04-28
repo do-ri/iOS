@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import DoriCore
 import DoriDesignSystem
 import SwiftUI
 
@@ -32,6 +33,9 @@ public struct MyPageView: View {
           settingInfoView
           accountInfoView
           notificationInfoView
+          if BuildEnvironment.current.isTestingEnabled {
+            debugInfoView
+          }
 
           Spacer()
         }
@@ -87,6 +91,13 @@ public struct MyPageView: View {
             store: store.scope(
               state: \.notificationSettings,
               action: \.notificationSettings
+            )
+          )
+        case .fcmPushTest:
+          FCMPushTestView(
+            store: store.scope(
+              state: \.fcmPushTest,
+              action: \.fcmPushTest
             )
           )
         }
@@ -153,6 +164,26 @@ public struct MyPageView: View {
         store.send(.notificationSettingsTapped)
       }
 
+    }
+  }
+
+  private var debugInfoView: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Divider()
+
+      HStack {
+        Text("디버깅 툴")
+          .pretendard(.subtitle(.m2))
+          .foregroundStyle(.grey600)
+        Spacer()
+        Text(BuildEnvironment.current.displayName)
+          .pretendard(.body(.r3))
+          .foregroundStyle(.grey400)
+      }
+
+      NavigationRow("FCM 푸시 테스트") {
+        store.send(.fcmPushTestTapped)
+      }
     }
   }
   
