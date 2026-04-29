@@ -8,33 +8,35 @@
 import ProjectDescription
 
 extension InfoPlist {
-  static let commonDictionary: [String: Plist.Value] = [
-    "UILaunchScreen": .dictionary([:]),
-    "CFBundleDisplayName": "$(APP_DISPLAY_NAME)",
-    "CFBundleShortVersionString": "$(MARKETING_VERSION)",
-    "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
-    "BASE_URL": "$(BASE_URL)",
-    "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
-    "Appearance": "Light",
-    "ITSAppUsesNonExemptEncryption": .boolean(false),
-    "FirebaseAppDelegateProxyEnabled": .boolean(false),
-    "FirebaseMessagingAutoInitEnabled": .boolean(true),
-    "CFBundleURLTypes": [
-      [
+  static var commonDictionary: [String: Plist.Value] {
+    var dict: [String: Plist.Value] = [:]
+    dict["UILaunchScreen"] = .dictionary([:])
+    dict["CFBundleDisplayName"] = "$(APP_DISPLAY_NAME)"
+    dict["CFBundleShortVersionString"] = "$(MARKETING_VERSION)"
+    dict["CFBundleVersion"] = "$(CURRENT_PROJECT_VERSION)"
+    dict["BASE_URL"] = "$(BASE_URL)"
+    dict["KAKAO_NATIVE_APP_KEY"] = "$(KAKAO_NATIVE_APP_KEY)"
+    dict["Appearance"] = "Light"
+    dict["ITSAppUsesNonExemptEncryption"] = .boolean(false)
+    dict["FirebaseAppDelegateProxyEnabled"] = .boolean(false)
+    dict["FirebaseMessagingAutoInitEnabled"] = .boolean(true)
+    dict["CFBundleURLTypes"] = .array([
+      .dictionary([
         "CFBundleTypeRole": "Editor",
-        "CFBundleURLName": Plist.Value.string(Environment.App.baseBundleId),
-        "CFBundleURLSchemes": ["$(KAKAO_CAllBACK)"],
-      ],
-    ],
-    "LSApplicationQueriesSchemes": [
-      "kakaokompassauth",
-      "kakaolink",
-    ],
-    "UISupportedInterfaceOrientations": [
-      "UIInterfaceOrientationPortrait",
-    ],
-  ]
-    
+        "CFBundleURLName": .string(Environment.App.baseBundleId),
+        "CFBundleURLSchemes": .array([.string("$(KAKAO_CAllBACK)")]),
+      ]),
+    ])
+    dict["LSApplicationQueriesSchemes"] = .array([
+      .string("kakaokompassauth"),
+      .string("kakaolink"),
+    ])
+    dict["UISupportedInterfaceOrientations"] = .array([
+      .string("UIInterfaceOrientationPortrait"),
+    ])
+    return dict
+  }
+
   public static func baseInfoPlist() -> InfoPlist {
     return .extendingDefault(with: commonDictionary)
   }
