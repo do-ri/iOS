@@ -1,10 +1,13 @@
 # TCA TestStore 기반 테스트 레퍼런스
 
+이 문서는 테스트 패턴 예시다. 현재 프로젝트의 실제 dependency 이름이나 파일 구조와 다를 수 있다.
+
 Feature Reducer 테스트 작성 시 참조하는 문서. 각 Feature의 State 전이가 다르므로 도메인을 이해한 후 작성한다.
 
 ## 참조
 
-- `docs/GUIDE.md` 지침서의 테스트 전략 섹션을 함께 참고한다
+- `AGENTS.md`
+- `docs/frontend/test-strategy.md`
 
 ---
 
