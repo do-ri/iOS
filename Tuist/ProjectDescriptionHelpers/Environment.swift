@@ -40,7 +40,7 @@ public struct Environment {
   public struct App {
     public static let baseBundleId = "\(organizationName).dori"
     public static let displayName = "도리"
-    public static let version = "1.0.0"
+    public static let version = "1.1.0"
     public static let buildNumber = "1"
     
     public static func bundleId(for configuration: BuildConfiguration = .release) -> String {

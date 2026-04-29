@@ -11,6 +11,8 @@ extension InfoPlist {
   static let commonDictionary: [String: Plist.Value] = [
     "UILaunchScreen": .dictionary([:]),
     "CFBundleDisplayName": "$(APP_DISPLAY_NAME)",
+    "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+    "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
     "BASE_URL": "$(BASE_URL)",
     "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
     "Appearance": "Light",
