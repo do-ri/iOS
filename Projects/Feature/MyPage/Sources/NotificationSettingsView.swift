@@ -13,6 +13,10 @@ struct NotificationSettingsView: View {
   @Bindable var store: StoreOf<NotificationSettingsFeature>
   @Environment(\.scenePhase) private var scenePhase
 
+  private var allPushDescrition: String {
+    store.isAllPushEnabled ? "앱 알림 받기" : "알림이 꺼져 있어요\n알림을 켜고 소식을 받아보세요"
+  }
+  
   var body: some View {
     ZStack {
       UIAsset.Colors.doriWhite.color
@@ -27,7 +31,7 @@ struct NotificationSettingsView: View {
           // 전체 푸시 수신 (Type 1: HStack { VStack { title, description }, switch })
           notificationRowWithDescription(
             title: "앱 알림 받기",
-            description: "알림이 꺼져 있어요\n알림을 받으려면 켜주세요",
+            description: allPushDescrition,
             isOn: $store.isAllPushEnabled.sending(\.allPushToggled)
           )
 
