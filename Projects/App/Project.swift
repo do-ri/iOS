@@ -33,7 +33,7 @@ let project = Project.dori(
     ),
     .target(
       name: "DoriAppUITests",
-      destinations: .iOS,
+      destinations: [.iPhone],
       product: .uiTests,
       bundleId: "\(Environment.App.baseBundleId).UITests",
       deploymentTargets: .iOS(Environment.deploymentTarget),

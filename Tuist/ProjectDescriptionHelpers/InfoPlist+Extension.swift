@@ -30,6 +30,9 @@ extension InfoPlist {
       "kakaokompassauth",
       "kakaolink",
     ],
+    "UISupportedInterfaceOrientations": [
+      "UIInterfaceOrientationPortrait",
+    ],
   ]
     
   public static func baseInfoPlist() -> InfoPlist {

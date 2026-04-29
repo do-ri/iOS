@@ -16,7 +16,7 @@ public extension Target {
   ) -> Target {
     .target(
       name: module.name,
-      destinations: .iOS,
+      destinations: [.iPhone],
       product: .framework,
       bundleId: "\(Environment.App.baseBundleId).\(module.name)",
       deploymentTargets: .iOS(Environment.deploymentTarget),
@@ -33,7 +33,7 @@ public extension Target {
   ) -> Target {
     .target(
       name: "\(module.name)Tests",
-      destinations: .iOS,
+      destinations: [.iPhone],
       product: .unitTests,
       bundleId: "\(Environment.App.baseBundleId).\(module.name)Tests",
       deploymentTargets: .iOS(Environment.deploymentTarget),
@@ -55,7 +55,7 @@ public extension Target {
   ) -> Target {
     .target(
       name: name,
-      destinations: .iOS,
+      destinations: [.iPhone],
       product: .app,
       bundleId: bundleId,
       deploymentTargets: .iOS(Environment.deploymentTarget),
