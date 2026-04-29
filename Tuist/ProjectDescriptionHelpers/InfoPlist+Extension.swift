@@ -10,31 +10,33 @@ import ProjectDescription
 extension InfoPlist {
   static let commonDictionary: [String: Plist.Value] = [
     "UILaunchScreen": .dictionary([:]),
+    "CFBundleDisplayName": "$(APP_DISPLAY_NAME)",
+    "CFBundleShortVersionString": "$(MARKETING_VERSION)",
+    "CFBundleVersion": "$(CURRENT_PROJECT_VERSION)",
     "BASE_URL": "$(BASE_URL)",
     "KAKAO_NATIVE_APP_KEY": "$(KAKAO_NATIVE_APP_KEY)",
     "Appearance": "Light",
-    "UISupportedInterfaceOrientations": [
-      "UIInterfaceOrientationPortrait"
-    ],
     "ITSAppUsesNonExemptEncryption": .boolean(false),
+    "FirebaseAppDelegateProxyEnabled": .boolean(false),
+    "FirebaseMessagingAutoInitEnabled": .boolean(true),
     "CFBundleURLTypes": [
       [
         "CFBundleTypeRole": "Editor",
-        "CFBundleURLName": .string(Environment.App.baseBundleId),
-        "CFBundleURLSchemes": .array([.string("$(KAKAO_CAllBACK)")]),
-      ]),
-    ])
-    dict["LSApplicationQueriesSchemes"] = .array([
-      .string("kakaokompassauth"),
-      .string("kakaolink"),
-    ])
+        "CFBundleURLName": Plist.Value.string(Environment.App.baseBundleId),
+        "CFBundleURLSchemes": ["$(KAKAO_CAllBACK)"],
+      ],
+    ],
+    "LSApplicationQueriesSchemes": [
+      "kakaokompassauth",
+      "kakaolink",
+    ],
+  ]
+
+  public static func baseInfoPlist() -> InfoPlist {
+    var dict = commonDictionary
     dict["UISupportedInterfaceOrientations"] = .array([
       .string("UIInterfaceOrientationPortrait"),
     ])
-    return dict
-  }
-
-  public static func baseInfoPlist() -> InfoPlist {
-    return .extendingDefault(with: commonDictionary)
+    return .extendingDefault(with: dict)
   }
 }
