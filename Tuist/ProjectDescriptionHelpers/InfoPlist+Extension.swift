@@ -30,12 +30,13 @@ extension InfoPlist {
       "kakaokompassauth",
       "kakaolink",
     ],
-    "UISupportedInterfaceOrientations": [
-      "UIInterfaceOrientationPortrait",
-    ],
   ]
 
   public static func baseInfoPlist() -> InfoPlist {
-    return .extendingDefault(with: commonDictionary)
+    var dict = commonDictionary
+    dict["UISupportedInterfaceOrientations"] = .array([
+      .string("UIInterfaceOrientationPortrait"),
+    ])
+    return .extendingDefault(with: dict)
   }
 }
