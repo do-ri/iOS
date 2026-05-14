@@ -37,6 +37,18 @@ public struct KeychainAuthTokenStore: AuthTokenStoring {
   public func exists() throws -> Bool {
     try contains(.accessToken)
   }
+
+  public func saveFCMToken(_ token: String) throws {
+    try set(token, for: .fcmToken)
+  }
+
+  public func loadFCMToken() -> String? {
+    try? string(for: .fcmToken)
+  }
+
+  public func deleteFCMToken() {
+    _ = try? delete(.fcmToken)
+  }
 }
 
 private extension KeychainAuthTokenStore {

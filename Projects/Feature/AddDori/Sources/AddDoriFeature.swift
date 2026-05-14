@@ -10,6 +10,7 @@ import ComposableArchitecture
 import DoriCore
 import DoriNetwork
 import DoriDesignSystem
+import UserNotifications
 
 @Reducer
 public struct AddDoriFeature {
@@ -46,6 +47,8 @@ public struct AddDoriFeature {
     public var memo: String = ""
 
     public var isSubmitting: Bool = false
+    public var isNotificationSettingsAlertPresented: Bool = false
+    public var pendingCreatedDori: Dori?
 
     // MARK: - Validation
 
@@ -122,6 +125,8 @@ public struct AddDoriFeature {
     // Submit
     case submitTapped
     case submitResponse(Result<Dori, SubmitError>)
+    case notificationAuthorizationStatusResponse(Bool, Dori)
+    case notificationSettingsAlertDismissed
 
     // Delegate
     case delegate(Delegate)
@@ -150,6 +155,7 @@ public struct AddDoriFeature {
 
   @Dependency(\.continuousClock) var clock
   @Dependency(\.addDoriAPIClient) var apiClient
+  @Dependency(\.userNotificationSettingsClient) var userNotificationSettingsClient
 
   // MARK: - Reducer
 
@@ -314,15 +320,66 @@ public struct AddDoriFeature {
 
       case let .submitResponse(.success(response)):
         state.isSubmitting = false
-        return .send(.delegate(.doriCreated(response)))
+        let isNotificationEnabled = userNotificationSettingsClient.isNotificationEnabled
+        return .run { send in
+          let isEnabled = await isNotificationEnabled()
+          await send(.notificationAuthorizationStatusResponse(isEnabled, response))
+        }
 
       case .submitResponse(.failure):
         state.isSubmitting = false
         return .none
 
+      case let .notificationAuthorizationStatusResponse(isEnabled, response):
+        if isEnabled {
+          return .send(.delegate(.doriCreated(response)))
+        }
+
+        state.pendingCreatedDori = response
+        state.isNotificationSettingsAlertPresented = true
+        return .none
+
+      case .notificationSettingsAlertDismissed:
+        state.isNotificationSettingsAlertPresented = false
+        guard let createdDori = state.pendingCreatedDori else { return .none }
+        state.pendingCreatedDori = nil
+        return .send(.delegate(.doriCreated(createdDori)))
+
       case .delegate:
         return .none
       }
     }
+  }
+}
+
+@DependencyClient
+public struct UserNotificationSettingsClient: Sendable {
+  public var isNotificationEnabled: @Sendable () async -> Bool = { true }
+}
+
+extension UserNotificationSettingsClient: DependencyKey {
+  public static let liveValue = Self(
+    isNotificationEnabled: {
+      let settings = await UNUserNotificationCenter.current().notificationSettings()
+      switch settings.authorizationStatus {
+      case .authorized, .provisional, .ephemeral:
+        return true
+      case .notDetermined, .denied:
+        return false
+      @unknown default:
+        return false
+      }
+    }
+  )
+
+  public static let testValue = Self(
+    isNotificationEnabled: { true }
+  )
+}
+
+public extension DependencyValues {
+  var userNotificationSettingsClient: UserNotificationSettingsClient {
+    get { self[UserNotificationSettingsClient.self] }
+    set { self[UserNotificationSettingsClient.self] = newValue }
   }
 }

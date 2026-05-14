@@ -11,7 +11,8 @@ public extension Target {
   static func doriFramework(
     _ module: DoriModule,
     dependencies: [TargetDependency] = [],
-    hasResources: Bool = false
+    hasResources: Bool = false,
+    settings: Settings = .frameworkSettings
   ) -> Target {
     .target(
       name: module.name,
@@ -22,7 +23,7 @@ public extension Target {
       sources: ["\(module.localPath)/Sources/**"],
       resources: hasResources ? ["\(module.localPath)/Resources/**"] : nil,
       dependencies: dependencies,
-      settings: .frameworkSettings
+      settings: settings
     )
   }
 
@@ -61,6 +62,7 @@ public extension Target {
       infoPlist: infoPlist,
       sources: sources,
       resources: resources,
+      entitlements: entitlements,
       dependencies: dependencies,
       settings: settings
     )

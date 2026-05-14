@@ -6,6 +6,7 @@
 //
 
 import ComposableArchitecture
+import DoriCore
 import DoriDesignSystem
 import SwiftUI
 
@@ -31,6 +32,10 @@ public struct MyPageView: View {
         VStack(alignment: .leading, spacing: 24) {
           settingInfoView
           accountInfoView
+          notificationInfoView
+          if BuildEnvironment.current.isTestingEnabled {
+            debugInfoView
+          }
 
           Spacer()
         }
@@ -81,6 +86,20 @@ public struct MyPageView: View {
             navigationTitle: "개인정보처리방침",
             url: Self.privacyPolicyURL
           )
+        case .notificationSettings:
+          NotificationSettingsView(
+            store: store.scope(
+              state: \.notificationSettings,
+              action: \.notificationSettings
+            )
+          )
+        case .fcmPushTest:
+          FCMPushTestView(
+            store: store.scope(
+              state: \.fcmPushTest,
+              action: \.fcmPushTest
+            )
+          )
         }
       }
     }
@@ -130,8 +149,44 @@ public struct MyPageView: View {
       NavigationRow("탈퇴하기") {
         store.send(.withdrawButtonTapped)
       }
+      
+      Divider()
     }
   }
+  
+  private var notificationInfoView: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Text("알림")
+        .pretendard(.subtitle(.m2))
+        .foregroundStyle(.grey600)
+
+      NavigationRow("앱 알림 설정") {
+        store.send(.notificationSettingsTapped)
+      }
+
+    }
+  }
+
+  private var debugInfoView: some View {
+    VStack(alignment: .leading, spacing: 16) {
+      Divider()
+
+      HStack {
+        Text("디버깅 툴")
+          .pretendard(.subtitle(.m2))
+          .foregroundStyle(.grey600)
+        Spacer()
+        Text(BuildEnvironment.current.displayName)
+          .pretendard(.body(.r3))
+          .foregroundStyle(.grey400)
+      }
+
+      NavigationRow("FCM 푸시 테스트") {
+        store.send(.fcmPushTestTapped)
+      }
+    }
+  }
+  
   private var logoutAlertBinding: Binding<Bool> {
     Binding(
       get: { store.isLogoutAlertPresented },

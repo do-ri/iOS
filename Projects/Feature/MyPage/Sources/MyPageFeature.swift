@@ -9,6 +9,7 @@ import ComposableArchitecture
 import DoriDesignSystem
 import DoriNetwork
 import Foundation
+import PlatformKeychain
 
 @Reducer
 public struct MyPageFeature {
@@ -28,25 +29,35 @@ public struct MyPageFeature {
     public var isLogoutAlertPresented: Bool
     public var isWithdrawAlertPresented: Bool
     public var toastItem: DoriToast?
+    public var notificationSettings: NotificationSettingsFeature.State
+    public var fcmPushTest: FCMPushTestFeature.State
 
     public init(
       isLoading: Bool = false,
       isLogoutAlertPresented: Bool = false,
       isWithdrawAlertPresented: Bool = false,
-      toastItem: DoriToast? = nil
+      toastItem: DoriToast? = nil,
+      notificationSettings: NotificationSettingsFeature.State = NotificationSettingsFeature.State(),
+      fcmPushTest: FCMPushTestFeature.State = FCMPushTestFeature.State()
     ) {
       self.navigationPath = []
       self.isLoading = isLoading
       self.isLogoutAlertPresented = isLogoutAlertPresented
       self.isWithdrawAlertPresented = isWithdrawAlertPresented
       self.toastItem = toastItem
+      self.notificationSettings = notificationSettings
+      self.fcmPushTest = fcmPushTest
     }
   }
 
   public enum Action: Equatable, Sendable {
     case onAppear
     case privacyPolicyTapped
+    case notificationSettingsTapped
+    case fcmPushTestTapped
     case navigationPathChanged([Route])
+    case notificationSettings(NotificationSettingsFeature.Action)
+    case fcmPushTest(FCMPushTestFeature.Action)
 
     case logoutButtonTapped
     case withdrawButtonTapped
@@ -73,6 +84,8 @@ public struct MyPageFeature {
 
   public enum Route: Hashable, Sendable {
     case privacyPolicy
+    case notificationSettings
+    case fcmPushTest
   }
 
   public func reduce(into state: inout State, action: Action) -> Effect<Action> {
@@ -84,9 +97,36 @@ public struct MyPageFeature {
       state.navigationPath.append(.privacyPolicy)
       return .none
 
+    case .notificationSettingsTapped:
+      state.navigationPath.append(.notificationSettings)
+      return .none
+
+    case .fcmPushTestTapped:
+      state.fcmPushTest = FCMPushTestFeature.State()
+      state.navigationPath.append(.fcmPushTest)
+      return .none
+
     case .navigationPathChanged(let path):
       state.navigationPath = path
       return .none
+
+    case .notificationSettings(.delegate(.didTapBack)):
+      state.navigationPath.removeAll(where: { $0 == .notificationSettings })
+      return .none
+
+    case .notificationSettings(let notifAction):
+      return NotificationSettingsFeature()
+        .reduce(into: &state.notificationSettings, action: notifAction)
+        .map(Action.notificationSettings)
+
+    case .fcmPushTest(.delegate(.didTapBack)):
+      state.navigationPath.removeAll(where: { $0 == .fcmPushTest })
+      return .none
+
+    case .fcmPushTest(let fcmAction):
+      return FCMPushTestFeature()
+        .reduce(into: &state.fcmPushTest, action: fcmAction)
+        .map(Action.fcmPushTest)
 
     case .logoutButtonTapped:
       state.isLogoutAlertPresented = true
@@ -264,7 +304,7 @@ extension MyPageAPIClient: TestDependencyKey {
 public extension MyPageAPIClient {
   static func live(
     networkService: any NetworkService,
-    tokenStore: any AuthTokenStoring
+    tokenStore: KeychainAuthTokenStore
   ) -> Self {
     Self(
       logout: {
@@ -287,6 +327,15 @@ public extension MyPageAPIClient {
 
         guard response.success else {
           throw MyPageAPIClientError.invalidResponse
+        }
+
+        if let fcmToken = tokenStore.loadFCMToken() {
+          let fcmEndpoint = DeleteFCMTokenEndpoint(token: fcmToken)
+          _ = try? await networkService.request(
+            fcmEndpoint,
+            responseType: SuccessResponse<EmptyResponse>.self
+          )
+          tokenStore.deleteFCMToken()
         }
 
         try tokenStore.clear()

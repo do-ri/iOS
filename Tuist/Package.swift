@@ -23,5 +23,6 @@ let package = Package(
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.1"),
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.0.0"),
+    .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0"),
   ]
 )
