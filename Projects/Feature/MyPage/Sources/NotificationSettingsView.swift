@@ -19,7 +19,7 @@ struct NotificationSettingsView: View {
   
   var body: some View {
     ZStack {
-      UIAsset.Colors.doriWhite.color
+      UIAsset.Colors.bgPrimary.color
         .ignoresSafeArea()
 
       ScrollView {
@@ -87,7 +87,7 @@ struct NotificationSettingsView: View {
           }
           .overlay {
             if !store.isAllPushEnabled {
-              UIAsset.Colors.doriWhite.color
+              UIAsset.Colors.bgPrimary.color
                 .opacity(0.6)
                 .allowsHitTesting(true)
             }
@@ -123,11 +123,11 @@ struct NotificationSettingsView: View {
         
         Image(.pushDisableBell)
           .font(.system(size: 20))
-          .foregroundStyle(.grey600)
+          .foregroundStyle(.textSecondary)
 
         Text("기기알림은 켜시면 새로운 소식을\n확인할 수 있습니다.")
           .pretendard(.body(.r6))
-          .foregroundStyle(.grey600)
+          .foregroundStyle(.textSecondary)
           .frame(maxWidth: .infinity, alignment: .leading)
 
         HStack(spacing: 2) {
@@ -163,10 +163,10 @@ struct NotificationSettingsView: View {
       VStack(alignment: .leading, spacing: 4) {
         Text(title)
           .pretendard(.body(.m3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
         Text(description)
           .pretendard(.body(.r6))
-          .foregroundStyle(.grey600)
+          .foregroundStyle(.textSecondary)
       }
 
       Spacer()
@@ -185,7 +185,7 @@ struct NotificationSettingsView: View {
     HStack {
       Text(title)
         .pretendard(.body(.r3))
-        .foregroundStyle(.doriBlack)
+        .foregroundStyle(.textPrimary)
 
       Spacer()
 
@@ -203,10 +203,10 @@ struct NotificationSettingsView: View {
     VStack(alignment: .leading, spacing: 4) {
       Text(title)
         .pretendard(.body(.m3))
-        .foregroundStyle(.doriBlack)
+        .foregroundStyle(.textPrimary)
       Text(description)
         .pretendard(.body(.r6))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
   }

@@ -57,7 +57,7 @@ public struct IntroView: View {
   private let props: [IntroProps] = .onboarding
   public var body: some View {
     ZStack {
-      DoriColors.doriWhite.color
+      DoriColors.bgPrimary.color
         .ignoresSafeArea()
       
       VStack(spacing: 0) {
@@ -103,17 +103,17 @@ public struct IntroView: View {
               if prop.id == 0 {
                 Text(prop.title)
                   .hopangche(size: 55)
-                  .foregroundStyle(.main)
+                  .foregroundStyle(.brandMain)
                 Text(prop.subtitle)
                   .pretendard(.regular(.r18))
-                  .foregroundStyle(.main)
+                  .foregroundStyle(.brandMain)
               } else {
                 Text(prop.title)
                   .pretendard(.subtitle(.sb1))
-                  .foregroundStyle(.main)
+                  .foregroundStyle(.brandMain)
                 Text(prop.subtitle)
                   .pretendard(.subtitle(.sb1))
-                  .foregroundStyle(.main)
+                  .foregroundStyle(.brandMain)
               }
               
             }
@@ -143,7 +143,7 @@ public struct IntroView: View {
     } label: {
       Text("카카오로 시작하기")
         .pretendard(.semiBold(.sb15))
-        .foregroundStyle(DoriColors.doriBlack.color)
+        .foregroundStyle(DoriColors.textPrimary.color)
         .frame(maxWidth: .infinity)
         .frame(height: 46)
         .background(

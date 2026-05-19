@@ -40,7 +40,7 @@ struct CustomTabBar: View {
         selectedTab = .myPage
       }
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
     .shadow(
       color: .black.opacity(0.05),
       radius: 8,

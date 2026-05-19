@@ -11,7 +11,7 @@ public struct DateHeaderView: View {
   public var body: some View {
     Text(date.koreanDateWithWeekday)
       .pretendard(.medium(.m12))
-      .foregroundStyle(.grey600)
+      .foregroundStyle(.textSecondary)
   }
 }
 

@@ -24,7 +24,7 @@ public struct DoriSegmentControl: View {
     .padding(4) // 바깥 캡슐과 선택 캡슐 사이 여백
     .background(
       RoundedRectangle(cornerRadius: 10)
-        .fill(.grey100)
+        .fill(.bgSecondary)
     )
   }
 

@@ -12,7 +12,7 @@ struct AddDoriSectionTitleStyleModifier: ViewModifier {
   func body(content: Content) -> some View {
     content
       .pretendard(.subtitle(.m2))
-      .foregroundStyle(.grey600)
+      .foregroundStyle(.textSecondary)
   }
 }
 
@@ -29,7 +29,7 @@ struct RoundedBorderModifier: ViewModifier {
       .padding(.vertical, 12)
       .background(
         RoundedRectangle(cornerRadius: 10)
-          .stroke(DoriColors.grey300.color)
+          .stroke(DoriColors.borderInput.color)
       )
   }
 }

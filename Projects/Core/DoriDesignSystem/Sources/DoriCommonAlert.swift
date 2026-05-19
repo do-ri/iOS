@@ -31,7 +31,7 @@ public struct DoriCommonAlert: View {
 
   public var body: some View {
     ZStack {
-      Color.black.opacity(0.4)
+      DoriColors.bgScrim.color
         .ignoresSafeArea()
         .onTapGesture {
           isPresented = false
@@ -43,7 +43,7 @@ public struct DoriCommonAlert: View {
         buttonArea
       }
       .padding(16)
-      .background(.doriWhite)
+      .background(.bgPrimary)
       .cornerRadius(10)
       .padding(.horizontal, 24)
       .scaleEffect(isPresented ? 1.0 : 0.8)
@@ -56,13 +56,13 @@ public struct DoriCommonAlert: View {
     VStack(alignment: .center, spacing: 8) {
       Text(title)
         .pretendard(.headline(.h1))
-        .foregroundStyle(.doriBlack)
+        .foregroundStyle(.textPrimary)
         .multilineTextAlignment(.center)
       
       if let description = description {
         Text(description)
           .pretendard(.body(.r4))
-          .foregroundStyle(.grey600)
+          .foregroundStyle(.textSecondary)
           .multilineTextAlignment(.center)
       }
     }
@@ -75,7 +75,7 @@ public struct DoriCommonAlert: View {
         PrimaryButton(title: secondaryButton.title) {
           secondaryButton.action()
         }
-        .backgroundColor(.grey100)
+        .backgroundColor(.bgSecondary)
         .foregroundColor(.black)
       }
 

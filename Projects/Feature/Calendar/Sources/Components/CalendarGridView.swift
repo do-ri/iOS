@@ -34,7 +34,7 @@ public struct CalendarGridView: View {
         ForEach(weekdays, id: \.self) { weekday in
           Text(weekday)
             .pretendard(.regular(.r13))
-            .foregroundStyle(.grey400)
+            .foregroundStyle(.textSecondary)
             .padding(.bottom, 10)
         }
       }
@@ -53,7 +53,7 @@ public struct CalendarGridView: View {
         }
       }
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
   }
 }
 
@@ -73,7 +73,7 @@ struct CalendarDayCell: View {
   
   var isTodayCircleColor: Color {
     guard isToday else { return .clear }
-    return selectedType == .judori ? UIAsset.Colors.secondary.color : UIAsset.Colors.grey600.color
+    return selectedType == .judori ? UIAsset.Colors.secondary.color : UIAsset.Colors.textSecondary.color
   }
   
   var dotColor: UIAsset.Colors {
@@ -99,7 +99,7 @@ struct CalendarDayCell: View {
     .background(alignment: .top, content: {
       Rectangle()
         .frame(height: 0.5)
-        .foregroundStyle(.grey300)
+        .foregroundStyle(.borderDefault)
     })
   }
   

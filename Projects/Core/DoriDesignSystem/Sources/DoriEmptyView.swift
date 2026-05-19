@@ -36,7 +36,7 @@ public struct DoriEmptyView: View {
       Label {
         Text(content.title)
           .pretendard(.headline(.h1))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
       } icon: {
         content.image
           .resizable()
@@ -45,7 +45,7 @@ public struct DoriEmptyView: View {
     } description: {
       Text(content.description)
         .pretendard(.body(.r4))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
     }
   }
 }

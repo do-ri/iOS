@@ -33,8 +33,8 @@ public struct PageIndicator: View {
           )
           .foregroundStyle(
             currentIndex == index
-            ? DoriColors.main.color
-            : DoriColors.grey200.color
+            ? DoriColors.brandMain.color
+            : DoriColors.borderDefault.color
           )
       }
     }

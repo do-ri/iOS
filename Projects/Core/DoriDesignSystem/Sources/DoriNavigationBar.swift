@@ -128,7 +128,7 @@ public struct DoriNavigationBar: View {
       // Center: 패딩 포함 전체 너비 기준 정중앙
       centerView
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
   }
 
   // MARK: - Helpers
@@ -153,7 +153,7 @@ public struct DoriNavigationBar: View {
     case .backButton(let action):
       Button(action: action) {
         Image(systemName: "chevron.left")
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
           .frame(width: 44, height: 44)
           .contentShape(Rectangle())
       }
@@ -171,19 +171,19 @@ public struct DoriNavigationBar: View {
     case .title(let title):
       Text(title)
         .pretendard(.headline(.h1))
-        .foregroundStyle(.doriBlack)
+        .foregroundStyle(.textPrimary)
         .frame(maxWidth: .infinity)
 
     case .searchField(let text, let placeholder, let onClear):
       HStack {
         TextField(placeholder, text: text)
           .pretendard(.body(.sb3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
 
         if !text.wrappedValue.isEmpty, let onClear {
           Button(action: onClear) {
             Image(systemName: "xmark.circle.fill")
-              .foregroundStyle(.grey400)
+              .foregroundStyle(.textDisabled)
           }
         }
       }
@@ -191,7 +191,7 @@ public struct DoriNavigationBar: View {
       .frame(height: 36)
       .background(
         RoundedRectangle(cornerRadius: 8)
-          .fill(.grey100)
+          .fill(.bgSecondary)
       )
       .padding(.leading, searchFieldLeadingPadding)
       .padding(.trailing, searchFieldTrailingPadding)
@@ -209,7 +209,7 @@ public struct DoriNavigationBar: View {
         case .iconButton(let image, let action):
           Button(action: action) {
             image
-              .foregroundStyle(.doriBlack)
+              .foregroundStyle(.textPrimary)
               .frame(width: 44, height: 44)
               .contentShape(Rectangle())
           }
@@ -307,7 +307,7 @@ public extension View {
 
 #Preview("Case 0: Empty") {
   NavigationStack {
-    UIAsset.Colors.grey100.color
+    UIAsset.Colors.bgSecondary.color
       .ignoresSafeArea()
       .doriNavigationBar(DoriNavigationBarConfig.empty)
   }
@@ -315,7 +315,7 @@ public extension View {
 
 #Preview("Case 1: Back + Title") {
   NavigationStack {
-    UIAsset.Colors.grey100.color
+    UIAsset.Colors.bgSecondary.color
       .ignoresSafeArea()
       .doriNavigationBar(DoriNavigationBarConfig.backWithTitle("내역 추가", onBack: {}))
   }
@@ -323,7 +323,7 @@ public extension View {
 
 #Preview("Case 2: Back + Title + 2 Actions") {
   NavigationStack {
-    UIAsset.Colors.grey100.color
+    UIAsset.Colors.bgSecondary.color
       .ignoresSafeArea()
       .doriNavigationBar(
         DoriNavigationBarConfig.backWithTitleAndActions(
@@ -342,7 +342,7 @@ public extension View {
   @Previewable @State var searchText = ""
 
   NavigationStack {
-    UIAsset.Colors.grey100.color
+    UIAsset.Colors.bgSecondary.color
       .ignoresSafeArea()
       .doriNavigationBar(
         DoriNavigationBarConfig.backWithSearch(
@@ -356,7 +356,7 @@ public extension View {
 
 #Preview("Case 5: Title Only") {
   NavigationStack {
-    UIAsset.Colors.grey100.color
+    UIAsset.Colors.bgSecondary.color
       .ignoresSafeArea()
       .doriNavigationBar(DoriNavigationBarConfig.titleWithActions("캘린더"))
   }

@@ -45,7 +45,7 @@ fileprivate struct DesignTokenDemoView: View {
           ZStack {
             Rectangle()
               .frame(height: 50)
-              .foregroundStyle(.grey100)
+              .foregroundStyle(.bgSecondary)
             Text("도리 화이팅")
               .pretendard(.headline(heading))
           }
@@ -54,7 +54,7 @@ fileprivate struct DesignTokenDemoView: View {
         Text("헤딩")
           .padding()
           .pretendard(.bold(.b15))
-          .foregroundStyle(.doriWhite)
+          .foregroundStyle(.onBrand)
           .frame(maxWidth: .infinity)
           .background(.secondary)
           .padding()
@@ -65,7 +65,7 @@ fileprivate struct DesignTokenDemoView: View {
           ZStack {
             Rectangle()
               .frame(height: 50)
-              .foregroundStyle(.grey200)
+              .foregroundStyle(.borderDefault)
             Text("도리 화이팅")
               .pretendard(.subtitle(subtitle))
           }
@@ -74,7 +74,7 @@ fileprivate struct DesignTokenDemoView: View {
         Text("서브 타이틀")
           .padding()
           .pretendard(.bold(.b15))
-          .foregroundStyle(.doriWhite)
+          .foregroundStyle(.onBrand)
           .frame(maxWidth: .infinity)
           .background(.secondary)
           .padding()
@@ -85,7 +85,7 @@ fileprivate struct DesignTokenDemoView: View {
           ZStack {
             Rectangle()
               .frame(height: 50)
-              .foregroundStyle(.grey300)
+              .foregroundStyle(.borderDefault)
             Text("도리 화이팅")
               .pretendard(.body(body))
           }
@@ -94,9 +94,9 @@ fileprivate struct DesignTokenDemoView: View {
         Text("바디")
           .padding()
           .pretendard(.bold(.b15))
-          .foregroundStyle(.doriWhite)
+          .foregroundStyle(.onBrand)
           .frame(maxWidth: .infinity)
-          .background(.main)
+          .background(.brandMain)
           .padding()
       }
       
@@ -105,7 +105,7 @@ fileprivate struct DesignTokenDemoView: View {
           ZStack {
             Rectangle()
               .frame(height: 50)
-              .foregroundStyle(.grey400)
+              .foregroundStyle(.textDisabled)
             Text("도리 화이팅")
               .pretendard(.caption(caption))
           }
@@ -114,9 +114,9 @@ fileprivate struct DesignTokenDemoView: View {
         Text("캡션")
           .padding()
           .pretendard(.bold(.b15))
-          .foregroundStyle(.doriWhite)
+          .foregroundStyle(.onBrand)
           .frame(maxWidth: .infinity)
-          .background(.main)
+          .background(.brandMain)
           .padding()
       }
     }
@@ -125,21 +125,18 @@ fileprivate struct DesignTokenDemoView: View {
 
 extension DesignTokenDemoView {
   private static let brandColors: [Color] = [
-    DoriColors.main.color,
+    DoriColors.brandMain.color,
     DoriColors.secondary.color,
   ]
   
   private static let greyColors: [Color] = [
-    DoriColors.doriWhite.color,
-    DoriColors.grey100.color,
-    DoriColors.grey200.color,
-    DoriColors.grey300.color,
-    DoriColors.grey400.color,
-    DoriColors.grey500.color,
-    DoriColors.grey600.color,
-    DoriColors.grey700.color,
-    DoriColors.grey800.color,
-    DoriColors.doriBlack.color
+    DoriColors.bgPrimary.color,
+    DoriColors.bgSecondary.color,
+    DoriColors.borderDefault.color,
+    DoriColors.borderInput.color,
+    DoriColors.textDisabled.color,
+    DoriColors.textSecondary.color,
+    DoriColors.textPrimary.color
   ]
   
   private static let typoHeadings: [TypoSemantic.Heading] = TypoSemantic.Heading.allCases

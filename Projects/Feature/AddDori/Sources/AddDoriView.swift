@@ -30,7 +30,7 @@ public struct AddDoriView: View {
             value: store.currentPage
           )
       }
-      .background(.doriWhite)
+      .background(.bgPrimary)
       .doriKeyboardDismissable()
       .doriNavigationBar(
         DoriNavigationBarConfig.backWithTitle(
@@ -56,7 +56,7 @@ public struct AddDoriView: View {
       .allowsHitTesting(!store.isDatePickerVisible)
 
       if store.isDatePickerVisible {
-        Color.black.opacity(0.4)
+        DoriColors.bgScrim.color
           .ignoresSafeArea()
           .allowsHitTesting(false)
 
@@ -112,7 +112,7 @@ public struct AddDoriView: View {
     .padding(.horizontal, 16)
     .padding(.top, 12)
     .padding(.bottom, 20)
-    .background(.doriWhite)
+    .background(.bgPrimary)
   }
 
   private var currentButtonTitle: String {

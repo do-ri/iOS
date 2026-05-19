@@ -29,16 +29,16 @@ public struct PersonCardView: View {
         HStack {
           Text(partner.partnerName)
             .pretendard(.body(.b4))
-            .foregroundStyle(.doriBlack)
+            .foregroundStyle(.textPrimary)
 
           Text(partner.relationship)
             .pretendard(.caption(.m2))
-            .foregroundStyle(.grey600)
+            .foregroundStyle(.textSecondary)
             .padding(.vertical, 2)
             .padding(.horizontal, 6)
             .background(
               RoundedRectangle(cornerRadius: 5)
-                .foregroundStyle(.grey100)
+                .foregroundStyle(.bgSecondary)
             )
 
           Spacer()
@@ -69,14 +69,14 @@ public struct PersonCardView: View {
 
           AmountLabel(Int(partner.inDoriTotalAmount))
             .pretendard(.caption(.b1))
-            .foregroundStyle(.grey500)
+            .foregroundStyle(.textSecondary)
         }
         .padding(.horizontal, 8)
       }
       .padding(.horizontal, 10)
       .padding(.top, 14)
       .padding(.bottom, 24)
-      .background(.doriWhite)
+      .background(.bgPrimary)
 
       Divider()
 
@@ -90,7 +90,7 @@ public struct PersonCardView: View {
             if partner.recentDoriList.isEmpty {
               Text("최근 도리 내역이 없습니다")
                 .pretendard(.regular(.r12))
-                .foregroundStyle(.grey600)
+                .foregroundStyle(.textSecondary)
                 .padding(.vertical, 12)
             }
           }
@@ -99,16 +99,16 @@ public struct PersonCardView: View {
           PrimaryButton(title: "전체 보기") {
             onViewAllTapped?()
           }
-          .backgroundColor(.doriWhite)
-          .foregroundColor(.main)
-          .strokeColor(.main)
+          .backgroundColor(.bgPrimary)
+          .foregroundColor(.brandMain)
+          .strokeColor(.brandMain)
           .padding(.bottom, 16)
         }
         .padding(.horizontal, 16)
         .transition(.move(edge: .top).combined(with: .opacity).combined(with: .blurReplace))
       }
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
     .cornerRadius(10)
   }
 }
@@ -121,7 +121,7 @@ fileprivate struct OutspreadChevron: View {
   var body: some View {
     Image(systemName: "chevron.down")
       .font(.system(size: 18))
-      .foregroundStyle(.doriBlack)
+      .foregroundStyle(.textPrimary)
       .rotationEffect(.degrees(isExpanded ? 180 : 0))
       .animation(.spring(response: 0.5, dampingFraction: 0.6), value: isExpanded)
   }
@@ -159,5 +159,5 @@ fileprivate struct OutspreadChevron: View {
     PersonCardView(partner: samplePartner)
   }
   .padding()
-  .background(.grey100)
+  .background(.bgSecondary)
 }

@@ -84,7 +84,7 @@ public struct EditDoriView: View {
           HStack {
             Text(dateFormatter.string(from: store.eventDate))
               .pretendard(.body(.sb3))
-              .foregroundStyle(.doriBlack)
+              .foregroundStyle(.textPrimary)
 
             Spacer()
 
@@ -139,7 +139,7 @@ public struct EditDoriView: View {
     )
     .overlay {
       if store.isDatePickerVisible {
-        Color.black.opacity(0.4)
+        DoriColors.bgScrim.color
           .ignoresSafeArea()
           .onTapGesture { store.send(.datePickerToggled) }
           .overlay {
@@ -186,7 +186,7 @@ struct EditDoriMemoField: View {
       if text.isEmpty {
         Text(placeholder)
           .pretendard(.body(.r3))
-          .foregroundStyle(.grey400)
+          .foregroundStyle(.textPlaceholder)
           .padding(.horizontal, 16)
           .padding(.vertical, 12)
           .allowsHitTesting(false)
@@ -194,11 +194,11 @@ struct EditDoriMemoField: View {
     }
     .background(
       RoundedRectangle(cornerRadius: 10)
-        .fill(.doriWhite)
+        .fill(.bgPrimary)
     )
     .overlay(
       RoundedRectangle(cornerRadius: 10)
-        .stroke(.grey300, lineWidth: 1)
+        .stroke(.borderInput, lineWidth: 1)
     )
   }
 }
@@ -305,17 +305,17 @@ private struct EditDoriCalendarView: View {
         displayedComponents: .date
       )
       .datePickerStyle(.graphical)
-      .tint(DoriColors.main.color)
+      .tint(DoriColors.brandMain.color)
       .padding()
-      .background(DoriColors.doriWhite.color)
+      .background(DoriColors.bgPrimary.color)
       .clipShape(RoundedRectangle(cornerRadius: 16))
 
       HStack {
         PrimaryButton(title: "나가기") {
           dismissAction()
         }
-        .backgroundColor(.grey100)
-        .foregroundColor(.doriBlack)
+        .backgroundColor(.bgSecondary)
+        .foregroundColor(.textPrimary)
 
         PrimaryButton(title: "날짜 선택") {
           selectionAction(selection)

@@ -32,16 +32,16 @@ fileprivate extension PrimaryButton {
   func doriSelected() -> Self {
     self
       .pretendard(.body(.sb3))
-      .backgroundColor(.main)
-      .foregroundColor(.doriWhite)
+      .backgroundColor(.brandMain)
+      .foregroundColor(.onBrand)
       
   }
   
   func doriUnselected() -> Self {
     self
       .pretendard(.body(.r3))
-      .backgroundColor(.doriWhite)
-      .foregroundColor(.grey500)
-      .strokeColor(.grey300)
+      .backgroundColor(.bgPrimary)
+      .foregroundColor(.textSecondary)
+      .strokeColor(.borderInput)
   }
 }

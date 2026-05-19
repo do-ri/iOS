@@ -13,8 +13,8 @@ public struct PrimaryButton: View {
   private let action: @MainActor () -> Void
   private var isEnabled: Bool = true
   
-  private var foregroundColor: Color = UIAsset.Colors.doriWhite.color
-  private var backgroundColor: Color = UIAsset.Colors.main.color
+  private var foregroundColor: Color = UIAsset.Colors.onBrand.color
+  private var backgroundColor: Color = UIAsset.Colors.brandMain.color
   private var strokeColor: Color? = nil
   private var cornerRadius: CGFloat = 10
   
@@ -93,8 +93,8 @@ public extension PrimaryButton {
   func isEnable(_ isEnable: Bool) -> some View {
     print("isEnable: \(isEnable)")
     var button = self
-    let backgroundColor = isEnable ? UIAsset.Colors.main.color : UIAsset.Colors.grey100.color
-    let foregroundColor = isEnable ? UIAsset.Colors.doriWhite.color : UIAsset.Colors.grey500.color
+    let backgroundColor = isEnable ? UIAsset.Colors.brandMain.color : UIAsset.Colors.bgSecondary.color
+    let foregroundColor = isEnable ? UIAsset.Colors.onBrand.color : UIAsset.Colors.textDisabled.color
     
     button.backgroundColor = backgroundColor
     button.foregroundColor = foregroundColor

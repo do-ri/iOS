@@ -19,10 +19,11 @@ let packageSettings = PackageSettings(
 let package = Package(
   name: "DoriDependencies",
   dependencies: [
-    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.25.5"),
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.1"),
     .package(url: "https://github.com/kakao/kakao-ios-sdk", from: "2.0.0"),
     .package(url: "https://github.com/firebase/firebase-ios-sdk", from: "11.0.0"),
+    .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.18.0"),
   ]
 )

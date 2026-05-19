@@ -28,6 +28,7 @@ let project = Project.dori(
       DoriModules.designSystem.module,
       dependencies: [
         .external(.composableArchitecture),
+        .external(.snapshotTesting),
       ]
     ),
   ],

@@ -18,7 +18,7 @@ public struct FCMPushTestView: View {
 
   public var body: some View {
     ZStack {
-      UIAsset.Colors.doriWhite.color
+      UIAsset.Colors.bgPrimary.color
         .ignoresSafeArea()
 
       ScrollView {
@@ -36,7 +36,7 @@ public struct FCMPushTestView: View {
       if store.isLoading {
         ProgressView()
           .frame(maxWidth: .infinity, maxHeight: .infinity)
-          .background(Color.black.opacity(0.2))
+          .background(.bgScrim)
       }
     }
     .doriNavigationBar(
@@ -56,7 +56,7 @@ public struct FCMPushTestView: View {
     VStack(alignment: .leading, spacing: 8) {
       Text("userID")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
 
       HStack {
         Text(store.userId == nil ? "불러오는 중..." : store.userIdDisplayText)
@@ -66,8 +66,8 @@ public struct FCMPushTestView: View {
       }
       .frame(height: 46)
       .padding(.horizontal, 16)
-      .background(RoundedRectangle(cornerRadius: 10).fill(.doriWhite))
-      .overlay(RoundedRectangle(cornerRadius: 10).stroke(.grey300, lineWidth: 1))
+      .background(RoundedRectangle(cornerRadius: 10).fill(.bgPrimary))
+      .overlay(RoundedRectangle(cornerRadius: 10).stroke(.borderInput, lineWidth: 1))
     }
   }
 
@@ -75,7 +75,7 @@ public struct FCMPushTestView: View {
     VStack(alignment: .leading, spacing: 8) {
       Text("title")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
 
       DoriTextField(
         "제목을 입력하세요",
@@ -88,7 +88,7 @@ public struct FCMPushTestView: View {
     VStack(alignment: .leading, spacing: 8) {
       Text("body")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
 
       DoriExpandingTextView(
         "내용을 입력하세요",
