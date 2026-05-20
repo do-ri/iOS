@@ -64,10 +64,10 @@ struct CalendarDayCell: View {
 
   var textColor: UIAsset.Colors {
     if day.isCurrentMonth {
-      if isToday { return .doriWhite }
-      return .doriBlack
+      if isToday { return .onBrand }
+      return .textPrimary
     } else {
-      return .grey400
+      return .textDisabled
     }
   }
   
@@ -77,7 +77,7 @@ struct CalendarDayCell: View {
   }
   
   var dotColor: UIAsset.Colors {
-    return selectedType == .judori ? .secondary : .grey600
+    return selectedType == .judori ? .secondary : .textSecondary
   }
   
   var isToday: Bool {

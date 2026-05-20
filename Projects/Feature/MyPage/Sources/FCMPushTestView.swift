@@ -61,7 +61,7 @@ public struct FCMPushTestView: View {
       HStack {
         Text(store.userId == nil ? "불러오는 중..." : store.userIdDisplayText)
           .pretendard(.body(.r3))
-          .foregroundStyle(store.userId == nil ? .grey400 : .doriBlack)
+          .foregroundStyle(store.userId == nil ? .textDisabled : .textPrimary)
         Spacer()
       }
       .frame(height: 46)

@@ -70,11 +70,11 @@ private struct TabBarItem: View {
           .resizable()
           .aspectRatio(contentMode: .fit)
           .frame(width: 24, height: 24)
-          .foregroundStyle(isSelected ? .main : .grey600)
+          .foregroundStyle(isSelected ? .brandMain : .textSecondary)
         
         Text(title)
           .pretendard(font)
-          .foregroundStyle(isSelected ? .main : .grey600)
+          .foregroundStyle(isSelected ? .brandMain : .textSecondary)
       }
       .frame(maxWidth: .infinity)
       .contentShape(Rectangle())
