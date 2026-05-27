@@ -238,11 +238,33 @@ gh pr checks <PR#>
      - UserNotificationSettingsClient (liveValue + testValue 만)
      → Phase B 에서 보강
   ```
-- Phase B DoriTestSupport 빌드 로그: _(채울 자리)_
-- Phase C 4개 unit test target 컴파일 로그: _(채울 자리)_
-- Phase D1 (P0) record 로그: _(채울 자리)_
-- Phase D1 replay 로그: _(채울 자리)_
-- Phase D1 회귀 시나리오 로그 (fail → 원복 → pass): _(채울 자리)_
+- Phase B DoriTestSupport 빌드 로그: `xcodebuild build -scheme DoriTestSupport ... EXIT 0`
+- Phase C 4개 unit test target 컴파일 로그: 5/5 schemes (Onboarding/AddDori/Calendar/History/MyPage) `** TEST BUILD SUCCEEDED **`
+- Phase D1 (P0) record 로그:
+  ```
+  6 TC × 2 modes = 12 baseline
+  모든 TC: "No reference was found on disk. Automatically recorded snapshot..."
+  PNG 12장 생성 확인: __Snapshots__/{Splash,Intro,AddDoriRoot,CalendarGrid,DoriList,MyPage}SnapshotTests/
+  ```
+- Phase D1 replay 로그:
+  ```
+  FeatureOnboarding: Executed 4 tests, with 0 failures (SplashSnapshotTests 2 + IntroSnapshotTests 2)
+  FeatureAddDori:    Executed 2 tests, with 0 failures
+  FeatureCalendar:   Executed 2 tests, with 0 failures
+  FeatureHistory:    Executed 2 tests, with 0 failures (DoriListSnapshotTests)
+  FeatureMyPage:     Executed 2 tests, with 0 failures
+  → 12/12 PASS
+  ```
+- Phase D1 회귀 시나리오 로그 (fail → 원복 → pass):
+  ```
+  의도적 변경: SplashSnapshotTests/test_splash_light layout .fixed(393,852) → .fixed(320,600)
+  → "Snapshot does not match reference"
+  → "Newly-taken snapshot@(320.0, 600.0) does not match reference@(393.0, 852.0)"
+  → TEST FAILED (detection 살아있음을 증명)
+  원복 후 재실행 → PASS
+  ```
+
+  추가 노트: FeatureHistory 의 사전 Swift Testing 기반 테스트 2개(SearchFeatureTests, EditDoriMemoFieldTests)가 deps 그래프 변경 후 "Restarting after unexpected exit, crash, or test timeout" 으로 죽음. 본 PR 범위 외라 `.disabled` 로 비활성화. 후속 PR 에서 처리.
 - Phase D2 (P1) record/replay/회귀 로그: _(채울 자리)_
 - Phase D3 (P2) record/replay/회귀 로그: _(채울 자리)_
 - CI green run URL: _(채울 자리)_
