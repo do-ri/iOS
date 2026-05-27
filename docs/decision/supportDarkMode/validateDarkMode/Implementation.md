@@ -180,11 +180,30 @@ gh pr checks 48
 
 ### 검증 기록 (완료 시 채움)
 
-- 로컬 lint 결함 보고 로그: _(채울 자리)_
-- 로컬 lint pass 로그: _(채울 자리)_
-- 회귀 시나리오 fail 로그: _(채울 자리)_
-- CI green run URL: _(채울 자리)_
-- `gh pr checks 48` 결과: _(채울 자리)_
+- 로컬 lint 결함 보고 로그:
+  ```
+  Projects/Core/DoriDesignSystem/Resources/Colors.xcassets/Brand/Secondary.colorset/Contents.json is missing dark appearance
+
+  1 violation(s)
+  exit=1
+  ```
+- 로컬 lint pass 로그:
+  ```
+  color assets lint: OK
+  exit=0
+  ```
+- 회귀 시나리오 fail 로그 (Semantic/BgPrimary dark 일시 제거):
+  ```
+  Projects/Core/DoriDesignSystem/Resources/Colors.xcassets/Brand/Secondary.colorset/Contents.json is missing dark appearance
+  Projects/Core/DoriDesignSystem/Resources/Colors.xcassets/Semantic/BgPrimary.colorset/Contents.json is missing dark appearance
+
+  2 violation(s)
+  exit=1
+  ```
+  원복 후 재실행: `color assets lint: OK` / exit 0
+- CI green run URL: https://github.com/do-ri/iOS/actions/runs/26496375211
+  - 모든 step success: Lint color assets · Build project · Run unit tests
+- `gh pr checks 48` 결과: `build  pass  11m49s`
 
 ## 사용한 기존 자산
 
