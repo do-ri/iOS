@@ -114,11 +114,4 @@ AppFeature
 - 인증 실패 처리는 중앙 경계에서 설명 가능해야 한다.
 - 현재 화면 구조는 모듈 경계를 흐리지 않는 선에서만 확장한다.
 - 문서는 구현 예시보다 구조 규칙을 우선한다.
-
-## 8. Related Docs
-
-- `docs/core/constitution.md`
-- `docs/core/project-overview.md`
-- `docs/core/directory-structure.md`
-- `docs/backend/network-layer.md`
-- `docs/frontend/swift-language-guide.md`
+- 실행할 작업은 `plan/` 에서 시작하고, 완료 기록은 `plan/history.md` 로 누적한다.

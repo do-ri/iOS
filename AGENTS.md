@@ -19,6 +19,7 @@
 - `docs/backend/`: 서버 통신과 백엔드 경계 규칙
 - `docs/workflows/`: 저장소 운영과 작업 절차
 - `docs/reference/`: 템플릿, 예시, 학습용 참고 자료
+- `plan/`: 작업 시작점과 완료 이력
 
 ## Role
 
@@ -50,7 +51,8 @@
 7. `docs/frontend/security.md`
 8. `docs/frontend/test-strategy.md`
 9. `docs/workflows/git-worktree.md`
-10. `docs/core/lessons-learned.md`
+10. `docs/workflows/plan-workflow.md`
+11. `docs/core/lessons-learned.md`
 
 ## Compatibility Paths
 
