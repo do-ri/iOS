@@ -8,7 +8,7 @@
 import ComposableArchitecture
 import DoriNetwork
 import Testing
-@testable import AddDori
+@testable import FeatureAddDori
 
 // MARK: - Mock Data
 
