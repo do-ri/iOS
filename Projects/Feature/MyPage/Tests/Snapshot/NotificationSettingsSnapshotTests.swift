@@ -78,4 +78,36 @@ final class NotificationSettingsSnapshotTests: XCTestCase {
       )
     )
   }
+
+  // MARK: - Partial enabled (master on, 일부 자식 토글만 on)
+
+  private static let partialEnabledState = NotificationSettingsFeature.State(
+    isSystemNotificationEnabled: true,
+    isAllPushEnabled: true,
+    isDoriAlertEnabled: true,
+    isRecordReminderEnabled: false,
+    isMonthlyEnabled: true,
+    isRelationBalanceEnabled: false,
+    isActivitySummaryEnabled: true
+  )
+
+  func test_notificationSettings_partialEnabled_light() {
+    assertSnapshot(
+      of: makeView(state: Self.partialEnabledState),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .light)
+      )
+    )
+  }
+
+  func test_notificationSettings_partialEnabled_dark() {
+    assertSnapshot(
+      of: makeView(state: Self.partialEnabledState),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .dark)
+      )
+    )
+  }
 }
