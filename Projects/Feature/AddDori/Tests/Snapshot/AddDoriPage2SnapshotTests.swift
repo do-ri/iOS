@@ -1,6 +1,5 @@
 import ComposableArchitecture
 import DoriCore
-import DoriTestSupport
 import SnapshotTesting
 import SwiftUI
 import XCTest
@@ -8,7 +7,7 @@ import XCTest
 @testable import FeatureAddDori
 
 @MainActor
-final class AddDoriPage1SnapshotTests: XCTestCase {
+final class AddDoriPage2SnapshotTests: XCTestCase {
   private func makeView(state: AddDoriFeature.State) -> some View {
     AddDoriView(
       store: Store(initialState: state) {
@@ -17,19 +16,20 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  // MARK: - Empty search query, no results
+  // MARK: - Default page2 (friend + wedding)
 
-  private func emptySearchState() -> AddDoriFeature.State {
+  private func defaultState() -> AddDoriFeature.State {
     var state = AddDoriFeature.State()
-    state.currentPage = 0
-    state.searchQuery = "박이름"
-    state.searchResults = []
+    state.currentPage = 1
+    state.searchQuery = "조카"
+    state.selectedRelationship = .friend
+    state.selectedEventType = .wedding
     return state
   }
 
-  func test_page1_emptySearch_light() {
+  func test_page2_default_light() {
     assertSnapshot(
-      of: makeView(state: emptySearchState()),
+      of: makeView(state: defaultState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -37,9 +37,9 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  func test_page1_emptySearch_dark() {
+  func test_page2_default_dark() {
     assertSnapshot(
-      of: makeView(state: emptySearchState()),
+      of: makeView(state: defaultState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)
@@ -47,19 +47,20 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  // MARK: - Search results populated
+  // MARK: - Birthday event type selected
 
-  private func searchResultsState() -> AddDoriFeature.State {
+  private func birthdayState() -> AddDoriFeature.State {
     var state = AddDoriFeature.State()
-    state.currentPage = 0
-    state.searchQuery = "조"
-    state.searchResults = Dori.mockList
+    state.currentPage = 1
+    state.searchQuery = "조카"
+    state.selectedRelationship = .family
+    state.selectedEventType = .birthday
     return state
   }
 
-  func test_page1_searchResults_light() {
+  func test_page2_selected_birthday_light() {
     assertSnapshot(
-      of: makeView(state: searchResultsState()),
+      of: makeView(state: birthdayState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -67,9 +68,9 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  func test_page1_searchResults_dark() {
+  func test_page2_selected_birthday_dark() {
     assertSnapshot(
-      of: makeView(state: searchResultsState()),
+      of: makeView(state: birthdayState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)
@@ -77,20 +78,22 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  // MARK: - Partner selected
+  // MARK: - Custom event input (other + typed)
 
-  private func selectedPartnerState() -> AddDoriFeature.State {
+  private func customEventState() -> AddDoriFeature.State {
     var state = AddDoriFeature.State()
-    state.currentPage = 0
-    state.searchQuery = "조"
-    state.searchResults = Dori.mockList
-    state.selectedPartner = Dori.mockList.first
+    state.currentPage = 1
+    state.searchQuery = "조카"
+    state.selectedRelationship = .other
+    state.customRelationship = "이웃"
+    state.selectedEventType = .other
+    state.customEventType = "이사"
     return state
   }
 
-  func test_page1_selected_light() {
+  func test_page2_customEventInput_light() {
     assertSnapshot(
-      of: makeView(state: selectedPartnerState()),
+      of: makeView(state: customEventState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -98,9 +101,9 @@ final class AddDoriPage1SnapshotTests: XCTestCase {
     )
   }
 
-  func test_page1_selected_dark() {
+  func test_page2_customEventInput_dark() {
     assertSnapshot(
-      of: makeView(state: selectedPartnerState()),
+      of: makeView(state: customEventState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)

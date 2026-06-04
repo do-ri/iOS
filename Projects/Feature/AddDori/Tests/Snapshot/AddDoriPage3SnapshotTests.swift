@@ -79,4 +79,64 @@ final class AddDoriPage3SnapshotTests: XCTestCase {
       )
     )
   }
+
+  // MARK: - Amount typed (normal)
+
+  private func amountTypedState() -> AddDoriFeature.State {
+    var state = AddDoriFeature.State()
+    state.currentPage = 2
+    state.amountInput.text = "50000"
+    state.eventDate = Self.fixedEventDate
+    return state
+  }
+
+  func test_page3_amountTyped_light() {
+    assertSnapshot(
+      of: makeView(state: amountTypedState()),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .light)
+      )
+    )
+  }
+
+  func test_page3_amountTyped_dark() {
+    assertSnapshot(
+      of: makeView(state: amountTypedState()),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .dark)
+      )
+    )
+  }
+
+  // MARK: - Amount zero
+
+  private func amountZeroState() -> AddDoriFeature.State {
+    var state = AddDoriFeature.State()
+    state.currentPage = 2
+    state.amountInput.text = "0"
+    state.eventDate = Self.fixedEventDate
+    return state
+  }
+
+  func test_page3_amountZero_light() {
+    assertSnapshot(
+      of: makeView(state: amountZeroState()),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .light)
+      )
+    )
+  }
+
+  func test_page3_amountZero_dark() {
+    assertSnapshot(
+      of: makeView(state: amountZeroState()),
+      as: .image(
+        layout: .fixed(width: 393, height: 852),
+        traits: UITraitCollection(userInterfaceStyle: .dark)
+      )
+    )
+  }
 }
