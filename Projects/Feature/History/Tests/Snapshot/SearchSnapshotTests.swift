@@ -8,20 +8,20 @@ import XCTest
 @testable import FeatureHistory
 
 @MainActor
-final class EditDoriSnapshotTests: XCTestCase {
-  private func makeView(state: EditDoriFeature.State) -> some View {
-    EditDoriView(
+final class SearchSnapshotTests: XCTestCase {
+  private func makeView(state: SearchFeature.State) -> some View {
+    SearchView(
       store: Store(initialState: state) {
-        EditDoriFeature()
+        SearchFeature()
       }
     )
   }
 
-  // MARK: - Default
+  // MARK: - Empty (검색 시작 전)
 
-  func test_editDori_default_light() {
+  func test_search_empty_light() {
     assertSnapshot(
-      of: makeView(state: EditDoriFeature.State(dori: .mockJudori)),
+      of: makeView(state: SearchFeature.State()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -29,9 +29,9 @@ final class EditDoriSnapshotTests: XCTestCase {
     )
   }
 
-  func test_editDori_default_dark() {
+  func test_search_empty_dark() {
     assertSnapshot(
-      of: makeView(state: EditDoriFeature.State(dori: .mockJudori)),
+      of: makeView(state: SearchFeature.State()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)
@@ -39,17 +39,18 @@ final class EditDoriSnapshotTests: XCTestCase {
     )
   }
 
-  // MARK: - Date picker open (bgScrim)
+  // MARK: - Typed, no results
 
-  private func datePickerOpenState() -> EditDoriFeature.State {
-    var state = EditDoriFeature.State(dori: .mockJudori)
-    state.isDatePickerVisible = true
+  private func typedNoResultsState() -> SearchFeature.State {
+    var state = SearchFeature.State()
+    state.searchQuery = "없는이름"
+    state.searchResults = []
     return state
   }
 
-  func test_editDori_datePickerOpen_light() {
+  func test_search_typedNoResults_light() {
     assertSnapshot(
-      of: makeView(state: datePickerOpenState()),
+      of: makeView(state: typedNoResultsState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -57,9 +58,9 @@ final class EditDoriSnapshotTests: XCTestCase {
     )
   }
 
-  func test_editDori_datePickerOpen_dark() {
+  func test_search_typedNoResults_dark() {
     assertSnapshot(
-      of: makeView(state: datePickerOpenState()),
+      of: makeView(state: typedNoResultsState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)
@@ -67,18 +68,18 @@ final class EditDoriSnapshotTests: XCTestCase {
     )
   }
 
-  // MARK: - Amount error (한도 초과 등)
+  // MARK: - Typed, with results
 
-  private func amountErrorState() -> EditDoriFeature.State {
-    var state = EditDoriFeature.State(dori: .mockJudori)
-    state.amountInput.text = "9999999999"
-    state.amountInput.state = .error(message: "*입력 한도")
+  private func typedWithResultsState() -> SearchFeature.State {
+    var state = SearchFeature.State()
+    state.searchQuery = "조"
+    state.searchResults = Dori.mockList
     return state
   }
 
-  func test_editDori_amountError_light() {
+  func test_search_typedWithResults_light() {
     assertSnapshot(
-      of: makeView(state: amountErrorState()),
+      of: makeView(state: typedWithResultsState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .light)
@@ -86,9 +87,9 @@ final class EditDoriSnapshotTests: XCTestCase {
     )
   }
 
-  func test_editDori_amountError_dark() {
+  func test_search_typedWithResults_dark() {
     assertSnapshot(
-      of: makeView(state: amountErrorState()),
+      of: makeView(state: typedWithResultsState()),
       as: .image(
         layout: .fixed(width: 393, height: 852),
         traits: UITraitCollection(userInterfaceStyle: .dark)
