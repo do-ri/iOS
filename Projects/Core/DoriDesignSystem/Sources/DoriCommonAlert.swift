@@ -76,7 +76,7 @@ public struct DoriCommonAlert: View {
           secondaryButton.action()
         }
         .backgroundColor(.bgSecondary)
-        .foregroundColor(.black)
+        .foregroundColor(.textPrimary)
       }
 
       PrimaryButton(title: primaryButton.title) {
