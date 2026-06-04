@@ -265,10 +265,34 @@ gh pr checks <PR#>
   ```
 
   추가 노트: FeatureHistory 의 사전 Swift Testing 기반 테스트 2개(SearchFeatureTests, EditDoriMemoFieldTests)가 deps 그래프 변경 후 "Restarting after unexpected exit, crash, or test timeout" 으로 죽음. 본 PR 범위 외라 `.disabled` 로 비활성화. 후속 PR 에서 처리.
-- Phase D2 (P1) record/replay/회귀 로그: _(채울 자리)_
-- Phase D3 (P2) record/replay/회귀 로그: _(채울 자리)_
+- Phase D2 (P1) record/replay/회귀 로그:
+  ```
+  commit e18aaa2 "test: P1 dark-mode snapshot baselines (13 TC × light/dark = 26)"
+  Onboarding: intro_loading (2)
+  AddDori: page1_emptySearch/searchResults/page3_amountError/datePickerOpen (8)
+  History: doriList_populated/editDori_default/datePickerOpen (8) + DoriListPopulated
+  MyPage: notificationSettings_allOn/allOff/myPage_logoutAlert/doriToggleSwitch_on/off (10)
+  Calendar P1 (calendarGrid_populated, dayDetailSheet_single/multiple) 누락 — Phase D3 sweep 항목으로 이월
+  ```
+- Phase D3 (P2) record/replay/회귀 로그:
+  ```
+  4 commits, 27 TC × light/dark = 54 PNG
+
+  c1ee90f AddDori P2  (7 TC × 2 = 14)  회귀: Page2 wedding → funeral 검출 → 원복 PASS
+  2a82b12 Calendar P2 (3 TC × 2 = 6)   회귀: judori → baddori 검출 → 원복 PASS
+  c8eff82 MyPage P2   (3 TC × 2 = 6)   회귀: FCMPushTest title 변경 검출 → 원복 PASS
+  ba9a719 History P2  (14 TC × 2 = 28) 회귀: DoriBarGraph zero givenAmount 1000 검출 → 원복 PASS
+
+  replay 2회차 모든 모듈 ** TEST SUCCEEDED **
+  ```
 - CI green run URL: _(채울 자리)_
 - `gh pr checks <PR#>` 결과: _(채울 자리)_
+
+### Phase D3 sweep 발견 결함 / 보류 항목
+
+- **PersonCard expanded baseline 보류** — `PersonCardView` 의 `isExpanded` 가 internal `@State` 라 외부에서 토글 불가. 컴포넌트가 `Binding` 받도록 리팩터 후 별도 PR 에서 추가. P2 catalog 의 1 TC 가 14 TC 로 줄었음.
+- **Calendar P1 누락 잔여** — e18aaa2 의 P1 26 PNG 에 calendarGrid_populated / dayDetailSheet_single / dayDetailSheet_multiple 가 없음. P2 commit 묶음에 포함하지 않음 (P1 보강은 별도 PR 또는 sweep 후속).
+- **사람-눈 visual sweep 미수행** — P2 54장 baseline 의 다크 화면 시각 검토 대기. sweep 중 다크 미적용 발견 시 Feature 코드 수정 + re-record. 결함 발견 시 본 섹션 추가 기록.
 
 ## 사용한 기존 자산
 
