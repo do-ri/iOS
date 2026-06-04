@@ -305,7 +305,20 @@ gh pr checks <PR#>
   - PartnerDoriHistory all, EditDori amountError, PartnerDoriDetail deleteAlert
   - Search typedWithResults (placeholder limitation 별건), MyPage notif partial
 
-- **잔여 sweep 14장** — 사용자 직접 확인 영역. 잔여 PNG: Onboarding, AddDori zero/birthday, Calendar segment baddori, History 나머지, MyPage 잔여. 추가 결함 발견 시 본 섹션 추가.
+- **사람-눈 visual sweep 2차 (사용자 전수, 34 전체화면 dark PNG)** — 결함 종합:
+
+  | 카테고리 | 결함 | 영향 화면 | Fix |
+  |---|---|---|---|
+  | **A** | brandMain hex `#6C8FF0` 박힘 | AddDori Page3/EditDori 의 "예/아니오" 선택 버튼, NotificationSettings 토글 스위치 | `.brandMain` 토큰 사용 |
+  | **B** | DoriCommonAlert 다크 색 미적용 | PartnerDoriDetail deleteAlert, MyPage logoutAlert | popup bg→`.bgPrimary`(#111111), 취소 bg→`.bgSecondary`(#232323)/text→`.textPrimary`(#FDFDFD), 삭제 bg→`.brandMain`(#6C8FF0)/text→`.onBrand`(#111111) |
+  | **C** | "주도리" 텍스트/색 `#111111` 박힘 | DoriList populated, PartnerDoriHistory all | `.textPrimary` 토큰 사용 |
+  | **D** | 이미지 dark variant 없음 | datePicker 캘린더 아이콘 (AddDori Page3, EditDori), judori/baddori 아이콘 (TransactionRow, PartnerDoriHistory judoriOnly/baddoriOnly) | xcassets imageset 에 Dark Appearance pair 등록 |
+  | **E** | FCMPushTest TextField 텍스트 다크 미적용 | FCMPushTestView (default/loading) | `.textPrimary` 토큰 적용 |
+
+  통과: Onboarding 3장 (Kakao brand-fixed `#212223` 포함), AddDori Page1 전 3장 + Page2 전 3장 + Page3 amountZero/amountError/datePickerOpen, History DoriList empty + Search 3장 + EditDori datePickerOpen/amountError, MyPage default + NotificationSettings allOff.
+
+  Scope 외:
+  - **#1 CalendarGrid emptyMonth** — 디자인 전면 교체 예정, 사용자 직접 수정 영역으로 분리. 본 sweep 결과에서 제외.
 
 ## 사용한 기존 자산
 
