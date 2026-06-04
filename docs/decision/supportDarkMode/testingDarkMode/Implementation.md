@@ -292,7 +292,20 @@ gh pr checks <PR#>
 
 - **PersonCard expanded baseline 보류** — `PersonCardView` 의 `isExpanded` 가 internal `@State` 라 외부에서 토글 불가. 컴포넌트가 `Binding` 받도록 리팩터 후 별도 PR 에서 추가. P2 catalog 의 1 TC 가 14 TC 로 줄었음.
 - **Calendar P1 누락 잔여** — e18aaa2 의 P1 26 PNG 에 calendarGrid_populated / dayDetailSheet_single / dayDetailSheet_multiple 가 없음. P2 commit 묶음에 포함하지 않음 (P1 보강은 별도 PR 또는 sweep 후속).
-- **사람-눈 visual sweep 미수행** — P2 54장 baseline 의 다크 화면 시각 검토 대기. sweep 중 다크 미적용 발견 시 Feature 코드 수정 + re-record. 결함 발견 시 본 섹션 추가 기록.
+- **사람-눈 visual sweep 1차 (claude multimodal, 13/27 dark PNG)** — 다음 결함 발견:
+
+  | # | 화면 | 결함 | 심각도 |
+  |---|---|---|---|
+  | 1 | `FCMPushTestView` (loading/default dark) | TextField 입력 텍스트가 어두운 회색/검은색 → 검은 배경에서 거의 안 보임. `userID=1`, `title=테스트 푸시`, `body=본문 메시지` 모두 light 색 박힌 의심. **다크 토큰(.textPrimary) 미적용** | 높음 |
+  | 2 | `TransactionRowView` (baddori dark) | 아이콘 배경이 light gray (`#E5E5E5` 추정). judori 의 `brandMain` 과 비교해 contrast 약함. 다크에서 디자인 의도 불확실 | 낮음 (디자인 결정 필요) |
+
+  정상 확인:
+  - DoriBarGraph balanced, TransactionRow judori, PersonCard collapsed, DoriSegmentControl judori
+  - AddDori Page1 selected / Page2 customEvent / Page3 amountTyped
+  - PartnerDoriHistory all, EditDori amountError, PartnerDoriDetail deleteAlert
+  - Search typedWithResults (placeholder limitation 별건), MyPage notif partial
+
+- **잔여 sweep 14장** — 사용자 직접 확인 영역. 잔여 PNG: Onboarding, AddDori zero/birthday, Calendar segment baddori, History 나머지, MyPage 잔여. 추가 결함 발견 시 본 섹션 추가.
 
 ## 사용한 기존 자산
 
