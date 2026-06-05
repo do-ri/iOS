@@ -320,6 +320,18 @@ gh pr checks <PR#>
   Scope 외:
   - **#1 CalendarGrid emptyMonth** — 디자인 전면 교체 예정, 사용자 직접 수정 영역으로 분리. 본 sweep 결과에서 제외.
 
+- **Phase D3 fix 진행** (commit `9107dbd`, `71d1693`, `11c4837`):
+
+  | 카테고리 | 상태 | 영향 baseline |
+  |---|---|---|
+  | A | 결함 아님 (이미 토큰 적용 확인) | — |
+  | B | ✓ DoriCommonAlert secondary text `.black` → `.textPrimary` | DoriCommonAlert/LogoutAlert/DeleteAlert light+dark 6장 |
+  | C | ✓ OnBrand.colorset dark `#FFFFFF` → `#111111` | 38장 dark 갱신 (DoriDesignSystem swatch/Alert/Toast/Button + Onboarding Intro + AddDori 전체 + Calendar segment + History BarGraph 등 + MyPage ToggleSwitch 등) |
+  | D | **보류** — 디자이너 PNG 작업 대기 | `Resources/Assets.xcassets` 의 `icon_judori`, `icon_baddori`, `iconCalendar` imageset 에 Dark Appearance 추가 + re-record 예정 |
+  | E | ✓ DoriTextField `.foregroundStyle(.textPrimary)` 명시 | FCMPushTest 4장 |
+
+  C 의 광범위 변경 후 핵심 재 sweep 진행 중.
+
 ## 사용한 기존 자산
 
 - [`PLAN.md`](./PLAN.md) — Scope/카탈로그/Risk 원본
