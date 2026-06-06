@@ -31,6 +31,13 @@ let project = Project.dori(
         .external(.snapshotTesting),
       ]
     ),
+    .doriFramework(
+      DoriModules.testSupport.module,
+      dependencies: [
+        DoriModules.core.module.targetDependency,
+        .external(.composableArchitecture),
+      ]
+    ),
   ],
   resourceSynthesizers: [
     .custom(

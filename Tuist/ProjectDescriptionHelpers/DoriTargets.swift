@@ -59,6 +59,7 @@ public struct DoriModule: Sendable {
 public enum DoriModules: CaseIterable, Sendable {
   case core
   case designSystem
+  case testSupport
   case network
   case networkImpl
   case kakaoAuth
@@ -76,6 +77,8 @@ public enum DoriModules: CaseIterable, Sendable {
       DoriModule(name: "DoriCore", layer: .core)
     case .designSystem:
       DoriModule(name: "DoriDesignSystem", layer: .core)
+    case .testSupport:
+      DoriModule(name: "DoriTestSupport", layer: .core)
     case .network:
       DoriModule(name: "DoriNetwork", layer: .infra)
     case .networkImpl:

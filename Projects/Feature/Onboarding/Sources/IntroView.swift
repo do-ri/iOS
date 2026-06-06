@@ -143,7 +143,7 @@ public struct IntroView: View {
     } label: {
       Text("카카오로 시작하기")
         .pretendard(.semiBold(.sb15))
-        .foregroundStyle(DoriColors.textPrimary.color)
+        .foregroundStyle(DoriColors.kakaoOnYellow.color)
         .frame(maxWidth: .infinity)
         .frame(height: 46)
         .background(

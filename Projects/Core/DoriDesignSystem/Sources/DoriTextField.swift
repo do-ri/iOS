@@ -36,6 +36,7 @@ public struct DoriTextField: View {
 
       TextField(placeholder, text: $localText)
         .pretendard(.body(.r3))
+        .foregroundStyle(.textPrimary)
         .padding(.horizontal, 16)
         .onChange(of: localText) { _, newValue in
           if newValue.count > maxLength {
