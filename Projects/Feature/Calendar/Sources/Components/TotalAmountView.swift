@@ -36,10 +36,10 @@ struct CalendarTotalAmountView: View {
     .padding(.vertical, 11)
     .frame(maxWidth: .infinity)
     .frame(height: 46)
-    .foregroundStyle(selectedType == .judori ? .doriWhite : .grey600)
+    .foregroundStyle(selectedType == .judori ? .onBrand : .textSecondary)
     .background(
       RoundedRectangle(cornerRadius: 10)
-        .fill(selectedType == .judori ? .secondary : .grey100)
+        .fill(selectedType == .judori ? .secondary : .bgSecondary)
     )
   }
 }

@@ -26,7 +26,7 @@ public struct PartnerDoriDetailView: View {
             HStack {
               Text(Int(dori.amount).wonFormatted)
                 .pretendard(.bold(.b30))
-                .foregroundStyle(.doriBlack)
+                .foregroundStyle(.textPrimary)
 
               Spacer()
             }
@@ -50,7 +50,7 @@ public struct PartnerDoriDetailView: View {
         )
       }
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
     .doriNavigationBar(
       DoriNavigationBarConfig.backWithTitleAndActions(
         store.doriDetail?.partnerName ?? "",
@@ -132,13 +132,13 @@ struct DetailRow: View {
     HStack {
       Text(prop.category)
         .pretendard(.medium(.m14))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
 
       Spacer()
 
       Text(prop.description)
         .pretendard(.semiBold(.sb15))
-        .foregroundStyle(.doriBlack)
+        .foregroundStyle(.textPrimary)
     }
   }
 }

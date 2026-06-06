@@ -32,7 +32,7 @@ public struct DoriListView: View {
     .overlay {
       if store.filteredPartners.isEmpty && !store.isLoading {
         DoriEmptyView(.partnerList)
-          .background(.grey100)
+          .background(.bgSecondary)
       }
     }
     .overlay(alignment: .bottomTrailing) {
@@ -41,7 +41,7 @@ public struct DoriListView: View {
       }
       .padding(20)
     }
-    .background(.grey100)
+    .background(.bgSecondary)
     .doriNavigationBar(
       .titleWithActions(
         "내역",

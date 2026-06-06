@@ -29,13 +29,14 @@ public struct DoriTextField: View {
   public var body: some View {
     ZStack(alignment: .center) {
       RoundedRectangle(cornerRadius: 10)
-        .stroke(.grey300, lineWidth: 1)
+        .stroke(.borderInput, lineWidth: 1)
 
       RoundedRectangle(cornerRadius: 10)
-        .fill(.doriWhite)
+        .fill(.bgPrimary)
 
       TextField(placeholder, text: $localText)
         .pretendard(.body(.r3))
+        .foregroundStyle(.textPrimary)
         .padding(.horizontal, 16)
         .onChange(of: localText) { _, newValue in
           if newValue.count > maxLength {

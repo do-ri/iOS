@@ -32,10 +32,10 @@ public struct DoriExpandingTextView: View {
   public var body: some View {
     ZStack(alignment: .topLeading) {
       RoundedRectangle(cornerRadius: 10)
-        .fill(.doriWhite)
+        .fill(.bgPrimary)
 
       RoundedRectangle(cornerRadius: 10)
-        .stroke(.grey300, lineWidth: 1)
+        .stroke(.borderInput, lineWidth: 1)
 
       ExpandingTextViewRepresentable(
         text: $text,
@@ -48,7 +48,7 @@ public struct DoriExpandingTextView: View {
       if text.isEmpty {
         Text(placeholder)
           .pretendard(.body(.r3))
-          .foregroundStyle(.grey400)
+          .foregroundStyle(.textPlaceholder)
           .padding(.horizontal, 16)
           .padding(.vertical, 13)
           .allowsHitTesting(false)
@@ -78,7 +78,7 @@ private struct ExpandingTextViewRepresentable: UIViewRepresentable {
     textView.textContainerInset = .init(top: 12, left: 16, bottom: 12, right: 16)
     textView.textContainer.lineFragmentPadding = 0
     textView.font = UIFont(name: "Pretendard-Regular", size: 15) ?? .systemFont(ofSize: 15)
-    textView.textColor = UIColor(DoriColors.doriBlack.color)
+    textView.textColor = UIColor(DoriColors.textPrimary.color)
     textView.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     textView.setContentHuggingPriority(.defaultLow, for: .horizontal)
     textView.accessibilityIdentifier = "addDori.memoTextView"

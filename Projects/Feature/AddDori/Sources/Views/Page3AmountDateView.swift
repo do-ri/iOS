@@ -66,12 +66,12 @@ struct Page3AmountDateView: View {
           } label: {
             Text(preset.title)
               .pretendard(.body(.r3))
-              .foregroundStyle(DoriColors.grey600.color)
+              .foregroundStyle(DoriColors.textSecondary.color)
               .frame(maxWidth: .infinity)
               .padding(.vertical, 14)
               .background(
                 RoundedRectangle(cornerRadius: 8)
-                  .stroke(DoriColors.grey300.color)
+                  .stroke(DoriColors.borderInput.color)
               )
           }
           .frame(maxWidth: .infinity)
@@ -94,7 +94,7 @@ struct Page3AmountDateView: View {
       HStack {
         Text(dateFormatter.string(from: store.eventDate))
           .pretendard(.body(.sb3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
 
         Spacer()
 
@@ -190,7 +190,7 @@ struct AddDoriCalendarView: View {
       .datePickerStyle(.graphical)
       .tint(DoriColors.secondary.color)
       .padding()
-      .background(DoriColors.doriWhite.color)
+      .background(DoriColors.bgPrimary.color)
       .clipShape(RoundedRectangle(cornerRadius: 16))
       
       
@@ -198,8 +198,8 @@ struct AddDoriCalendarView: View {
         PrimaryButton(title: "나가기") {
           dismissAction()
         }
-        .backgroundColor(.grey100)
-        .foregroundColor(.doriBlack)
+        .backgroundColor(.bgSecondary)
+        .foregroundColor(.textPrimary)
         
         PrimaryButton(title: "날짜 선택") {
           selecionAction(selection)

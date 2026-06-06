@@ -88,6 +88,9 @@ public extension Image {
 {% macro casesBlock assets %}
   {% for asset in assets %}
   {% if asset.type == "color" %}
+  {% if asset.value|hasPrefix:"Grey-" or asset.value == "Main" or asset.value == "Secondary" or asset.value == "DoriBlack" or asset.value == "DoriWhite" %}
+  @available(*, deprecated, message: "Use a semantic color token (Semantic/*) instead. See DoriDesignSystem/DESIGN.md migration table.")
+  {% endif %}
   case {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = "{{asset.value}}"
   {% elif asset.type == "data" %}
   {{accessModifier}} static let {{asset.name|swiftIdentifier:"pretty"|lowerFirstWord|escapeReservedKeywords}} = {{dataType}}(name: "{{asset.value}}")

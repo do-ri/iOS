@@ -24,7 +24,7 @@ public struct SearchView: View {
       contentView
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(.doriWhite)
+    .background(.bgPrimary)
     .onChange(of: localNameText) { _, newValue in
       let truncated = String(newValue.prefix(10))
       if localNameText != truncated {

@@ -21,6 +21,14 @@ let project = Project.dori(
         .external(.composableArchitecture)
       ]
     ),
+    .doriUnitTests(
+      DoriModules.onboarding.module,
+      dependencies: [
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
+      ]
+    ),
     .doriFramework(
       DoriModules.addDori.module,
       dependencies: [
@@ -28,6 +36,14 @@ let project = Project.dori(
         DoriModules.core.module.projectDependency,
         DoriModules.network.module.projectDependency,
         .external(.composableArchitecture)
+      ]
+    ),
+    .doriUnitTests(
+      DoriModules.addDori.module,
+      dependencies: [
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
       ]
     ),
     .doriFramework(
@@ -38,6 +54,14 @@ let project = Project.dori(
         DoriModules.core.module.projectDependency,
         DoriModules.network.module.projectDependency,
         .external(.composableArchitecture)
+      ]
+    ),
+    .doriUnitTests(
+      DoriModules.calendar.module,
+      dependencies: [
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
       ]
     ),
     .doriFramework(
@@ -53,7 +77,9 @@ let project = Project.dori(
     .doriUnitTests(
       DoriModules.history.module,
       dependencies: [
-        .external(.composableArchitecture)
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
       ]
     ),
     .doriFramework(
@@ -64,6 +90,14 @@ let project = Project.dori(
         DoriModules.keychain.module.projectDependency,
         DoriModules.core.module.projectDependency,
         .external(.composableArchitecture)
+      ]
+    ),
+    .doriUnitTests(
+      DoriModules.myPage.module,
+      dependencies: [
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
       ]
     ),
   ]

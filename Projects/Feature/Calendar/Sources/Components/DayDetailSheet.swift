@@ -32,7 +32,7 @@ struct DayDetailSheet: View {
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 30)
-    .background(.doriWhite)
+    .background(.bgPrimary)
   }
 }
 
@@ -115,16 +115,16 @@ private struct CalendarDoriRow: View {
         HStack(spacing: 2) {
           Text(dori.partnerName)
             .pretendard(.body(.b4))
-            .foregroundStyle(.doriBlack)
+            .foregroundStyle(.textPrimary)
 
           Text(dori.relationship)
             .pretendard(.caption(.m2))
-            .foregroundStyle(.grey600)
+            .foregroundStyle(.textSecondary)
             .padding(.vertical, 2)
             .padding(.horizontal, 6)
             .background(
               RoundedRectangle(cornerRadius: 5)
-                .foregroundStyle(.grey100)
+                .foregroundStyle(.bgSecondary)
             )
 
           Spacer()
@@ -142,7 +142,7 @@ private struct CalendarDoriRow: View {
           Spacer()
         }
         .pretendard(.body(.r6))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
       }
       
 
@@ -151,7 +151,7 @@ private struct CalendarDoriRow: View {
       HStack(spacing: 8) {
         AmountLabel(Int(dori.amount))
           .pretendard(.body(.sb2))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
       }
     }
     .padding(.vertical, 8)

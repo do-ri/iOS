@@ -26,7 +26,7 @@ public struct MyPageView: View {
   public var body: some View {
     NavigationStack(path: navigationPathBinding) {
       ZStack {
-        UIAsset.Colors.doriWhite.color
+        UIAsset.Colors.bgPrimary.color
           .ignoresSafeArea()
 
         VStack(alignment: .leading, spacing: 24) {
@@ -46,7 +46,7 @@ public struct MyPageView: View {
         if store.isLoading {
           ProgressView()
             .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .background(Color.black.opacity(0.2))
+            .background(.bgScrim)
         }
       }
       .overlay {
@@ -112,16 +112,16 @@ public struct MyPageView: View {
     VStack(alignment: .leading, spacing: 16) {
       Text("정보")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
       
       HStack {
         Text("앱 버전")
           .pretendard(.body(.r3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
         Spacer()
         Text(Self.versionString)
           .pretendard(.body(.r3))
-          .foregroundStyle(.grey400)
+          .foregroundStyle(.textDisabled)
       }
       .padding(.bottom, 12)
       
@@ -139,7 +139,7 @@ public struct MyPageView: View {
     VStack(alignment: .leading, spacing: 16) {
       Text("계정")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
       
       NavigationRow("로그아웃") {
         store.send(.logoutButtonTapped)
@@ -158,7 +158,7 @@ public struct MyPageView: View {
     VStack(alignment: .leading, spacing: 16) {
       Text("알림")
         .pretendard(.subtitle(.m2))
-        .foregroundStyle(.grey600)
+        .foregroundStyle(.textSecondary)
 
       NavigationRow("앱 알림 설정") {
         store.send(.notificationSettingsTapped)
@@ -174,11 +174,11 @@ public struct MyPageView: View {
       HStack {
         Text("디버깅 툴")
           .pretendard(.subtitle(.m2))
-          .foregroundStyle(.grey600)
+          .foregroundStyle(.textSecondary)
         Spacer()
         Text(BuildEnvironment.current.displayName)
           .pretendard(.body(.r3))
-          .foregroundStyle(.grey400)
+          .foregroundStyle(.textDisabled)
       }
 
       NavigationRow("FCM 푸시 테스트") {
@@ -246,7 +246,7 @@ struct NavigationRow: View {
         Spacer()
         Image(systemName: "chevron.right")
       }
-      .foregroundStyle(.doriBlack)
+      .foregroundStyle(.textPrimary)
     }
   }
 }

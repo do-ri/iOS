@@ -36,6 +36,9 @@ jobs:
       - name: Generate workspace
         run: tuist generate --no-open
 
+      - name: Lint color assets
+        run: python3 Scripts/lint_color_assets.py
+
       - name: Build project
         run: |
           xcodebuild \

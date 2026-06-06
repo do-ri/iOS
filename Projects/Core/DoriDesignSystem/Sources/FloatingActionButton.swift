@@ -24,7 +24,7 @@ public struct FloatingActionButton: View {
           width: 56,
           height: 56
         )
-        .background(DoriColors.main.color)
+        .background(DoriColors.brandMain.color)
         .clipShape(Circle())
         .shadow(
           color: .black.opacity(0.3),

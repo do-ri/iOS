@@ -18,12 +18,12 @@ struct DoriToggleSwitch: View {
   var body: some View {
     ZStack {
       Capsule()
-        .fill(isOn ? UIAsset.Colors.main.color : UIAsset.Colors.grey300.color)
+        .fill(isOn ? UIAsset.Colors.brandMain.color : UIAsset.Colors.borderInput.color)
         .frame(width: width, height: height)
         .animation(.easeInOut(duration: 0.2), value: isOn)
 
       Circle()
-        .fill(UIAsset.Colors.doriWhite.color)
+        .fill(UIAsset.Colors.onBrand.color)
         .frame(width: thumbSize, height: thumbSize)
         .shadow(color: .black.opacity(0.15), radius: 2, x: 0, y: 1)
         .offset(x: isOn ? (width / 2 - thumbSize / 2 - 2) : -(width / 2 - thumbSize / 2 - 2))

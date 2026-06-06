@@ -58,12 +58,12 @@ public struct TransactionRowView: View {
       VStack(alignment: .leading, spacing: 4) {
         Text(dori.eventType)
           .pretendard(.semiBold(.sb14))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
 
         if !dori.memo.isEmpty {
           Text(dori.memo)
             .pretendard(.regular(.r12))
-            .foregroundStyle(.grey600)
+            .foregroundStyle(.textSecondary)
         }
       }
 
@@ -72,12 +72,12 @@ public struct TransactionRowView: View {
       HStack(spacing: 8) {
         AmountLabel(Int(dori.amount))
           .pretendard(.body(.sb3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
 
         if !isChevronHidden {
           Image(systemName: "chevron.right")
             .font(.system(size: 12))
-            .foregroundStyle(.grey400)
+            .foregroundStyle(.textDisabled)
         }
       }
     }

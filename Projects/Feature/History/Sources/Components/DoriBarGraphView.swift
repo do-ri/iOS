@@ -30,7 +30,7 @@ public struct DoriBarGraphView: View {
       ZStack(alignment: .leading) {
         // 배경
         RoundedRectangle(cornerRadius: 20)
-          .fill(UIAsset.Colors.grey200.color)
+          .fill(UIAsset.Colors.borderDefault.color)
 
         // 주도리 바 (왼쪽)
         if givenAmount > 0 {
@@ -47,7 +47,7 @@ public struct DoriBarGraphView: View {
           HStack(spacing: 0) {
             Spacer(minLength: 0)
             RoundedRectangle(cornerRadius: 20)
-              .fill(UIAsset.Colors.grey200.color)
+              .fill(UIAsset.Colors.borderDefault.color)
               .frame(width: width - dividerPosition)
           }
         }
@@ -64,7 +64,7 @@ public struct DoriBarGraphView: View {
               Text("주도리")
                 .pretendard(.body(.sb6))
             }
-            .foregroundStyle(.doriWhite)
+            .foregroundStyle(.onBrand)
           }
 
           Spacer()
@@ -79,7 +79,7 @@ public struct DoriBarGraphView: View {
                 .frame(width: 26, height: 26)
                 .padding(.trailing, 4)
             }
-            .foregroundStyle(.grey500)
+            .foregroundStyle(.textSecondary)
           }
         }
       }

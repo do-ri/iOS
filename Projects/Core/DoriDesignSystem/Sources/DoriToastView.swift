@@ -24,7 +24,7 @@ public struct DoriToastView: View {
 
       Text(toast.message)
         .pretendard(.regular(.r15))
-        .foregroundStyle(.doriWhite)
+        .foregroundStyle(.onBrand)
         .lineLimit(2)
     }
     .padding(.horizontal, 16)
@@ -88,7 +88,7 @@ extension ToastType {
         blue: 0.3
       )
     case .info:
-      return UIAsset.Colors.doriBlack.color.opacity(0.8)
+      return Color.black.opacity(0.8)
     }
   }
 }

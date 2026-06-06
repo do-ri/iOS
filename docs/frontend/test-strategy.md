@@ -5,6 +5,7 @@
 - 테스트는 상태 전이와 경계 동작을 우선 검증한다.
 - 외부 의존성은 대체 가능해야 한다.
 - navigation과 인증처럼 깨지기 쉬운 흐름은 Reducer 수준에서 검증 가능해야 한다.
+- 다크모드를 그리는 View 스냅샷은 light/dark 한 쌍으로만 baseline 을 생성한다. 헬퍼는 `Projects/Core/DoriDesignSystem/Tests/Snapshot/Helpers/SnapshotPair.swift` 의 `assertSnapshotPair`.
 
 ## Secondary Rules
 
@@ -13,4 +14,4 @@
 
 ## Reference
 
-- `docs/tca-test.md`
+- `docs/reference/tca-test.md`

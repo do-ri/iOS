@@ -23,17 +23,17 @@ public struct SplashView: View {
   private let imageSize: CGFloat = 240
   public var body: some View {
     ZStack {
-      DoriColors.doriWhite.color
+      DoriColors.bgPrimary.color
         .ignoresSafeArea()
       
       VStack(spacing: 40) {
         VStack(spacing: 0) {
           Text(prop.title)
             .hopangche(size: 55)
-            .foregroundStyle(.main)
+            .foregroundStyle(.brandMain)
           Text(prop.subtitle)
             .pretendard(.regular(.r18))
-            .foregroundStyle(.main)
+            .foregroundStyle(.brandMain)
         }
         
         prop.image.image

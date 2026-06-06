@@ -44,7 +44,7 @@ struct Page1NameTypeView: View {
             text: $localNameText
           )
           .pretendard(.body(.sb3))
-          .foregroundStyle(.doriBlack)
+          .foregroundStyle(.textPrimary)
           .onChange(of: localNameText) { _, newValue in
             let truncated = String(newValue.prefix(10))
             if localNameText != truncated {
@@ -63,7 +63,7 @@ struct Page1NameTypeView: View {
               store.send(.clearSearchTapped)
             } label: {
               Image(systemName: "xmark.circle.fill")
-                .foregroundStyle(DoriColors.grey400.color)
+                .foregroundStyle(DoriColors.textDisabled.color)
             }
           }
         }

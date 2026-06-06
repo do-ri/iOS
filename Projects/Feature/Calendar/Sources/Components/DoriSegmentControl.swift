@@ -1,5 +1,6 @@
 import SwiftUI
 import DoriCore
+import DoriDesignSystem
 
 public struct DoriSegmentControl: View {
   @Binding var selectedType: TransactionType
@@ -24,7 +25,7 @@ public struct DoriSegmentControl: View {
     .padding(4) // 바깥 캡슐과 선택 캡슐 사이 여백
     .background(
       RoundedRectangle(cornerRadius: 10)
-        .fill(.grey100)
+        .fill(.bgSecondary)
     )
   }
 
@@ -38,13 +39,13 @@ public struct DoriSegmentControl: View {
         // 선택 인디케이터: "하나"만 존재하고 matchedGeometryEffect로 이동
         if selectedType == item {
           RoundedRectangle(cornerRadius: 10)
-            .fill(selectedType == .judori ? .secondary : .grey600)
+            .fill(selectedType == .judori ? .secondary : .textSecondary)
             .matchedGeometryEffect(id: "dori.segment.indicator", in: indicatorNS)
         }
 
         Text(item.displayName)
           .pretendard(selectedType == item ? .caption(.b1) : .body(.m5))
-          .foregroundStyle(selectedType == item ? .doriWhite : .doriBlack)
+          .foregroundStyle(selectedType == item ? .onBrand : .textPrimary)
           .frame(maxWidth: .infinity)
           .padding(.vertical, 6)
           .padding(.horizontal, 10)

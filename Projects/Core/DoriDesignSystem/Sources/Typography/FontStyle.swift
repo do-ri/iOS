@@ -13,7 +13,6 @@ public enum FontType: Equatable {
   case custom(String)
 }
 
-// MARK: - TypoStyle 혹은 직접 활용도 가능하끔 구조 작성
 @MainActor
 public struct FontStyle {
   public let font: Font

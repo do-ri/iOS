@@ -28,7 +28,7 @@ public struct PartnerSearchResultRow: View {
           
         Text(partner.relationship)
           .pretendard(.caption(.m2))
-          .foregroundStyle(DoriColors.grey600.color)
+          .foregroundStyle(DoriColors.textSecondary.color)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(1)
           .truncationMode(.tail)
@@ -36,7 +36,7 @@ public struct PartnerSearchResultRow: View {
           .padding(.vertical, 4)
           .background(
             RoundedRectangle(cornerRadius: 5)
-              .fill(DoriColors.grey100.color)
+              .fill(DoriColors.bgSecondary.color)
           )
       }
 
@@ -44,11 +44,11 @@ public struct PartnerSearchResultRow: View {
 
       Text(partner.eventType)
         .pretendard(.body(.m5))
-        .foregroundStyle(DoriColors.grey500.color)
+        .foregroundStyle(DoriColors.textSecondary.color)
 
       Text(partner.eventDate)
         .pretendard(.body(.m5))
-        .foregroundStyle(DoriColors.grey500.color)
+        .foregroundStyle(DoriColors.textSecondary.color)
     }
   }
   

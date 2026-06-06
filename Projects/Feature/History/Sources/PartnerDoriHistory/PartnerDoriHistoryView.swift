@@ -36,13 +36,13 @@ public struct PartnerDoriHistoryView: View {
 
             AmountLabel(Int(store.inDoriTotalAmount))
               .pretendard(.caption(.b1))
-              .foregroundStyle(.grey500)
+              .foregroundStyle(.textSecondary)
           }
           .padding(.horizontal, 8)
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 36)
-        .background(.grey100)
+        .background(.bgSecondary)
 
         // 도리 내역
         VStack(alignment: .leading, spacing: 16) {
@@ -84,7 +84,7 @@ public struct PartnerDoriHistoryView: View {
         }
       }
     }
-    .background(.doriWhite)
+    .background(.bgPrimary)
     .doriNavigationBar(
       DoriNavigationBarConfig.backWithTitleAndActions(
         store.partnerName,
@@ -106,7 +106,7 @@ public struct PartnerDoriHistoryView: View {
           store.send(.filterChanged(filter))
         }
       )
-      .presentationBackground(DoriDesignSystem.DoriColors.doriWhite.color)
+      .presentationBackground(DoriDesignSystem.DoriColors.bgPrimary.color)
       .presentationDetents([.height(200)])
     }
     .overlay {
@@ -155,13 +155,13 @@ private struct DoriFilterSheet: View {
             HStack {
               Text(filter.rawValue)
                 .pretendard(selected == filter ? .bold(.b16) : .regular(.r16))
-                .foregroundStyle(.doriBlack)
+                .foregroundStyle(.textPrimary)
 
               Spacer()
 
               if selected == filter {
                 Image(systemName: "checkmark")
-                  .foregroundStyle(.main)
+                  .foregroundStyle(.brandMain)
               }
             }
             .padding(.horizontal, 20)
