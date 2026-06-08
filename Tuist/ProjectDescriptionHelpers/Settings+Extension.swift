@@ -16,7 +16,8 @@ public extension Settings {
       "ENABLE_BITCODE": "NO",
       "IPHONEOS_DEPLOYMENT_TARGET": .string(Environment.deploymentTarget),
       "SWIFT_VERSION": "6.0",
-      "CLANG_ENABLE_MODULES": "YES"
+      "CLANG_ENABLE_MODULES": "YES",
+      "CODE_SIGNING_ALLOWED": "NO"
     ],
     configurations: [
       .debug(
@@ -47,6 +48,7 @@ public extension Settings {
       "SWIFT_VERSION": "6.0",
       "CLANG_ENABLE_MODULES": "YES",
       "OTHER_LDFLAGS": .array(["$(inherited)", "-ObjC"]),
+      "CODE_SIGNING_ALLOWED": "NO"
     ],
     configurations: [
       .debug(
