@@ -32,7 +32,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.arex.dori" => "Dori App Store"
+          "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
       xcargs: "-skipMacroValidation",
@@ -72,7 +72,7 @@ platform :ios do
       export_method: "app-store",
       export_options: {
         provisioningProfiles: {
-          "com.arex.dori" => "Dori App Store"
+          "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
       xcargs: "-skipMacroValidation",
