@@ -1,5 +1,6 @@
 import SwiftUI
 import DoriCore
+import DoriDesignSystem
 
 public struct MonthSelectorView: View {
   let currentMonth: Date
@@ -18,20 +19,20 @@ public struct MonthSelectorView: View {
         onPrevious()
       } label: {
         Image(systemName: "chevron.left")
-          .font(.title3)
-          .foregroundColor(.primary)
+          .font(.system(size: 16, weight: .semibold))
+          .foregroundStyle(.textPrimary)
       }
 
       Text(currentMonth.koreanMonth)
-        .font(.title2)
-        .fontWeight(.semibold)
+        .pretendard(.body(.sb2))
+        .foregroundStyle(.textPrimary)
 
       Button {
         onNext()
       } label: {
         Image(systemName: "chevron.right")
-          .font(.title3)
-          .foregroundColor(.primary)
+          .font(.system(size: 16, weight: .semibold))
+          .foregroundStyle(.textPrimary)
       }
     }
     .padding(.horizontal)

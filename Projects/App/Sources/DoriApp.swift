@@ -100,7 +100,6 @@ struct DoriApp: App {
   var body: some Scene {
     WindowGroup {
       rootView
-        .preferredColorScheme(.light)
     }
   }
 

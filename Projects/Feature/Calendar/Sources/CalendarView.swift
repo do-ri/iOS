@@ -58,12 +58,12 @@ public struct CalendarView: View {
               .padding(.horizontal)
           }
         }
+        .padding(.top, 10)
         .padding(.horizontal, 16)
         .padding(.bottom, 80)
       }
       .scrollDisabled(true)
-      .navigationTitle("캘린더")
-      .toolbarTitleDisplayMode(.inline)
+      .background(.bgPrimary)
       .doriNavigationBar(DoriNavigationBarConfig.titleWithActions("캘린더"))
       .onAppear { store.send(.onAppear) }
       .overlay(alignment: .bottomTrailing) {

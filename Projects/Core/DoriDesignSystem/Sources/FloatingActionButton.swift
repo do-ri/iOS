@@ -19,7 +19,7 @@ public struct FloatingActionButton: View {
       Image(systemName: "plus")
         .font(.title2)
         .fontWeight(.semibold)
-        .foregroundColor(.white)
+        .foregroundStyle(.bgPrimary)
         .frame(
           width: 56,
           height: 56
