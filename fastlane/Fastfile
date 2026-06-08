@@ -39,8 +39,8 @@ platform :ios do
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
-      xcargs: "-skipMacroValidation -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
-      export_xcargs: "-allowProvisioningUpdates"
+      xcargs: "-skipMacroValidation -allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
+      export_xcargs: "-allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}"
     )
 
     upload_to_testflight(
