@@ -35,7 +35,7 @@ platform :ios do
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
-      xcargs: "-skipMacroValidation",
+      xcargs: "-skipMacroValidation -allowProvisioningUpdates",
       export_xcargs: "-allowProvisioningUpdates"
     )
 
@@ -75,7 +75,7 @@ platform :ios do
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
-      xcargs: "-skipMacroValidation",
+      xcargs: "-skipMacroValidation -allowProvisioningUpdates",
       export_xcargs: "-allowProvisioningUpdates"
     )
 
