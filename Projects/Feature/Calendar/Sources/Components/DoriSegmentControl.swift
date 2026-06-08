@@ -39,13 +39,13 @@ public struct DoriSegmentControl: View {
         // 선택 인디케이터: "하나"만 존재하고 matchedGeometryEffect로 이동
         if selectedType == item {
           RoundedRectangle(cornerRadius: 10)
-            .fill(selectedType == .judori ? .secondary : .textSecondary)
+            .fill(.bgPrimary)
             .matchedGeometryEffect(id: "dori.segment.indicator", in: indicatorNS)
         }
 
         Text(item.displayName)
           .pretendard(selectedType == item ? .caption(.b1) : .body(.m5))
-          .foregroundStyle(selectedType == item ? .onBrand : .textPrimary)
+          .foregroundStyle(selectedType == item ? .textPrimary : .textSecondary)
           .frame(maxWidth: .infinity)
           .padding(.vertical, 6)
           .padding(.horizontal, 10)

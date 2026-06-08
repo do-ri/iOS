@@ -73,11 +73,13 @@ struct CalendarDayCell: View {
   
   var isTodayCircleColor: Color {
     guard isToday else { return .clear }
-    return selectedType == .judori ? UIAsset.Colors.secondary.color : UIAsset.Colors.textSecondary.color
+    return selectedType == .judori
+      ? UIAsset.Colors.brandMain.color
+      : UIAsset.Colors.textSecondary.color
   }
-  
+
   var dotColor: UIAsset.Colors {
-    return selectedType == .judori ? .secondary : .textSecondary
+    return selectedType == .judori ? .brandMain : .textSecondary
   }
   
   var isToday: Bool {

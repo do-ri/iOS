@@ -26,20 +26,21 @@ struct CalendarTotalAmountView: View {
     HStack(spacing: 0) {
       Text("총 \(selectedType.displayName)")
         .pretendard(.body(.m3))
+        .foregroundStyle(.textSecondary)
 
       Spacer()
 
       AmountLabel(totalAmount)
         .pretendard(.body(.sb3))
+        .foregroundStyle(.textPrimary)
     }
     .padding(.horizontal, 16)
     .padding(.vertical, 11)
     .frame(maxWidth: .infinity)
     .frame(height: 46)
-    .foregroundStyle(selectedType == .judori ? .onBrand : .textSecondary)
     .background(
       RoundedRectangle(cornerRadius: 10)
-        .fill(selectedType == .judori ? .secondary : .bgSecondary)
+        .fill(.bgSecondary)
     )
   }
 }
