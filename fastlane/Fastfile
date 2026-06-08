@@ -58,17 +58,35 @@ platform :ios do
       </plist>
     PLIST
 
+    # Archive only — fastlane's export step rewrites the export plist by
+    # scanning the archive's embedded bundles, which forces every framework
+    # into the provisioningProfiles dict and breaks export. We export
+    # ourselves below.
     build_app(
       workspace: "Dori-iOS.xcworkspace",
       scheme: "DoriApp",
       configuration: "Release",
-      export_method: "app-store",
-      export_options: export_options_path,
-      xcargs: "-skipMacroValidation",
-      export_xcargs: ""
+      skip_package_ipa: true,
+      output_directory: "build",
+      xcargs: "-skipMacroValidation"
     )
 
+    archive_path = lane_context[SharedValues::XCODEBUILD_ARCHIVE]
+    UI.user_error!("Archive path not found in lane_context") if archive_path.nil? || archive_path.empty?
+    ipa_dir = File.expand_path("../build", __FILE__)
+    FileUtils.mkdir_p(ipa_dir)
+
+    sh("xcodebuild", "-exportArchive",
+       "-archivePath", archive_path,
+       "-exportOptionsPlist", export_options_path,
+       "-exportPath", ipa_dir,
+       "-allowProvisioningUpdates")
+
+    ipa_path = Dir.glob(File.join(ipa_dir, "*.ipa")).first
+    UI.user_error!("No IPA produced in #{ipa_dir}") if ipa_path.nil?
+
     upload_to_testflight(
+      ipa: ipa_path,
       skip_waiting_for_build_processing: true,
       groups: ["도리팀"],
       distribute_external: true,
