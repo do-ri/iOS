@@ -116,7 +116,10 @@ public extension Settings {
       "ENABLE_TESTABILITY": "NO",
       "DEBUG_INFORMATION_FORMAT": "dwarf-with-dsym",
       "SWIFT_COMPILATION_MODE": "wholemodule",
-      "SWIFT_ACTIVE_COMPILATION_CONDITIONS": .array(["$(inherited)"])
+      "SWIFT_ACTIVE_COMPILATION_CONDITIONS": .array(["$(inherited)"]),
+      "CODE_SIGN_STYLE": "Manual",
+      "PROVISIONING_PROFILE_SPECIFIER": "$(PROFILE_NAME)",
+      "CODE_SIGN_IDENTITY": "Apple Distribution"
     ]
     
     return .settings(

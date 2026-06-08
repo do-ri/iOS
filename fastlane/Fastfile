@@ -64,8 +64,8 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store",
       export_options: export_options_path,
-      xcargs: "-skipMacroValidation -allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
-      export_xcargs: "-allowProvisioningUpdates"
+      xcargs: "-skipMacroValidation",
+      export_xcargs: ""
     )
 
     upload_to_testflight(
