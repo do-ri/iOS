@@ -34,9 +34,15 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store",
       export_options: {
+        method: "app-store",
+        signingStyle: "manual",
+        teamID: "FL4QTRRKMD",
         provisioningProfiles: {
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
-        }
+        },
+        stripSwiftSymbols: true,
+        uploadBitcode: false,
+        uploadSymbols: true
       },
       xcargs: "-skipMacroValidation -allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
       export_xcargs: "-allowProvisioningUpdates"
@@ -74,9 +80,15 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store",
       export_options: {
+        method: "app-store",
+        signingStyle: "manual",
+        teamID: "FL4QTRRKMD",
         provisioningProfiles: {
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
-        }
+        },
+        stripSwiftSymbols: true,
+        uploadBitcode: false,
+        uploadSymbols: true
       },
       xcargs: "-skipMacroValidation -allowProvisioningUpdates",
       export_xcargs: "-allowProvisioningUpdates"

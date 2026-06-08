@@ -3,6 +3,7 @@ import PackageDescription
 
 #if TUIST
 import struct ProjectDescription.PackageSettings
+import ProjectDescription
 
 let packageSettings = PackageSettings(
   productTypes: [
@@ -12,7 +13,13 @@ let packageSettings = PackageSettings(
     "KakaoSDKCommon": .framework,
     "KakaoSDKAuth": .framework,
     "KakaoSDKUser": .framework,
-  ]
+  ],
+  baseSettings: .settings(
+    base: [
+      "CODE_SIGNING_ALLOWED": "NO",
+      "CODE_SIGN_IDENTITY": ""
+    ]
+  )
 )
 #endif
 
