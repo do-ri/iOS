@@ -40,7 +40,7 @@ platform :ios do
         }
       },
       xcargs: "-skipMacroValidation -allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
-      export_xcargs: "-allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}"
+      export_xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_testflight(
