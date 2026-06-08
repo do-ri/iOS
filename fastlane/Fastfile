@@ -28,29 +28,51 @@ platform :ios do
 
     key_path = File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{ENV["ASC_KEY_ID"]}.p8")
 
+    team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
+    app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
+    profile_name = ENV["PROVISIONING_PROFILE_SPECIFIER"]
+    export_options_path = File.expand_path("../ExportOptions.plist", __FILE__)
+    File.write(export_options_path, <<~PLIST)
+      <?xml version="1.0" encoding="UTF-8"?>
+      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+      <plist version="1.0">
+      <dict>
+        <key>method</key>
+        <string>app-store</string>
+        <key>signingStyle</key>
+        <string>manual</string>
+        <key>teamID</key>
+        <string>#{team_id}</string>
+        <key>provisioningProfiles</key>
+        <dict>
+          <key>#{app_id}</key>
+          <string>#{profile_name}</string>
+        </dict>
+        <key>stripSwiftSymbols</key>
+        <true/>
+        <key>uploadBitcode</key>
+        <false/>
+        <key>uploadSymbols</key>
+        <true/>
+      </dict>
+      </plist>
+    PLIST
+
     build_app(
       workspace: "Dori-iOS.xcworkspace",
       scheme: "DoriApp",
       configuration: "Release",
       export_method: "app-store",
-      export_options: {
-        method: "app-store",
-        signingStyle: "manual",
-        teamID: "FL4QTRRKMD",
-        provisioningProfiles: {
-          "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
-        },
-        stripSwiftSymbols: true,
-        uploadBitcode: false,
-        uploadSymbols: true
-      },
+      export_options: export_options_path,
       xcargs: "-skipMacroValidation -allowProvisioningUpdates -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
       export_xcargs: "-allowProvisioningUpdates"
     )
 
     upload_to_testflight(
       skip_waiting_for_build_processing: true,
-      groups: ["도리팀"]
+      groups: ["도리팀"],
+      distribute_external: true,
+      changelog: last_git_commit[:message]
     )
 
     discord_notifier(
@@ -82,9 +104,9 @@ platform :ios do
       export_options: {
         method: "app-store",
         signingStyle: "manual",
-        teamID: "FL4QTRRKMD",
+        teamID: CredentialsManager::AppfileConfig.try_fetch_value(:team_id),
         provisioningProfiles: {
-          "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
+          CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier) => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         },
         stripSwiftSymbols: true,
         uploadBitcode: false,

@@ -41,3 +41,4 @@ Derived/
 *.xcworkspace
 .claude/worktrees
 GoogleService-Info.plist
+fastlane/ExportOptions.plist
