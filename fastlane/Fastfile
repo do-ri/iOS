@@ -16,17 +16,18 @@ platform :ios do
   # TestFlight 배포 (feature → develop 병합 시)
   # 대상: 도리팀 외부 그룹
   # -----------------------------------------------
+  # Tuist 가 생성하는 프로젝트는 root 에 .xcodeproj 가 없어 agvtool 기반
+  # get_build_number 가 동작하지 않는다. lane 안에서는 새로 셋한 build_number
+  # 를 변수로 가지고 다닌다.
   desc "TestFlight 도리팀 배포"
   lane :beta do
     setup_ci if ENV["CI"]
     setup_api_key
 
-    increment_build_number(
+    build_number = increment_build_number(
       build_number: latest_testflight_build_number + 1,
       xcodeproj: "Projects/App/Dori-iOS.xcodeproj"
     )
-
-    key_path = File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{ENV["ASC_KEY_ID"]}.p8")
 
     team_id = CredentialsManager::AppfileConfig.try_fetch_value(:team_id)
     app_id = CredentialsManager::AppfileConfig.try_fetch_value(:app_identifier)
@@ -79,24 +80,25 @@ platform :ios do
     sh("xcodebuild", "-exportArchive",
        "-archivePath", archive_path,
        "-exportOptionsPlist", export_options_path,
-       "-exportPath", ipa_dir,
-       "-allowProvisioningUpdates")
+       "-exportPath", ipa_dir)
 
     ipa_path = Dir.glob(File.join(ipa_dir, "*.ipa")).first
     UI.user_error!("No IPA produced in #{ipa_dir}") if ipa_path.nil?
+
+    release_notes = ENV["RELEASE_NOTES"].to_s.empty? ? last_git_commit[:message] : ENV["RELEASE_NOTES"]
 
     upload_to_testflight(
       ipa: ipa_path,
       skip_waiting_for_build_processing: true,
       groups: ["도리팀"],
       distribute_external: true,
-      changelog: last_git_commit[:message]
+      changelog: release_notes
     )
 
     discord_notifier(
       webhook_url: ENV["DISCORD_WEBHOOK_URL"],
       title: "✅ Dori TestFlight 배포 완료",
-      description: "빌드 번호: #{get_build_number}\n브랜치: #{git_branch}\n커밋: #{last_git_commit[:message]}",
+      description: "버전: 1.2.0 (#{build_number})\n브랜치: #{git_branch}\n노트: #{release_notes}",
       success: true
     )
   end

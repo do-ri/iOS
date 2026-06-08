@@ -114,27 +114,3 @@ jobs:
           PROVISIONING_PROFILE_SPECIFIER: ${{ env.PROVISIONING_PROFILE_SPECIFIER }}
           RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
         run: bundle exec fastlane beta
-
-      - name: Diagnose archive codesign
-        if: always()
-        run: |
-          ARCHIVE=$(ls -td ~/Library/Developer/Xcode/Archives/*/*.xcarchive 2>/dev/null | head -1)
-          if [ -z "$ARCHIVE" ]; then
-            echo "(no archive found)"
-            exit 0
-          fi
-          echo "Archive: $ARCHIVE"
-          APP=$(ls -d "$ARCHIVE"/Products/Applications/*.app 2>/dev/null | head -1)
-          echo "App: $APP"
-          codesign -dv "$APP" 2>&1 | head -10 || true
-          echo "---frameworks---"
-          for f in "$APP"/Frameworks/*.framework; do
-            [ -d "$f" ] || continue
-            name=$(basename "$f")
-            if codesign -dv "$f" 2>&1 | grep -q "Authority="; then
-              authority=$(codesign -dv "$f" 2>&1 | grep "Authority=" | head -1)
-              echo "$name: SIGNED ($authority)"
-            else
-              echo "$name: UNSIGNED"
-            fi
-          done
