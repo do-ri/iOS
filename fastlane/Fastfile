@@ -18,6 +18,7 @@ platform :ios do
   # -----------------------------------------------
   desc "TestFlight 도리팀 배포"
   lane :beta do
+    setup_ci if ENV["CI"]
     setup_api_key
 
     increment_build_number(
@@ -25,17 +26,20 @@ platform :ios do
       xcodeproj: "Projects/App/Dori-iOS.xcodeproj"
     )
 
+    key_path = File.expand_path("~/.appstoreconnect/private_keys/AuthKey_#{ENV["ASC_KEY_ID"]}.p8")
+
     build_app(
       workspace: "Dori-iOS.xcworkspace",
       scheme: "DoriApp",
       configuration: "Release",
       export_method: "app-store",
       export_options: {
+        signingStyle: "manual",
         provisioningProfiles: {
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
       },
-      xcargs: "-skipMacroValidation -allowProvisioningUpdates",
+      xcargs: "-skipMacroValidation -authenticationKeyPath #{key_path} -authenticationKeyID #{ENV["ASC_KEY_ID"]} -authenticationKeyIssuerID #{ENV["ASC_ISSUER_ID"]}",
       export_xcargs: "-allowProvisioningUpdates"
     )
 
