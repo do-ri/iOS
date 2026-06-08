@@ -34,7 +34,6 @@ platform :ios do
       configuration: "Release",
       export_method: "app-store",
       export_options: {
-        signingStyle: "manual",
         provisioningProfiles: {
           "com.arex.dori" => ENV["PROVISIONING_PROFILE_SPECIFIER"]
         }
