@@ -50,6 +50,7 @@ let project = Project.dori(
       DoriModules.calendar.module,
       dependencies: [
         DoriModules.addDori.module.targetDependency,
+        DoriModules.notification.module.targetDependency,
         DoriModules.designSystem.module.projectDependency,
         DoriModules.core.module.projectDependency,
         DoriModules.network.module.projectDependency,
@@ -85,6 +86,7 @@ let project = Project.dori(
     .doriFramework(
       DoriModules.myPage.module,
       dependencies: [
+        DoriModules.notification.module.targetDependency,
         DoriModules.designSystem.module.projectDependency,
         DoriModules.network.module.projectDependency,
         DoriModules.keychain.module.projectDependency,
@@ -94,6 +96,24 @@ let project = Project.dori(
     ),
     .doriUnitTests(
       DoriModules.myPage.module,
+      dependencies: [
+        DoriModules.notification.module.targetDependency,
+        DoriModules.testSupport.module.projectDependency,
+        .external(.composableArchitecture),
+        .external(.snapshotTesting),
+      ]
+    ),
+    .doriFramework(
+      DoriModules.notification.module,
+      dependencies: [
+        DoriModules.designSystem.module.projectDependency,
+        DoriModules.core.module.projectDependency,
+        DoriModules.network.module.projectDependency,
+        .external(.composableArchitecture)
+      ]
+    ),
+    .doriUnitTests(
+      DoriModules.notification.module,
       dependencies: [
         DoriModules.testSupport.module.projectDependency,
         .external(.composableArchitecture),

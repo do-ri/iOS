@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import FeatureAddDori
+import FeatureNotification
 import DoriCore
 
 @Reducer
@@ -17,6 +18,7 @@ public struct CalendarFeature {
   @ObservableState
   public struct State: Equatable, Sendable {
     @Presents public var addDori: AddDoriFeature.State?
+    @Presents public var notificationList: NotificationListFeature.State?
 
     public var currentMonth: Date
     public var selectedType: TransactionType = .judori
@@ -44,7 +46,9 @@ public struct CalendarFeature {
   public enum Action: Equatable, Sendable {
     case onAppear
     case fabTapped
+    case notificationBellTapped
     case addDori(PresentationAction<AddDoriFeature.Action>)
+    case notificationList(PresentationAction<NotificationListFeature.Action>)
     case goToPreviousMonth
     case goToNextMonth
     case selectedTypeChanged(TransactionType)
@@ -65,6 +69,13 @@ public struct CalendarFeature {
         
       case .fabTapped:
         state.addDori = AddDoriFeature.State()
+        return .none
+
+      case .notificationBellTapped:
+        state.notificationList = NotificationListFeature.State()
+        return .none
+
+      case .notificationList:
         return .none
 
       case .addDori(.presented(.delegate(.doriCreated))):
@@ -136,6 +147,9 @@ public struct CalendarFeature {
     }
     .ifLet(\.$addDori, action: \.addDori) {
       AddDoriFeature()
+    }
+    .ifLet(\.$notificationList, action: \.notificationList) {
+      NotificationListFeature()
     }
   }
 

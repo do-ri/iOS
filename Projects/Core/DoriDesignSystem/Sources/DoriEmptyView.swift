@@ -67,6 +67,13 @@ public extension DoriEmptyView.Content {
     title: "검색된 도리가 없어요.",
     description: "해당 도리의 기록을 찾을 수 없어요.\n다른 이름으로 검색해보세요."
   )
+
+  /// 알림함이 비어 있을 때
+  static let notificationList = DoriEmptyView.Content(
+    image: UIAsset.Images.placeholderEmpty.image,
+    title: "아직 도착한 알림이 없어요",
+    description: "새로운 소식이 오면 여기에서 알려드릴게요!"
+  )
 }
 
 // MARK: - Preview
