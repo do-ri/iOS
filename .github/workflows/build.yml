@@ -26,7 +26,7 @@ jobs:
         run: |
           mkdir -p Projects/App/Resources
           if [ ! -f Projects/App/Resources/Common.xcconfig ]; then
-            printf "BASE_URL = https://hellodoriworld.com\nKAKAO_NATIVE_APP_KEY =\n" > Projects/App/Resources/Common.xcconfig
+            printf 'BASE_URL = https:/$()/hellodoriworld.com\nKAKAO_NATIVE_APP_KEY =\n' > Projects/App/Resources/Common.xcconfig
           fi
           echo "✅ xcconfig file is ready"
 
