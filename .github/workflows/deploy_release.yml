@@ -55,7 +55,7 @@ jobs:
       - name: Prepare xcconfig
         run: |
           mkdir -p Projects/App/Resources
-          printf "BASE_URL = ${{ vars.BASE_URL }}\nKAKAO_NATIVE_APP_KEY = ${{ secrets.KAKAO_NATIVE_APP_KEY }}\n" \
+          printf 'BASE_URL = ${{ vars.BASE_URL }}\nKAKAO_NATIVE_APP_KEY = ${{ secrets.KAKAO_NATIVE_APP_KEY }}\n' \
             > Projects/App/Resources/Common.xcconfig
 
       - name: Install Tuist dependencies
