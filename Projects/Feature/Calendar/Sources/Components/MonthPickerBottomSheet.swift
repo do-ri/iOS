@@ -34,19 +34,18 @@ public struct MonthPickerBottomSheet: View {
         .fill(Color.gray.opacity(0.3))
         .frame(width: 36, height: 4)
         .frame(maxWidth: .infinity)
-        .padding(.top, 12)
         .padding(.bottom, 20)
 
       Text("날짜를 선택하세요")
         .pretendard(.subtitle(.sb1))
         .foregroundStyle(.textPrimary)
         .padding(.horizontal, 20)
-        .padding(.bottom, 8)
+        .padding(.bottom, 32)
 
       HStack(spacing: 0) {
         Picker("년도", selection: $selectedYear) {
           ForEach(years, id: \.self) { year in
-            Text("\(year)년").tag(year)
+            Text(verbatim: "\(year)년").tag(year)
           }
         }
         .pickerStyle(.wheel)
@@ -54,13 +53,14 @@ public struct MonthPickerBottomSheet: View {
 
         Picker("월", selection: $selectedMonth) {
           ForEach(months, id: \.self) { month in
-            Text("\(month)월").tag(month)
+            Text(verbatim: "\(month)월").tag(month)
           }
         }
         .pickerStyle(.wheel)
         .frame(maxWidth: .infinity)
       }
-      .frame(height: 216)
+      .frame(height: 100)
+      .padding(.bottom, 32)
       .onChange(of: selectedYear) { _, newYear in
         notifyDateChange(year: newYear, month: selectedMonth)
       }
@@ -68,25 +68,17 @@ public struct MonthPickerBottomSheet: View {
         notifyDateChange(year: selectedYear, month: newMonth)
       }
 
-      Button {
+      PrimaryButton(title: "완료") {
         onConfirm()
-      } label: {
-        Text("완료")
-          .pretendard(.body(.sb2))
-          .foregroundStyle(UIAsset.Colors.onBrand.color)
-          .frame(maxWidth: .infinity)
-          .frame(height: 52)
-          .background(
-            RoundedRectangle(cornerRadius: 12)
-              .fill(UIAsset.Colors.brandMain.color)
-          )
       }
-      .padding(.horizontal, 20)
-      .padding(.bottom, 20)
+      .padding(.horizontal, 16)
     }
     .background(.bgPrimary)
-    .presentationDetents([.medium])
+    .ignoresSafeArea(.container, edges: .bottom)
+    .presentationDetents([.height(310)])
+    .presentationBackground(UIAsset.Colors.bgPrimary.color)
     .presentationDragIndicator(.hidden)
+    
   }
 
   private func notifyDateChange(year: Int, month: Int) {
