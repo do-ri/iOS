@@ -25,6 +25,8 @@ public struct CalendarFeature {
     public var selectedDay: CalendarDay?
     public var dayDoris: [CalendarDori] = []
     public var errorMessage: String?
+    public var isMonthPickerPresented: Bool = false
+    public var pickerDate: Date
 
     public var totalAmount: Int {
       switch selectedType {
@@ -37,6 +39,7 @@ public struct CalendarFeature {
 
     public init(currentMonth: Date = Date()) {
       self.currentMonth = currentMonth
+      self.pickerDate = currentMonth
       self.calendarData = .empty(for: currentMonth)
     }
   }
@@ -52,6 +55,10 @@ public struct CalendarFeature {
     case calendarDataFailed(String)
     case dayTapped(CalendarDay)
     case sheetDismissed
+    case monthLabelTapped
+    case pickerDateChanged(Date)
+    case monthPickerConfirmed
+    case monthPickerDismissed
   }
 
   @Dependency(\.calendarClient) var calendarClient
@@ -131,6 +138,26 @@ public struct CalendarFeature {
       case .sheetDismissed:
         state.selectedDay = nil
         state.dayDoris = []
+        return .none
+
+      case .monthLabelTapped:
+        state.pickerDate = state.currentMonth
+        state.isMonthPickerPresented = true
+        return .none
+
+      case let .pickerDateChanged(date):
+        state.pickerDate = date
+        return .none
+
+      case .monthPickerConfirmed:
+        state.currentMonth = state.pickerDate.startOfMonth
+        state.isMonthPickerPresented = false
+        state.selectedDay = nil
+        state.dayDoris = []
+        return fetchMonthlyData(month: state.currentMonth, type: state.selectedType)
+
+      case .monthPickerDismissed:
+        state.isMonthPickerPresented = false
         return .none
       }
     }

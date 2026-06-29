@@ -29,7 +29,8 @@ public struct CalendarView: View {
             MonthSelectorView(
               currentMonth: store.currentMonth,
               onPrevious: { store.send(.goToPreviousMonth) },
-              onNext: { store.send(.goToNextMonth) }
+              onNext: { store.send(.goToNextMonth) },
+              onMonthTapped: { store.send(.monthLabelTapped) }
             )
 
             Spacer()
@@ -90,6 +91,18 @@ public struct CalendarView: View {
           )
           .presentationDetents([.medium, .large])
         }
+      }
+      .sheet(
+        isPresented: Binding(
+          get: { store.isMonthPickerPresented },
+          set: { if !$0 { store.send(.monthPickerDismissed) } }
+        )
+      ) {
+        MonthPickerBottomSheet(
+          selectedDate: store.pickerDate,
+          onDateChanged: { store.send(.pickerDateChanged($0)) },
+          onConfirm: { store.send(.monthPickerConfirmed) }
+        )
       }
     }
   }
