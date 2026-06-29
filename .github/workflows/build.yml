@@ -47,7 +47,7 @@ jobs:
             -configuration Debug \
             -skipMacroValidation \
             -destination "generic/platform=iOS Simulator" \
-            -parallelizeTargets NO \
+            -jobs 1 \
             SWIFT_ENABLE_EXPLICIT_MODULES=NO \
             build
 
@@ -90,7 +90,7 @@ jobs:
               -configuration Debug \
               -skipMacroValidation \
               -destination "id=${SIMULATOR_ID}" \
-              -parallelizeTargets NO \
+              -jobs 1 \
               SWIFT_ENABLE_EXPLICIT_MODULES=NO \
               test
           done <<< "${TEST_SCHEMES}"
