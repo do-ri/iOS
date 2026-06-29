@@ -15,6 +15,7 @@ import FeatureOnboarding
 import FeatureAddDori
 import FeatureHistory
 import FeatureCalendar
+import FeatureNotification
 import PlatformKakaoAuth
 import PlatformKeychain
 import PlatformFCM
@@ -79,6 +80,7 @@ struct DoriApp: App {
       )
       $0.fcmPushTestAPIClient = .live(networkService: networkService)
       $0.notificationSettingsAPIClient = .live(networkService: networkService)
+      $0.notificationListAPIClient = .live(networkService: networkService)
     }
 
     storeBox.store = store

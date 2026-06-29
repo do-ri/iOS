@@ -70,6 +70,7 @@ public enum DoriModules: CaseIterable, Sendable {
   case history
   case myPage
   case addDori
+  case notification
 
   public var module: DoriModule {
     switch self {
@@ -99,6 +100,8 @@ public enum DoriModules: CaseIterable, Sendable {
       DoriModule(name: "FeatureMyPage", layer: .feature, directoryName: "MyPage")
     case .addDori:
       DoriModule(name: "FeatureAddDori", layer: .feature, directoryName: "AddDori")
+    case .notification:
+      DoriModule(name: "FeatureNotification", layer: .feature, directoryName: "Notification")
     }
   }
 }

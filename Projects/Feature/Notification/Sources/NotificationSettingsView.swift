@@ -9,15 +9,19 @@ import ComposableArchitecture
 import DoriDesignSystem
 import SwiftUI
 
-struct NotificationSettingsView: View {
+public struct NotificationSettingsView: View {
   @Bindable var store: StoreOf<NotificationSettingsFeature>
   @Environment(\.scenePhase) private var scenePhase
+
+  public init(store: StoreOf<NotificationSettingsFeature>) {
+    self.store = store
+  }
 
   private var allPushDescrition: String {
     store.isAllPushEnabled ? "앱 알림 받기" : "알림이 꺼져 있어요\n알림을 켜고 소식을 받아보세요"
   }
-  
-  var body: some View {
+
+  public var body: some View {
     ZStack {
       UIAsset.Colors.bgPrimary.color
         .ignoresSafeArea()
