@@ -26,7 +26,18 @@ let packageSettings = PackageSettings(
       "CODE_SIGN_IDENTITY": "",
       "SWIFT_ENABLE_EXPLICIT_MODULES": "NO"
     ]
-  )
+  ),
+  targetSettings: [
+    "CasePathsMacrosSupport": .settings(
+      base: ["SWIFT_ENABLE_EXPLICIT_MODULES": "NO"]
+    ),
+    "CasePathsMacros": .settings(
+      base: ["SWIFT_ENABLE_EXPLICIT_MODULES": "NO"]
+    ),
+    "SwiftNavigationMacros": .settings(
+      base: ["SWIFT_ENABLE_EXPLICIT_MODULES": "NO"]
+    ),
+  ]
 )
 #endif
 
