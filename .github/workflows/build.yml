@@ -46,6 +46,7 @@ jobs:
             -scheme DoriApp \
             -configuration Debug \
             -skipMacroValidation \
+            -parallelizeTargets NO \
             -destination "generic/platform=iOS Simulator" \
             SWIFT_ENABLE_EXPLICIT_MODULES=NO \
             clean build
@@ -88,6 +89,7 @@ jobs:
               -scheme "${scheme}" \
               -configuration Debug \
               -skipMacroValidation \
+              -parallelizeTargets NO \
               -destination "id=${SIMULATOR_ID}" \
               SWIFT_ENABLE_EXPLICIT_MODULES=NO \
               test
