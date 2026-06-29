@@ -17,7 +17,8 @@ let packageSettings = PackageSettings(
   baseSettings: .settings(
     base: [
       "CODE_SIGNING_ALLOWED": "NO",
-      "CODE_SIGN_IDENTITY": ""
+      "CODE_SIGN_IDENTITY": "",
+      "SWIFT_ENABLE_EXPLICIT_MODULES": "NO"
     ]
   )
 )
