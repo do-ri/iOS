@@ -8,6 +8,12 @@ import ProjectDescription
 let packageSettings = PackageSettings(
   productTypes: [
     "ComposableArchitecture": .framework,
+    "Dependencies": .framework,
+    "CombineSchedulers": .framework,
+    "Clocks": .framework,
+    "CasePaths": .framework,
+    "SwiftNavigation": .framework,
+    "ConcurrencyExtras": .framework,
     "Swinject": .framework,
     "Alamofire": .framework,
     "KakaoSDKCommon": .framework,
