@@ -12,6 +12,7 @@ let packageSettings = PackageSettings(
     "CombineSchedulers": .framework,
     "Clocks": .framework,
     "CasePaths": .framework,
+    "CasePathsMacrosSupport": .framework,
     "SwiftNavigation": .framework,
     "ConcurrencyExtras": .framework,
     "Swinject": .framework,
