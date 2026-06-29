@@ -16,6 +16,9 @@ public enum HTTPMethod: String, Sendable {
   case PATCH
 }
 
+// MARK: - Parameters
+public typealias Parameters = [String: any Sendable]
+
 // MARK: - Base Endpoint Protocol
 public protocol Endpoint: Sendable {
   var baseURL: String { get }
