@@ -47,7 +47,9 @@ jobs:
             -configuration Debug \
             -skipMacroValidation \
             -destination "generic/platform=iOS Simulator" \
-            clean build
+            -jobs 1 \
+            SWIFT_ENABLE_EXPLICIT_MODULES=NO \
+            build
 
       - name: Run unit tests (all *Tests schemes)
         run: |
@@ -88,5 +90,7 @@ jobs:
               -configuration Debug \
               -skipMacroValidation \
               -destination "id=${SIMULATOR_ID}" \
+              -jobs 1 \
+              SWIFT_ENABLE_EXPLICIT_MODULES=NO \
               test
           done <<< "${TEST_SCHEMES}"
