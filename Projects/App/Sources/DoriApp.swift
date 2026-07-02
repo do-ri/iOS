@@ -70,6 +70,10 @@ struct DoriApp: App {
         networkService: networkService,
         tokenStore: tokenStore
       )
+      $0.appleServerLoginClient = .live(
+        networkService: networkService,
+        tokenStore: tokenStore
+      )
 
       $0.addDoriAPIClient = .live(networkService: networkService)
       $0.calendarClient = .live(networkService: networkService)

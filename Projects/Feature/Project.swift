@@ -18,6 +18,7 @@ let project = Project.dori(
         DoriModules.core.module.projectDependency,
         DoriModules.network.module.projectDependency,
         DoriModules.kakaoAuth.module.projectDependency,
+        DoriModules.appleAuth.module.projectDependency,
         .external(.composableArchitecture)
       ]
     ),

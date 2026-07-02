@@ -24,6 +24,52 @@ public struct KakaoLoginEndpoint: Endpoint {
   }
 }
 
+public struct AppleLoginUserInfo: Equatable, Sendable {
+  public let firstName: String?
+  public let lastName: String?
+  public let email: String?
+
+  public init(
+    firstName: String? = nil,
+    lastName: String? = nil,
+    email: String? = nil
+  ) {
+    self.firstName = firstName
+    self.lastName = lastName
+    self.email = email
+  }
+}
+
+public struct AppleLoginEndpoint: Endpoint {
+  public let baseURL: String
+  public let path: String = "/auth/login/apple"
+  public let method: HTTPMethod = .POST
+  public let headers: [String: String] = [:]
+  public let queryParameters: [String: String] = [:]
+  public let body: Data?
+
+  public init(
+    identityToken: String,
+    user: AppleLoginUserInfo? = nil,
+    baseURL: String = NetworkConfig.baseURL
+  ) {
+    self.baseURL = baseURL
+
+    var params: [String: any Sendable] = ["identityToken": identityToken]
+    if let user {
+      var userDict: [String: any Sendable] = [:]
+      var nameDict: [String: any Sendable] = [:]
+      if let firstName = user.firstName { nameDict["firstName"] = firstName }
+      if let lastName = user.lastName { nameDict["lastName"] = lastName }
+      if !nameDict.isEmpty { userDict["name"] = nameDict }
+      if let email = user.email { userDict["email"] = email }
+      if !userDict.isEmpty { params["user"] = userDict }
+    }
+    let parameters = params as Parameters
+    self.body = try? JSONSerialization.data(withJSONObject: parameters)
+  }
+}
+
 // MARK: - Auth Endpoints (logout / withdraw / refresh)
 
 public struct LogoutEndpoint: Endpoint {

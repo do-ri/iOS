@@ -21,6 +21,12 @@ let project = Project.dori(
       ]
     ),
     .doriFramework(
+      DoriModules.appleAuth.module,
+      dependencies: [
+        .external(.composableArchitecture)
+      ]
+    ),
+    .doriFramework(
       DoriModules.keychain.module,
       dependencies: [
         DoriModules.network.module.projectDependency,

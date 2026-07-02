@@ -74,9 +74,10 @@ public struct IntroView: View {
         Spacer()
         
         kakaoLoginButton
+        appleLoginButton
       }
       .alert(
-        "카카오 로그인 실패",
+        "로그인 실패",
         isPresented: Binding(
           get: { store.errorMessage != nil },
           set: { isPresented in
@@ -166,7 +167,45 @@ public struct IntroView: View {
         }
     }
     .disabled(store.isLoading)
-    .padding()
+    .padding(.horizontal, 16)
+    .padding(.top, 16)
+    .padding(.bottom, 8)
+  }
+
+  var appleLoginButton: some View {
+    Button {
+      store.send(.appleLoginButtonTapped)
+    } label: {
+      Text("Apple로 시작하기")
+        .pretendard(.semiBold(.sb15))
+        .foregroundStyle(.bgPrimary)
+        .frame(maxWidth: .infinity)
+        .frame(height: 46)
+        .background(
+          RoundedRectangle(cornerRadius: 10)
+            .foregroundStyle(.textPrimary)
+        )
+        .overlay() {
+          HStack {
+            Image(systemName: "apple.logo")
+              .resizable()
+              .scaledToFit()
+              .foregroundStyle(.bgPrimary)
+              .frame(
+                width: 24,
+                height: 24
+              )
+              .padding(.leading, 16)
+
+            Spacer()
+          }
+
+        }
+    }
+    .disabled(store.isLoading)
+    .padding(.horizontal, 16)
+    .padding(.top, 8)
+    .padding(.bottom, 32)
   }
 }
 

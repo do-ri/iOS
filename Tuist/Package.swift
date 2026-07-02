@@ -34,9 +34,10 @@ let package = Package(
   name: "DoriDependencies",
   dependencies: [
     .package(url: "https://github.com/pointfreeco/swift-composable-architecture", from: "1.25.5"),
-    // swift-navigation 2.10.1+ / swift-case-paths 1.8.0+ have Xcode 26.3 macro host build issues.
-    // Pin to versions known to work (same as develop CI June 15).
-    .package(url: "https://github.com/pointfreeco/swift-navigation", .upToNextMinor(from: "2.8.0")),
+    // swift-case-paths 1.8.0+ triggers CasePathsMacrosSupport-Swift.h not found on Xcode 26 macro host.
+    // Pinning only swift-case-paths to 1.7.x is sufficient: SPM transitively constrains
+    // swift-navigation to 2.8.x without a direct dependency (which would conflict with
+    // TCA's IssueReporting trait requirement added after 2.8.0).
     .package(url: "https://github.com/pointfreeco/swift-case-paths", .upToNextMinor(from: "1.7.3")),
     .package(url: "https://github.com/Swinject/Swinject.git", from: "2.9.1"),
     .package(url: "https://github.com/Alamofire/Alamofire.git", from: "5.11.1"),

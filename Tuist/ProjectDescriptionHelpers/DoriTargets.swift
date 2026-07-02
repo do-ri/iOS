@@ -63,6 +63,7 @@ public enum DoriModules: CaseIterable, Sendable {
   case network
   case networkImpl
   case kakaoAuth
+  case appleAuth
   case keychain
   case fcm
   case onboarding
@@ -86,6 +87,8 @@ public enum DoriModules: CaseIterable, Sendable {
       DoriModule(name: "DoriNetworkImpl", layer: .infra)
     case .kakaoAuth:
       DoriModule(name: "PlatformKakaoAuth", layer: .platform, directoryName: "KakaoAuth")
+    case .appleAuth:
+      DoriModule(name: "PlatformAppleAuth", layer: .platform, directoryName: "AppleAuth")
     case .keychain:
       DoriModule(name: "PlatformKeychain", layer: .platform, directoryName: "Keychain")
     case .fcm:
