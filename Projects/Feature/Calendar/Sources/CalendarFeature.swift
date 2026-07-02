@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import Foundation
 import FeatureAddDori
+import FeatureNotification
 import DoriCore
 
 @Reducer
@@ -17,6 +18,7 @@ public struct CalendarFeature {
   @ObservableState
   public struct State: Equatable, Sendable {
     @Presents public var addDori: AddDoriFeature.State?
+    @Presents public var notificationList: NotificationListFeature.State?
 
     public var currentMonth: Date
     public var selectedType: TransactionType = .judori
@@ -25,6 +27,8 @@ public struct CalendarFeature {
     public var selectedDay: CalendarDay?
     public var dayDoris: [CalendarDori] = []
     public var errorMessage: String?
+    public var isMonthPickerPresented: Bool = false
+    public var pickerDate: Date
 
     public var totalAmount: Int {
       switch selectedType {
@@ -37,6 +41,7 @@ public struct CalendarFeature {
 
     public init(currentMonth: Date = Date()) {
       self.currentMonth = currentMonth
+      self.pickerDate = currentMonth
       self.calendarData = .empty(for: currentMonth)
     }
   }
@@ -44,7 +49,9 @@ public struct CalendarFeature {
   public enum Action: Equatable, Sendable {
     case onAppear
     case fabTapped
+    case notificationBellTapped
     case addDori(PresentationAction<AddDoriFeature.Action>)
+    case notificationList(PresentationAction<NotificationListFeature.Action>)
     case goToPreviousMonth
     case goToNextMonth
     case selectedTypeChanged(TransactionType)
@@ -52,6 +59,10 @@ public struct CalendarFeature {
     case calendarDataFailed(String)
     case dayTapped(CalendarDay)
     case sheetDismissed
+    case monthLabelTapped
+    case pickerDateChanged(Date)
+    case monthPickerConfirmed
+    case monthPickerDismissed
   }
 
   @Dependency(\.calendarClient) var calendarClient
@@ -65,6 +76,13 @@ public struct CalendarFeature {
         
       case .fabTapped:
         state.addDori = AddDoriFeature.State()
+        return .none
+
+      case .notificationBellTapped:
+        state.notificationList = NotificationListFeature.State()
+        return .none
+
+      case .notificationList:
         return .none
 
       case .addDori(.presented(.delegate(.doriCreated))):
@@ -132,10 +150,33 @@ public struct CalendarFeature {
         state.selectedDay = nil
         state.dayDoris = []
         return .none
+
+      case .monthLabelTapped:
+        state.pickerDate = state.currentMonth
+        state.isMonthPickerPresented = true
+        return .none
+
+      case let .pickerDateChanged(date):
+        state.pickerDate = date
+        return .none
+
+      case .monthPickerConfirmed:
+        state.currentMonth = state.pickerDate.startOfMonth
+        state.isMonthPickerPresented = false
+        state.selectedDay = nil
+        state.dayDoris = []
+        return fetchMonthlyData(month: state.currentMonth, type: state.selectedType)
+
+      case .monthPickerDismissed:
+        state.isMonthPickerPresented = false
+        return .none
       }
     }
     .ifLet(\.$addDori, action: \.addDori) {
       AddDoriFeature()
+    }
+    .ifLet(\.$notificationList, action: \.notificationList) {
+      NotificationListFeature()
     }
   }
 

@@ -1,4 +1,5 @@
 import ComposableArchitecture
+import FeatureNotification
 import SnapshotTesting
 import SwiftUI
 import XCTest

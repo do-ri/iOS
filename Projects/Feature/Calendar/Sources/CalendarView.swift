@@ -9,6 +9,7 @@ import SwiftUI
 import ComposableArchitecture
 import DoriDesignSystem
 import FeatureAddDori
+import FeatureNotification
 
 public struct CalendarView: View {
   @Bindable var store: StoreOf<CalendarFeature>
@@ -29,7 +30,8 @@ public struct CalendarView: View {
             MonthSelectorView(
               currentMonth: store.currentMonth,
               onPrevious: { store.send(.goToPreviousMonth) },
-              onNext: { store.send(.goToNextMonth) }
+              onNext: { store.send(.goToNextMonth) },
+              onMonthTapped: { store.send(.monthLabelTapped) }
             )
 
             Spacer()
@@ -64,7 +66,17 @@ public struct CalendarView: View {
       }
       .scrollDisabled(true)
       .background(.bgPrimary)
-      .doriNavigationBar(DoriNavigationBarConfig.titleWithActions("캘린더"))
+      .doriNavigationBar(
+        DoriNavigationBarConfig.titleWithActions(
+          "캘린더",
+          trailing: [
+            .iconButton(
+              image: UIAsset.Icons.notificaitonOff.image.renderingMode(.template),
+              action: { store.send(.notificationBellTapped) }
+            )
+          ]
+        )
+      )
       .onAppear { store.send(.onAppear) }
       .overlay(alignment: .bottomTrailing) {
         FloatingActionButton {
@@ -76,6 +88,11 @@ public struct CalendarView: View {
         item: $store.scope(state: \.addDori, action: \.addDori)
       ) { addDoriStore in
         AddDoriView(store: addDoriStore)
+      }
+      .navigationDestination(
+        item: $store.scope(state: \.notificationList, action: \.notificationList)
+      ) { notificationStore in
+        NotificationListView(store: notificationStore)
       }
       .sheet(
         isPresented: Binding(
@@ -90,6 +107,18 @@ public struct CalendarView: View {
           )
           .presentationDetents([.medium, .large])
         }
+      }
+      .sheet(
+        isPresented: Binding(
+          get: { store.isMonthPickerPresented },
+          set: { if !$0 { store.send(.monthPickerDismissed) } }
+        )
+      ) {
+        MonthPickerBottomSheet(
+          selectedDate: store.pickerDate,
+          onDateChanged: { store.send(.pickerDateChanged($0)) },
+          onConfirm: { store.send(.monthPickerConfirmed) }
+        )
       }
     }
   }

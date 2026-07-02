@@ -20,6 +20,7 @@ let project = Project.dori(
         DoriModules.calendar.module.projectDependency,
         DoriModules.history.module.projectDependency,
         DoriModules.myPage.module.projectDependency,
+        DoriModules.notification.module.projectDependency,
         DoriModules.network.module.projectDependency,
         DoriModules.networkImpl.module.projectDependency,
         DoriModules.kakaoAuth.module.projectDependency,

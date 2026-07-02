@@ -107,9 +107,7 @@ private struct CalendarDoriRow: View {
 
   public var body: some View {
     HStack {
-      eventIcon.image
-        .resizable()
-        .frame(width: 34, height: 34)
+      DoriCircleIcon(eventIcon, style: isJudori ? .judori : .baddori)
 
       VStack(spacing: 4) {
         HStack(spacing: 2) {

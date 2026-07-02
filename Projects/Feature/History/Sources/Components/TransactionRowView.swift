@@ -50,9 +50,7 @@ public struct TransactionRowView: View {
 
   public var body: some View {
     HStack {
-      eventIcon.image
-        .resizable()
-        .frame(width: 34, height: 34)
+      DoriCircleIcon(eventIcon, style: isJudori ? .judori : .baddori)
         .padding(4)
 
       VStack(alignment: .leading, spacing: 4) {

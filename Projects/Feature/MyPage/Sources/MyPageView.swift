@@ -8,6 +8,7 @@
 import ComposableArchitecture
 import DoriCore
 import DoriDesignSystem
+import FeatureNotification
 import SwiftUI
 
 public struct MyPageView: View {

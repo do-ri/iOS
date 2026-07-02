@@ -6,11 +6,18 @@ public struct MonthSelectorView: View {
   let currentMonth: Date
   let onPrevious: () -> Void
   let onNext: () -> Void
+  let onMonthTapped: () -> Void
 
-  public init(currentMonth: Date, onPrevious: @escaping () -> Void, onNext: @escaping () -> Void) {
+  public init(
+    currentMonth: Date,
+    onPrevious: @escaping () -> Void,
+    onNext: @escaping () -> Void,
+    onMonthTapped: @escaping () -> Void
+  ) {
     self.currentMonth = currentMonth
     self.onPrevious = onPrevious
     self.onNext = onNext
+    self.onMonthTapped = onMonthTapped
   }
 
   public var body: some View {
@@ -23,9 +30,13 @@ public struct MonthSelectorView: View {
           .foregroundStyle(.textPrimary)
       }
 
-      Text(currentMonth.koreanMonth)
-        .pretendard(.body(.sb2))
-        .foregroundStyle(.textPrimary)
+      Button {
+        onMonthTapped()
+      } label: {
+        Text(currentMonth.koreanMonth)
+          .pretendard(.body(.sb2))
+          .foregroundStyle(.textPrimary)
+      }
 
       Button {
         onNext()
@@ -44,6 +55,7 @@ public struct MonthSelectorView: View {
   MonthSelectorView(
     currentMonth: Date(),
     onPrevious: {},
-    onNext: {}
+    onNext: {},
+    onMonthTapped: {}
   )
 }

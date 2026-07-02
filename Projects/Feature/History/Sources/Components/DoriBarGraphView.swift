@@ -58,6 +58,7 @@ public struct DoriBarGraphView: View {
           if givenAmount > 0 {
             HStack(spacing: 3) {
               UIAsset.Icons.iconJudori.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 26, height: 26)
                 .padding(.leading, 4)
@@ -75,6 +76,7 @@ public struct DoriBarGraphView: View {
               Text("받도리")
                 .pretendard(.body(.sb6))
               UIAsset.Icons.iconBaddori.image
+                .renderingMode(.template)
                 .resizable()
                 .frame(width: 26, height: 26)
                 .padding(.trailing, 4)

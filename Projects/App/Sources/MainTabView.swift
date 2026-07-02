@@ -28,6 +28,7 @@ struct MainTabFeature {
     var isTabBarVisible: Bool {
       history.path.isEmpty &&
       calendar.addDori == nil &&
+      calendar.notificationList == nil &&
       myPage.navigationPath.isEmpty
     }
   }
